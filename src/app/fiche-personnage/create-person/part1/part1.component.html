@@ -1,0 +1,57 @@
+<!-- utiliser [formGroup]="form" pour lier le formulaire à la classe du composant --> 
+<div [formGroup]="form">
+    <div class="row">
+        <div class="input-field col s4">
+            <label for="nomPersonnage">Nom du personnage :</label>
+            <input id="nomPersonnage" formControlName="nomPersonnage" type="text">
+        </div>
+        
+        <div class="input-field col s4">
+            <label for="nomJoueur">Nom du joueur :</label>
+            <input id="nomJoueur" formControlName="nomJoueur" type="text">
+        </div>
+        
+        <div class="input-field col s3">
+            <label for="race">Race :</label>
+            <select id="race" formControlName="race" class="browser-default">
+                <option *ngFor="let race of races" [value]="race.id">{{ race.nom }}</option>
+            </select>
+        </div>
+        
+        <div class="input-field col s1">
+            <div>
+                <label>
+                <input type="radio" formControlName="genre" value="M">
+                <span>Masculin</span>
+                </label>
+                <label>
+                <input type="radio" formControlName="genre" value="F">
+                <span>Féminin</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="input-field col s4">
+            <label for="terreNatale">Terre natale :</label>
+            <input id="terreNatale" formControlName="terreNatale" type="text">
+        </div>
+
+        <div class="input-field col s4">
+            <label for="age">Âge:</label>
+            <input id="age" formControlName="age" type="number">
+        </div>
+
+        <div class="input-field col s4">
+            <label for="profession">Profession :</label>
+            <select id="profession" formControlName="profession" class="browser-default">
+                <option *ngFor="let profession of professions" [value]="profession.id">{{ profession.nom }}</option>
+            </select>
+        </div>
+    </div>
+  
+    <label for="historique">Historique :</label>
+    <textarea id="historique" formControlName="historique" class="materialize-textarea"></textarea>
+   
+  </div>

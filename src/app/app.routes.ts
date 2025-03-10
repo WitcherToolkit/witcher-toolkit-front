@@ -10,6 +10,7 @@ import { CompetencesListComponent } from './competences/competences-list/compete
 import { CaracteristiquesListComponent } from './caracteristiques/caracteristiques-list/caracteristiques-list.component';
 import { RaceListComponent } from './race/race-list/race-list.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { CreatePersonComponent } from './fiche-personnage/create-person/create-person.component';
 
 //Les routes on été externalisés, elles sont toutes regroupées dans un fichier app.routes.ts
 export const routes: Routes = [
@@ -25,6 +26,8 @@ export const routes: Routes = [
     { path: 'aptitude/caracteristique', component: CaracteristiquesListComponent },
     //Patie Classe 
     { path: 'classse/race', component: RaceListComponent },
+    //Parite fiche personnage
+    { path: 'personnage/nouveau', component: CreatePersonComponent },
 
     { path: 'home', component: HomePageComponent },
     { path: '', redirectTo: 'home', pathMatch: 'full' },
