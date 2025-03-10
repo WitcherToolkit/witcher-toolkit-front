@@ -23,13 +23,13 @@
           <div class="card-content white-text">
            
             <div *ngIf="currentStep === 1">
-              <app-part1-identity [form]="form"></app-part1-identity>
+              <app-part1 [form]="form"></app-part1>
             </div>
             <div *ngIf="currentStep === 2">
-              <app-part2-origin [form]="form"></app-part2-origin>
+              <app-part2 [form]="form"></app-part2>
             </div>
             <div *ngIf="currentStep === 3">
-              <app-part3-characteristic [form]="form"></app-part3-characteristic>
+              <app-part3 [form]="form"></app-part3>
             </div>
 
           </div>

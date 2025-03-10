@@ -5,7 +5,7 @@ import { RACE_LIST } from '../../../fake-data-set/race-fake';
 import { PROFESSION_LIST } from '../../../fake-data-set/profession-fake';
 
 @Component({
-  selector: 'app-part1-identity',
+  selector: 'app-part1',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './part1.component.html',
@@ -19,8 +19,6 @@ export class Part1Component implements OnInit {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
-    console.log(RACE_LIST)
-    console.log(PROFESSION_LIST)
     this.form.addControl('nomPersonnage', this.fb.control(''));
     this.form.addControl('nomJoueur', this.fb.control(''));
     this.form.addControl('genre', this.fb.control(''));

@@ -1,10 +1,50 @@
-<div>
-    <label for="age">Âge:</label>
-    <input id="age" formControlName="age" type="number">
-  
-    <label for="gender">Sexe:</label>
-    <select id="gender" formControlName="name">
-      <option value="male">Homme</option>
-      <option value="female">Femme</option>
-    </select>
+<div [formGroup]="form">
+  <div class="row"></div>
+    <div formArrayName="caracteristiquePersonnage">
+    
+      <div class="col s4">
+        <div *ngFor="let caracteristiqueCtrl of caracteristiquePersonnage.controls; let i = index" [formGroupName]="i">
+          <div *ngIf="isEditable(caracteristiqueCtrl.value.code)" class="row">
+            <div class="col s12">
+              <label>{{ caracteristiqueCtrl.value.code }}</label>
+              <input type="number" formControlName="valeurMax" [readonly]="!caracteristiqueCtrl.get('valeurMax')?.enabled">
+              <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.invalid && (caracteristiqueCtrl.get('valeurMax')?.dirty || caracteristiqueCtrl.get('valeurMax')?.touched)">
+                <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['required']">Valeur requise.</div>
+                <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['min']">Valeur minimale: 3.</div>
+                <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['max']">Valeur maximale: 10.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col s1"></div>
+      <div class="col s3">
+        <div *ngFor="let caracteristiqueCtrl of caracteristiquePersonnage.controls; let i = index" [formGroupName]="i">
+          <div *ngIf="!isEditable(caracteristiqueCtrl.value.code)" class="row">
+            <div class="col s12">
+              <label>{{ caracteristiqueCtrl.value.code }}</label>
+              <input type="number" formControlName="valeurMax" [readonly]="!caracteristiqueCtrl.get('valeurMax')?.enabled">
+              <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.invalid && (caracteristiqueCtrl.get('valeurMax')?.dirty || caracteristiqueCtrl.get('valeurMax')?.touched)">
+                <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['required']">Valeur requise.</div>
+                <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['min']">Valeur minimale: 3.</div>
+                <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['max']">Valeur maximale: 10.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col s1"></div>
+    <div class="col s3">
+      <label>Poings</label>
+      <input type="text" formControlName="poings" readonly>
+    
+      <label>Pieds</label>
+      <input type="text" formControlName="pieds" readonly>
+    </div>
+  </div>
+
+  <div class="row">
+    
 </div>
