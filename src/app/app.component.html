@@ -5,18 +5,21 @@
   <li><a [routerLink]="['/grimoire/rituel']">Rituels</a></li>
   <li><a [routerLink]="['/grimoire/envoutement']">Envoûtement</a></li>
 </ul>
+
 <ul id="dropdown2" class="dropdown-content grey darken-3">
   <li><a>Aptitudes</a></li>
   <li class="divider"></li>
   <li><a [routerLink]="['/aptitude/caracteristique']">Caractéristiques</a></li>
   <li><a [routerLink]="['/aptitude/competence']">Compétences</a></li>
 </ul>
+
 <ul id="dropdown2" class="dropdown-content grey darken-3">
   <li><a >Classes</a></li>
   <li class="divider"></li>
-  <li><a >Races</a></li>
+  <li><a [routerLink]="['/classse/race']">Races</a></li>
   <li><a >Professions</a></li>
 </ul>
+
 <nav>
   <div class="nav-wrapper grey darken-3">
     <a [routerLink]="['/home']" class="brand-logo right">Witcher Toolkit</a>
@@ -32,6 +35,7 @@
   <router-outlet></router-outlet>
 </main>
 
+<!--
 <footer class="page-footer grey darken-3">
   <div class="container">
     <div class="row">
@@ -55,6 +59,7 @@
     </div>
   </div>
 </footer>
+-->
 
 <script>
 $( document ).ready(function() {

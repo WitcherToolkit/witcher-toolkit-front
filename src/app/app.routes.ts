@@ -8,6 +8,8 @@ import { SortsDetailComponent } from './sorts/sorts-detail/sorts-detail.componen
 import { SortsListComponent } from './sorts/sorts-list/sorts-list.component';
 import { CompetencesListComponent } from './competences/competences-list/competences-list.component';
 import { CaracteristiquesListComponent } from './caracteristiques/caracteristiques-list/caracteristiques-list.component';
+import { RaceListComponent } from './race/race-list/race-list.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 //Les routes on été externalisés, elles sont toutes regroupées dans un fichier app.routes.ts
 export const routes: Routes = [
@@ -21,7 +23,11 @@ export const routes: Routes = [
     //Partie Aptitudes
     { path: 'aptitude/competence', component: CompetencesListComponent },
     { path: 'aptitude/caracteristique', component: CaracteristiquesListComponent },
+    //Patie Classe 
+    { path: 'classse/race', component: RaceListComponent },
 
     { path: 'home', component: HomePageComponent },
-    { path: '', redirectTo: 'home', pathMatch: 'full' }
+    { path: '', redirectTo: 'home', pathMatch: 'full' },
+    
+    { path: '**', component: PageNotFoundComponent } //Page 404, a laisser en dernier !
 ];
