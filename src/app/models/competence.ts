@@ -7,7 +7,7 @@ export interface Competence {
     description: string;
     specialisation?: string;
     exclusif: boolean;
-    caracteritique?: Caracteristique
+    caracteristique?: Caracteristique
     tags?: string[];
     professions?: Profession[];
 }

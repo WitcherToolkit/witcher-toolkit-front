@@ -1,0 +1,35 @@
+.card-image-square {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+    overflow: hidden;
+
+    img {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.card-content-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 180px!important;//a adapter pas la suite en fonction du texte qu'il y aura.
+}
+
+.card-content {
+    flex-grow: 1;
+}
+
+.card .card-action { /* Sélecteur spécifique pour card-action */
+    position: static; /* Rétablit le comportement normal */
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.card.medium { 
+    margin-bottom: 250px; 
+}

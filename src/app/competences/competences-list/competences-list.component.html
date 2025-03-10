@@ -1,24 +1,52 @@
 <h1 class="center-align">Les compétences</h1>
 
-<table class="highlight">
-    <thead>
-      <tr>
-          <th>Nom</th>
-          <th>Caractéristique</th>
-          <th>Description</th>
-      </tr>
-    </thead>
+<div class="container mb-5">
+  <div class="row">
+    <div class="col-4 offset-4">
+      <div class="card">
+        <form class="card-body">
+          <div class="form-group">
+            <div class="row">
+              <div class="col s3"></div>
+              <div class="input-field col s6">
+                <i class="material-icons prefix">search</i>
+                <input id="icon_prefix" type="text" name="searchTerm" class="validate"  #searchField [value]="searchTerm()" (input)="searchTerm.set(searchField.value)">
+                <label for="icon_prefix">Rechercher une compétence</label>
+              </div>
+              <div class="col s3"></div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <tbody>
-      <tr>
-        <td>Connaissance de la rue</td>
-        <td>INT</td>
-        <td><a class="waves-effect waves-light btn">Plus d'infos</a></td>
-      </tr>
-      <tr>
-        <td>Compagnon</td>
-        <td>TECH</td>
-        <td><a class="waves-effect waves-light btn">Plus d'infos</a></td>
-      </tr>
-    </tbody>
-</table>
+<div class="container">
+  <div class="row">
+    
+    <!-- Afficher le message "Aucun résultat" si la liste est vide -->
+    <div *ngIf="competencesListFiltered().length === 0" class="col-12 text-center">
+      <p>Aucun résultat</p>
+    </div>
+
+    <!-- Afficher les cartes des compétences filtrées -->
+    
+    <div *ngFor="let competence of competencesListFiltered(); trackBy: trackById">
+
+      <div class="col s12 m4">
+        <div class="card horizontal">
+          <div class="card-stacked">
+            <span class="card-title">{{ competence.nom }} <span *ngIf="competence.caracteristique">({{ competence.caracteristique.code }})</span></span>
+            <div class="card-content">
+              <p>{{ competence.description }}</p>
+            </div>
+            <div class="card-action">
+              <a href="#">VOIR</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>    
+  </div>
+</div>
