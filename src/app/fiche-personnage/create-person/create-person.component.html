@@ -1,48 +1,60 @@
 <div>
   <div class="row">
     <div class="col s1"> </div>
+    
     <div class="col s10">
       <h1 class="center-align">Créer un personnage</h1>
       <nav>
         <div class="nav-wrapper grey darken-3">
           <div class="col s12">
-            <a [class.active]="currentStep === 1" (click)="goToStep(1)" class="breadcrumb">Partie 1</a>
-            <a [class.active]="currentStep === 2" (click)="goToStep(2)" class="breadcrumb">Partie 2</a>
-            <a [class.active]="currentStep === 3" (click)="goToStep(3)" class="breadcrumb">Partie 3</a>
+            <a [appHighlight]="currentStep === 1" (click)="goToStep(1)" class="breadcrumb">Identité</a>
+            <a [appHighlight]="currentStep === 2" (click)="goToStep(2)" class="breadcrumb">Caractéristiques</a>
+            <a [appHighlight]="currentStep === 3" (click)="goToStep(3)" class="breadcrumb">Compétences</a>
           </div>
         </div>
       </nav>
     </div>
+
     <div class="col s1"> </div>
   </div>
 
-    <div class="row">
-      <div class="col s1"> </div>
-      <div class="col s10">
-        <div class="card darken-1">
-          <div class="card-content white-text">
-           
-            <div *ngIf="currentStep === 1">
-              <app-part1 [form]="form"></app-part1>
-            </div>
-            <div *ngIf="currentStep === 2">
-              <app-part2 [form]="form"></app-part2>
-            </div>
-            <div *ngIf="currentStep === 3">
-              <app-part3 [form]="form"></app-part3>
-            </div>
+  <div class="row">
+    <div class="col s1"> </div>
+    
+    <div class="col s10">
+      <div class="progress">
+        <div class="determinate" [style.width]="getProgressWidth()"></div>
+      </div>
+    </div>
 
+    <div class="col s1"> </div>
+  </div>
+
+  <div class="row">
+    <div class="col s1"> </div>
+    <div class="col s10">
+      <div class="card darken-1">
+        <div class="card-content white-text">
+          
+          <div *ngIf="currentStep === 1">
+            <app-part1 [form]="form"></app-part1>
           </div>
-          <div class="card-action">
-        
-            <button class="waves-light btn grey darken-3" (click)="previousStep()" [disabled]="currentStep === 1">Précédent</button>
-            <button class="waves-light btn grey darken-3" (click)="nextStep()" [disabled]="currentStep === 3">Suivant</button>
-            <button class="waves-light btn grey darken-3" (click)="submitForm()" [disabled]="currentStep !== 3">Soumettre</button>
+          <div *ngIf="currentStep === 2">
+            <app-part2 [form]="form"></app-part2>
           </div>
+          <div *ngIf="currentStep === 3">
+            <app-part3 [form]="form"></app-part3>
+          </div>
+
+        </div>
+        <div class="card-action">
+          <button class="waves-light btn grey darken-3" (click)="previousStep()" [disabled]="currentStep === 1">Précédent</button>
+          <button class="waves-light btn grey darken-3" (click)="nextStep()" [disabled]="currentStep === 3">Suivant</button>
+          <button class="waves-light btn grey darken-3" (click)="submitForm()" [disabled]="currentStep !== 3">Soumettre</button>
         </div>
       </div>
-      <div class="col s1"> </div>
     </div>
-             
-  
+    <div class="col s1"> </div>
+  </div>
+
 </div>
