@@ -1,26 +1,52 @@
-<p>caracteristiques-list works!</p>
 <h1 class="center-align">Les caractéristiques</h1>
 
-<table class="highlight">
-    <thead>
-      <tr>
-          <th>Nom</th>
-          <th>Code</th>
-          <th>Caractéristiques</th>
-      </tr>
-    </thead>
+<div class="container mb-5">
+  <div class="row">
+    <div class="col-4 offset-4">
+      <div class="card">
+        <form class="card-body">
+          <div class="form-group">
+            <div class="row">
+              <div class="col s3"></div>
+              <div class="input-field col s6">
+                <i class="material-icons prefix">search</i>
+                <input id="icon_prefix" type="text" name="searchTerm" class="validate"  #searchField [value]="searchTerm()" (input)="searchTerm.set(searchField.value)">
+                <label for="icon_prefix">Rechercher une caracteristique</label>
+              </div>
+              <div class="col s3"></div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <tbody>
-      <tr>
-        <td>Intelligence</td>
-        <td>INT</td>
-        <td>Permet de résoudre des énigmes, de réaliser des expériences scientifiques, de construire des raisonnements logiques…</td>
-      </tr>
-      <tr>
-        <td>Réflexes</td>
-        <td>RÉF</td>
-        <td>Sert à combattre, esquiver et effectuer des actions nécessitant des réactions rapides et des gestes précis.</td>
-      </tr>
-    </tbody>
-</table>
+<div class="container">
+  <div class="row">
+    
+    <!-- Afficher le message "Aucun résultat" si la liste est vide -->
+    <div *ngIf="caracteristiquesListFiltered().length === 0" class="col-12 text-center">
+      <p>Aucun résultat</p>
+    </div>
 
+    <!-- Afficher les cartes des caracteristique filtrées -->
+    
+    <div *ngFor="let caracteristique of caracteristiquesListFiltered(); trackBy: trackById">
+
+      <div class="col s12 m4">
+        <div class="card horizontal">
+          <div class="card-stacked">
+            <span class="card-title center-align">{{ caracteristique.nom }} ({{ caracteristique.code }})</span>
+            <div class="card-content">
+              <p>{{ caracteristique.description }}</p>
+            </div>
+            <div class="card-action">
+              <a href="#">VOIR</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>    
+  </div>
+</div>

@@ -1,5 +1,5 @@
-export const INTELLIGENCE =   { id: 1, code:"INT", nom: "Intelligence", description: "Capacité à comprendre et à apprendre" };
-export const REFLEXES =       { id: 2, code:"RÉF", nom: "Réflexes", description: "Capacité à réagir rapidement" };
+export const INTELLIGENCE =   { id: 1, code:"INT", nom: "Intelligence", description: "Permet de résoudre des énigmes, de réaliser des expériences scientifiques, de construire des raisonnements logiques…" };
+export const REFLEXES =       { id: 2, code:"RÉF", nom: "Réflexes", description: "Sert à combattre, esquiver et effectuer des actions nécessitant des réactions rapides et des gestes précis." };
 export const DEXTERITE =      { id: 3, code:"DEX", nom: "Dextérité", description: "Capacité à manipuler des objets" };
 export const CORPS =          { id: 4, code:"COR", nom: "Corps", description: "Capacité à encaisser des dégâts" };
 export const VITESSE =        { id: 5, code:"VIT", nom: "Vitesse", description: "Capacité à se déplacer rapidement" };

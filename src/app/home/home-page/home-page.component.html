@@ -46,15 +46,15 @@
         <div class="card medium">
             <div class="card-image card-image-square">
             <img src="img/don.jpg">
-            <span class="card-title">Les classes</span>
+            <span class="card-title">Les aptitudes</span>
           </div>
           <div class="card-content-wrapper">
             <div class="card-content">
               <p>Le wiki des classes, les professions, les races, les compétences etc...</p>
             </div>
             <div class="card-action">
-              <a >Professions</a>
-              <a >Races</a>
+              <a [routerLink]="['/aptitude/caracteristique']">Caractéristiques</a>
+              <a [routerLink]="['/aptitude/competence']">Compétences</a>
             </div>
           </div>
         </div>
@@ -72,7 +72,7 @@
             </div>
             <div class="card-action">
               <a >Jobs</a>
-              <a >Races</a>
+              <a [routerLink]="['/classse/race']">Races</a>
             </div>
           </div>
         </div>
