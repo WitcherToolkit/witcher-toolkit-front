@@ -5,10 +5,9 @@ import { Race } from '../models/race';
 @Injectable({
   providedIn: 'root'
 })
-export class RaceService {
+export class RacesService {
 
   getRacesList() : Race[] {
-    console.log(RACE_LIST)
     return RACE_LIST;
   }
 }

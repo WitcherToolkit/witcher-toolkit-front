@@ -8,9 +8,10 @@ import { SortsDetailComponent } from './sorts/sorts-detail/sorts-detail.componen
 import { SortsListComponent } from './sorts/sorts-list/sorts-list.component';
 import { CompetencesListComponent } from './competences/competences-list/competences-list.component';
 import { CaracteristiquesListComponent } from './caracteristiques/caracteristiques-list/caracteristiques-list.component';
-import { RaceListComponent } from './race/race-list/race-list.component';
+import { RacesListComponent } from './races/races-list/races-list.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { CreatePersonComponent } from './fiche-personnage/create-person/create-person.component';
+import { ProfessionsListComponent } from './professions/professions-list/professions-list.component';
 
 //Les routes on été externalisés, elles sont toutes regroupées dans un fichier app.routes.ts
 export const routes: Routes = [
@@ -25,7 +26,8 @@ export const routes: Routes = [
     { path: 'aptitude/competence', component: CompetencesListComponent },
     { path: 'aptitude/caracteristique', component: CaracteristiquesListComponent },
     //Patie Classe 
-    { path: 'classse/race', component: RaceListComponent },
+    { path: 'classe/race', component: RacesListComponent },
+    { path: 'classe/profession', component: ProfessionsListComponent },
     //Parite fiche personnage
     { path: 'personnage/nouveau', component: CreatePersonComponent },
 

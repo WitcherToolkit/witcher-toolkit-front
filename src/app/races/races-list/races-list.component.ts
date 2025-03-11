@@ -1,20 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { RACE_LIST } from '../../fake-data-set/race-fake';
-import { RaceService } from '../race.service';
+import { RacesService } from '../races.service';
 
 @Component({
-    selector: 'app-race-list',
+    selector: 'app-races-list',
     standalone: true,
     imports: [CommonModule],
-    templateUrl: './race-list.component.html',
-    styleUrls: ['race-list.component.scss']
+    templateUrl: './races-list.component.html',
+    styleUrls: ['races-list.component.scss']
 })
-export class RaceListComponent {
+export class RacesListComponent {
 
-    readonly races = signal(RACE_LIST);
-    readonly #raceService = inject(RaceService);
-    readonly racesList = signal(this.#raceService.getRacesList());
+    readonly race = signal(RACE_LIST);
+    readonly #racesService = inject(RacesService);
+    readonly racesList = signal(this.#racesService.getRacesList());
     readonly searchTerm = signal('');
 
     readonly racesListFiltered = computed(() => {
