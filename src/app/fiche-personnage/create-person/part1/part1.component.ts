@@ -1,7 +1,7 @@
 import { CommonModule, JsonPipe } from '@angular/common';
 import { Component, Input, OnInit, Signal, signal, computed } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormArray, FormControl } from '@angular/forms';
-import { RACE_LIST } from '../../../fake-data-set/race-fake';
+import { RACE_LIST, RACE_MAP } from '../../../fake-data-set/race-fake';
 import { PROFESSION_LIST, PROFESSION_MAP } from '../../../fake-data-set/profession-fake';
 import { ARTISAN_INVENTAIRE, BARDE_INVENTAIRE, CRIMINEL_INVENTAIRE, DOCTEUR_INVENTAIRE, HOMME_D_ARME_INVENTAIRE, MAGE_INVENTAIRE, MARCHAND_INVENTAIRE, NOBLE_INVENTAIRE, PRETRE_INVENTAIRE, SORCELEUR_INVENTAIRE } from '../../../fake-data-set/inventaire-fake';
 import { Inventaire } from '../../../models/inventaire';
@@ -17,6 +17,7 @@ export class Part1Component implements OnInit {
   @Input() form!: FormGroup;
   races = RACE_LIST;
   professions = PROFESSION_LIST;
+  filteredProfessions: any[] = [];
   selectedInventaire!: FormArray;
   professionSignal = signal<number | null>(null);
   inventaireSignal: Signal<any[]>;
@@ -49,6 +50,26 @@ export class Part1Component implements OnInit {
     this.form.get('profession')?.valueChanges.subscribe(professionId => {
       this.professionSignal.set(professionId);
     });
+    this.form.get('race')?.valueChanges.subscribe(raceId => {
+      this.filterProfessions(raceId);
+    });
+    // Initialiser les professions filtrées
+    this.filteredProfessions = this.professions;
+  }
+
+  filterProfessions(raceId: number) {
+    const sorceleurProfessionId = Object.keys(PROFESSION_MAP).find(key => PROFESSION_MAP[+key] === 'Sorceleur');
+    const sorceleurRaceId = Object.keys(RACE_MAP).find(key => RACE_MAP[+key] === 'Sorceleur');
+
+    if (raceId.toString() === sorceleurRaceId) {
+      this.filteredProfessions = this.professions.filter(profession => profession.nom === 'Sorceleur');
+      this.form.get('profession')?.setValue(sorceleurProfessionId);
+    } else {
+      this.filteredProfessions = this.professions.filter(profession => profession.nom !== 'Sorceleur');
+      if (this.form.get('profession')?.value === sorceleurProfessionId) {
+        this.form.get('profession')?.setValue(null);
+      }
+    }
   }
 
   //Affichage de l'inventaire disponible en fonction de la profession
