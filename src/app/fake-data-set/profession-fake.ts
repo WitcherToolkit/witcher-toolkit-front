@@ -21,3 +21,8 @@ export const PROFESSION_LIST = [
     DOCTEUR,
     NOBLE
 ]
+
+export const PROFESSION_MAP: { [key: number]: string } = PROFESSION_LIST.reduce((map, profession) => {
+    map[profession.id] = profession.nom;
+    return map;
+  }, {} as { [key: number]: string });

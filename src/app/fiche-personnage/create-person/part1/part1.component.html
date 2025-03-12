@@ -1,20 +1,21 @@
-<!-- utiliser [formGroup]="form" pour lier le formulaire à la classe du composant --> 
+<!-- utiliser [formGroup]="form" pour lier le formulaire à la classe du composant -->
+
 <div [formGroup]="form">
     <div class="row">
         <div class="input-field col s4">
-            <label for="nomPersonnage">Nom du personnage :</label>
+            <label for="nomPersonnage">Nom du personnage</label>
             <input id="nomPersonnage" formControlName="nomPersonnage" type="text">
         </div>
         
         <div class="input-field col s4">
-            <label for="nomJoueur">Nom du joueur :</label>
+            <label for="nomJoueur">Nom du joueur</label>
             <input id="nomJoueur" formControlName="nomJoueur" type="text">
         </div>
         
         <div class="input-field col s3">
-            <label for="race">Race :</label>
-            <select id="race" formControlName="race" class="browser-default">
-                <option *ngFor="let race of races" [value]="race.id">{{ race.nom }}</option>
+            <select #raceSelect id="race" formControlName="race" class="browser-default">
+              <option value="">Race</option>
+              <option *ngFor="let race of races" [value]="race.id">{{ race.nom }}</option>
             </select>
         </div>
         
@@ -34,24 +35,60 @@
 
     <div class="row">
         <div class="input-field col s4">
-            <label for="terreNatale">Terre natale :</label>
+            <label for="terreNatale">Terre natale</label>
             <input id="terreNatale" formControlName="terreNatale" type="text">
         </div>
 
         <div class="input-field col s4">
-            <label for="age">Âge:</label>
+            <label for="age">Âge</label>
             <input id="age" formControlName="age" type="number">
         </div>
 
         <div class="input-field col s4">
-            <label for="profession">Profession :</label>
-            <select id="profession" formControlName="profession" class="browser-default">
-                <option *ngFor="let profession of professions" [value]="profession.id">{{ profession.nom }}</option>
+            <select #professionSelect id="profession" formControlName="profession" class="browser-default">
+              <option value="">Profession</option>
+              <option *ngFor="let profession of professions" [value]="profession.id">{{ profession.nom }}</option>
             </select>
         </div>
     </div>
+
+    <div class="row">
+        <form class="col s12">
+          <div class="row">
+            <div class="input-field col s12">
+              <textarea id="historique" class="materialize-textarea"></textarea>
+              <label for="textarea1">Historique</label>
+            </div>
+          </div>
+        </form>
+    </div>
+
+    <div class="row">
+        <div class="col s12">
+          <label>Dans l'inventaire :</label>
+          <div class="row">
+            <div *ngFor="let item of selectedInventaire.controls" class="chip">
+              {{ item.value }}
+              <i class="close material-icons" (click)="removeChip(item.value)">close</i>
+            </div>
+          </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col s12">
+          <label>Inventaire</label>
+          <div class="row">
+            <div *ngFor="let item of inventaireSignal(); let i = index" class="col s4">
+              <p>
+                <label>
+                  <input type="checkbox" [value]="item.nom" (change)="onCheckboxChange($event)">
+                  <span>{{ item.nom }}</span>
+                </label>
+              </p>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
   
-    <label for="historique">Historique :</label>
-    <textarea id="historique" formControlName="historique" class="materialize-textarea"></textarea>
-   
-  </div>

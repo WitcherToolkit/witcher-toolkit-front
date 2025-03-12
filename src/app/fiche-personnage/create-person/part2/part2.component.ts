@@ -3,6 +3,7 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CARACTERISTIQUE_LIST } from '../../../fake-data-set/caracteristiques-fake';
 import { Subscription } from 'rxjs';
+import { RACE_MAP } from '../../../fake-data-set/race-fake';
 
 @Component({
   selector: 'app-part2',
@@ -19,6 +20,7 @@ export class Part2Component implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
+    console.log(`Initialisation étape 2:`, this.form.value);
     const caracteristiquePersonnageArray = this.fb.array(
       this.caracteristiques.map(caracteristique => {
         const isEditable = this.isEditable(caracteristique.code);
@@ -88,10 +90,11 @@ export class Part2Component implements OnInit, OnDestroy {
     const sautValue = Math.floor(couValue / 5);
 
     // Vérifier la race et ajuster l'encombrement si nécessaire
-    const race = this.form.get('race')?.value;
-    if (race === 'Nain') {
-      encValue += 25;
-    }
+  const raceId = this.form.get('race')?.value;
+  const raceName = RACE_MAP[raceId];
+  if (raceName === 'Nain') {
+    encValue += 25;
+  }
 
     this.setDerivedValue('ENC', encValue);
     this.setDerivedValue('COU', couValue);

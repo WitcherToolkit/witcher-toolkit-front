@@ -32,12 +32,14 @@ export class CreatePersonComponent {
 
   nextStep() {
     if (this.currentStep < 3) {
+      console.log(`Etape ${this.currentStep} :`, this.form.value);
       this.currentStep++;
     }
   }
 
   previousStep() {
     if (this.currentStep > 1) {
+      console.log(`Etape ${this.currentStep} :`, this.form.value);
       this.currentStep--;
     }
   }

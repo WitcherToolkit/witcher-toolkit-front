@@ -1,7 +1,13 @@
-<div>
-    <label for="email">Email:</label>
-    <input id="email" formControlName="email" type="email">
-  
-    <label for="description">Description:</label>
-    <textarea id="description" formControlName="description"></textarea>
+<p>Dépensez 44 points dans les compétences. Points restant à répenser :</p>
+<div [formGroup]="form">
+    <div class="row">
+      <form class="col s12">
+        <div class="row" formArrayName="competences">
+          <div *ngFor="let competenceCtrl of competencesArray.controls; let i = index" [formGroupName]="i" class="input-field col s2">
+            <input type="number" formControlName="valeurMax" class="validate">
+            <label>{{ competenceCtrl.value.competence.nom }} ({{ competenceCtrl.value.competence.caracteristique.code }})</label>
+          </div>
+        </div>
+      </form>
+    </div>
 </div>

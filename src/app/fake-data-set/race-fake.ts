@@ -15,3 +15,7 @@ export const RACE_LIST: RaceList = [
     HALFELIN,
     SORCELEUR_RACE
 ]
+export const RACE_MAP: { [key: number]: string } = RACE_LIST.reduce((map, race) => {
+    map[race.id] = race.nom;
+    return map;
+  }, {} as { [key: number]: string });
