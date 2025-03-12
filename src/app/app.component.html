@@ -1,23 +1,23 @@
 <ul id="dropdown1" class="dropdown-content grey darken-3">
   <li><a>Grimoire</a></li>
   <li class="divider"></li>
-  <li><a [routerLink]="['/grimoire/magie']">Magie</a></li>
-  <li><a [routerLink]="['/grimoire/rituel']">Rituels</a></li>
-  <li><a [routerLink]="['/grimoire/envoutement']">Envoûtement</a></li>
+  <li><a [routerLink]="['/' + magieBasePath + '/magie']">Magie</a></li>
+  <li><a [routerLink]="['/' + rituelBasePath + '/rituel']">Rituels</a></li>
+  <li><a [routerLink]="['/' + envoutementBasePath + '/envoutement']">Envoûtement</a></li>
 </ul>
 
 <ul id="dropdown2" class="dropdown-content grey darken-3">
   <li><a>Aptitudes</a></li>
   <li class="divider"></li>
-  <li><a [routerLink]="['/aptitude/caracteristique']">Caractéristiques</a></li>
-  <li><a [routerLink]="['/aptitude/competence']">Compétences</a></li>
+  <li><a [routerLink]="['/' + caracteristiqueBasePath + '/caracteristique']">Caractéristiques</a></li>
+  <li><a [routerLink]="['/' + competenceBasePath + '/competence']">Compétences</a></li>
 </ul>
 
 <ul id="dropdown2" class="dropdown-content grey darken-3">
   <li><a >Classes</a></li>
   <li class="divider"></li>
-  <li><a [routerLink]="['/classe/race']">Races</a></li>
-  <li><a [routerLink]="['/classe/profession']">Professions</a></li>
+  <li><a [routerLink]="['/' + raceBasePath + '/race']">Races</a></li>
+  <li><a [routerLink]="['/' + professionBasePath + '/profession']">Professions</a></li>
 </ul>
 
 <nav>
