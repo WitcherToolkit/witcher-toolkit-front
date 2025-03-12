@@ -1,5 +1,6 @@
 import { Caracteristique } from "./caracteristique";
 import { CaracteristiquePersonnage } from "./caracteristique-personnage";
+import { Inventaire } from "./inventaire";
 import { Profession } from "./profession";
 import { Race } from "./race";
 
@@ -19,6 +20,7 @@ export interface Personnage {
     caracteristiquePersonnage : CaracteristiquePersonnage[];
     pieds: string;
     poings: string;
+    inventaires : Inventaire[];
     //campagne : Campagne;
     //user : User;
 }
