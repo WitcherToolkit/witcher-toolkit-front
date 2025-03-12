@@ -39,19 +39,24 @@ export class Part1Component implements OnInit {
     this.form.addControl('profession', this.fb.control(''));
     this.form.addControl('race', this.fb.control(''));
     this.form.addControl('inventaires', this.fb.control([]));
-
+  
     this.form.addControl('selectedInventaire', this.selectedInventaire); // pour qu'il soit bien initialité
-
-    //Appel des changements dans le formulaire
+  
+    // Écouteur pour les changements de profession
+    this.form.get('profession')?.valueChanges.subscribe((professionId) => {
+      this.professionSignal.set(professionId);
+      this.resetSelections();  // Réinitialiser les sélections lors du changement de profession
+    });
+  
+    // Appel des changements dans le formulaire
     this.form.get('selectedInventaire')?.valueChanges.subscribe(() => {
       this.convertInventaireToObject();
     });
-    this.form.get('profession')?.valueChanges.subscribe(professionId => {
-      this.professionSignal.set(professionId);
-    });
-    this.form.get('race')?.valueChanges.subscribe(raceId => {
+  
+    this.form.get('race')?.valueChanges.subscribe((raceId) => {
       this.filterProfessions(raceId);
     });
+  
     // Initialiser les professions filtrées
     this.filteredProfessions = this.professions;
   }
@@ -134,8 +139,13 @@ export class Part1Component implements OnInit {
 
   //Comportement des checkbox
   onCheckboxChange(e: any) {
+    const maxItems = this.getMaxInventaireItems();
     if (e.target.checked) {
-      this.selectedInventaire.push(new FormControl(e.target.value));
+      if (this.selectedInventaire.length < maxItems) {
+        this.selectedInventaire.push(new FormControl(e.target.value));
+      } else {
+        e.target.checked = false; // Empêche de cocher plus d'éléments que la limite
+      }
     } else {
       const index = this.selectedInventaire.controls.findIndex(x => x.value === e.target.value);
       if (index !== -1) {
@@ -144,14 +154,77 @@ export class Part1Component implements OnInit {
     }
     this.convertInventaireToObject();
   }
+  
+  // Détermine la limite max d'objets en fonction de la profession
+  getMaxInventaireItems(): number {
+    const professionId = this.form.get('profession')?.value;
+    const professionName = PROFESSION_MAP[professionId || 0];
+  
+    if (professionName === 'Sorceleur') return 2;
+    if (professionName === 'Marchand') return 3;
+    return 5; // Par défaut, 5 objets max
+  }
+  
+  // Vérifie si on doit désactiver les checkboxes
+  isCheckboxDisabled(item: any): boolean {
+    const maxItems = this.getMaxInventaireItems();
+    return this.selectedInventaire.length >= maxItems && !this.selectedInventaire.controls.some(control => control.value === item.nom);
+  }
 
-  //Comportement des chips
   removeChip(item: string) {
+    // Supprimer l'élément de l'inventaire sélectionné
     const index = this.selectedInventaire.controls.findIndex(x => x.value === item);
     if (index >= 0) {
       this.selectedInventaire.removeAt(index);
     }
+  
+    // Désactiver visuellement la checkbox correspondante
+    this.updateCheckboxState();
+  
+    // Mettre à jour les objets d'inventaire après suppression
     this.convertInventaireToObject();
   }
+  
+  updateCheckboxState() {
+    const maxItems = this.getMaxInventaireItems();
+    const selectedCount = this.selectedInventaire.length;
+  
+    // On réactive toutes les checkboxes si la limite n'est plus atteinte
+    if (selectedCount < maxItems) {
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      checkboxes.forEach((checkbox: any) => {
+        if (!checkbox.checked) {
+          checkbox.disabled = false;
+        }
+      });
+    }
+  
+    // Assurer que les checkboxes sont décochées si nécessaire
+    const selectedItems = this.selectedInventaire.controls.map(control => control.value);
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    
+    checkboxes.forEach((checkbox: any) => {
+      const checkboxValue = checkbox.value;
+      // Si l'élément est supprimé, décocher la checkbox
+      if (selectedItems.indexOf(checkboxValue) === -1) {
+        checkbox.checked = false;
+      }
+    });
+  }
+  // Fonction pour réinitialiser les sélections
+  resetSelections() {
+    // Réinitialiser les chips
+    this.selectedInventaire.clear();
 
+    // Réinitialiser les checkboxes : décocher et réactiver les checkboxes
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach((checkbox: any) => {
+      checkbox.checked = false;
+      checkbox.disabled = false;  // Réactiver les checkboxes pour la nouvelle profession
+    });
+    
+    // Mettre à jour l'inventaire en fonction de la nouvelle profession
+    this.convertInventaireToObject();
+  }
+    
 }

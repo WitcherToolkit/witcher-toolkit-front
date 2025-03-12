@@ -80,7 +80,7 @@
         <div *ngFor="let item of inventaireSignal(); let i = index" class="col s4">
           <p>
             <label>
-              <input type="checkbox" [value]="item.nom" (change)="onCheckboxChange($event)">
+              <input type="checkbox"  [value]="item.nom" (change)="onCheckboxChange($event)" [disabled]="isCheckboxDisabled(item)">
               <span>{{ item.nom }}</span>
             </label>
           </p>
@@ -88,5 +88,6 @@
       </div>
     </div>
   </div>
+  
 </div>
   
