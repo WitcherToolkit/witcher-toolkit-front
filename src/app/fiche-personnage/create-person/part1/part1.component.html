@@ -11,9 +11,9 @@
     </div>
     
     <div class="input-field col s3">
-          <select #raceSelect id="race" formControlName="race" class="browser-default">
-            <option value="">Race</option>
-        <option *ngFor="let race of races" [value]="race.id">{{ race.nom }}</option>
+        <select #raceSelect id="race" formControlName="race" class="browser-default">
+          <option value="">Choisir Race</option>
+          <option *ngFor="let race of races" [value]="race.id">{{ race.nom }}</option>
       </select>
     </div>
     
@@ -44,7 +44,7 @@
 
     <div class="input-field col s4">
       <select #professionSelect id="profession" formControlName="profession" class="browser-default">
-            <option value="">Profession</option>
+            <option value="">Choisir Profession</option>
         <option *ngFor="let profession of filteredProfessions" [value]="profession.id">{{ profession.nom }}</option>
       </select>
     </div>

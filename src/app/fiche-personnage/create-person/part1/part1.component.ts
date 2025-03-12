@@ -38,7 +38,6 @@ export class Part1Component implements OnInit {
     this.form.addControl('historique', this.fb.control(''));
     this.form.addControl('profession', this.fb.control(''));
     this.form.addControl('race', this.fb.control(''));
-    //this.form.addControl('inventaires', this.fb.array([]));
     this.form.addControl('inventaires', this.fb.control([]));
 
     this.form.addControl('selectedInventaire', this.selectedInventaire); // pour qu'il soit bien initialité
@@ -58,16 +57,39 @@ export class Part1Component implements OnInit {
   }
 
   filterProfessions(raceId: number) {
+    // Récupération des IDs des professions Sorceleur et Mage
     const sorceleurProfessionId = Object.keys(PROFESSION_MAP).find(key => PROFESSION_MAP[+key] === 'Sorceleur');
+    const mageProfessionId = Object.keys(PROFESSION_MAP).find(key => PROFESSION_MAP[+key] === 'Mage');
+  
+    // Récupération des IDs des races Sorceleur, Humain et Elfe
     const sorceleurRaceId = Object.keys(RACE_MAP).find(key => RACE_MAP[+key] === 'Sorceleur');
-
+    const humainRaceId = Object.keys(RACE_MAP).find(key => RACE_MAP[+key] === 'Humain');
+    const elfeRaceId = Object.keys(RACE_MAP).find(key => RACE_MAP[+key] === 'Elfe');
+  
+    // Si la race sélectionnée est Sorceleur
     if (raceId.toString() === sorceleurRaceId) {
-      this.filteredProfessions = this.professions.filter(profession => profession.nom === 'Sorceleur');
-      this.form.get('profession')?.setValue(sorceleurProfessionId);
-    } else {
-      this.filteredProfessions = this.professions.filter(profession => profession.nom !== 'Sorceleur');
-      if (this.form.get('profession')?.value === sorceleurProfessionId) {
-        this.form.get('profession')?.setValue(null);
+      // Seule la profession Sorceleur est disponible
+      this.filteredProfessions = this.professions.filter(prof => prof.nom === 'Sorceleur');
+      this.form.get('profession')?.setValue(sorceleurProfessionId, { emitEvent: false });
+      return; 
+    }
+  
+    // Si la race sélectionnée n'est PAS Sorceleur
+    // On exclut Sorceleur de la liste des professions disponibles
+    this.filteredProfessions = this.professions.filter(prof => prof.nom !== 'Sorceleur');
+  
+    // Si la profession actuelle est Sorceleur, on la réinitialise à "Choisir Profession"
+    if (this.form.get('profession')?.value === sorceleurProfessionId) {
+      this.form.get('profession')?.setValue('', { emitEvent: false });
+    }
+  
+    // Si la race sélectionnée N'EST PAS Humain ou Elfe, on exclut Mage de la liste
+    if (![humainRaceId, elfeRaceId].includes(raceId.toString())) {
+      this.filteredProfessions = this.filteredProfessions.filter(prof => prof.nom !== 'Mage');
+  
+      // Si la profession actuelle est Mage", on la réinitialise à "Choisir Profession"
+      if (this.form.get('profession')?.value === mageProfessionId) {
+        this.form.get('profession')?.setValue('', { emitEvent: false });
       }
     }
   }
