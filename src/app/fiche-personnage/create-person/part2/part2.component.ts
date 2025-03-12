@@ -1,65 +1,97 @@
+import { Component, OnInit, OnDestroy, Input, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CARACTERISTIQUE_LIST } from '../../../fake-data-set/caracteristiques-fake';
+import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { RACE_MAP } from '../../../fake-data-set/race-fake';
+import { CARACTERISTIQUE_LIST } from '../../../fake-data-set/caracteristiques-fake';
 
 @Component({
   selector: 'app-part2',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './part2.component.html',
-  styles: ``
+  styles: ``,
 })
 export class Part2Component implements OnInit, OnDestroy {
   @Input() form!: FormGroup;
   caracteristiques = CARACTERISTIQUE_LIST;
-  subscriptions: Subscription[] = [];
 
-  constructor(private fb: FormBuilder) {}
+  subscriptions: Subscription[] = [];
+  
+  niveauJeu = signal<string>('libre');
+  pointsRestants = signal<number>(0);
+
+  constructor(private fb: FormBuilder) {
+    // Écoute les changements de niveau et met à jour les points restants
+    effect(() => {
+      this.updatePointsRestants();
+    });
+  }
 
   ngOnInit() {
     console.log(`Initialisation étape 2:`, this.form.value);
-    const caracteristiquePersonnageArray = this.fb.array(
-      this.caracteristiques.map(caracteristique => {
-        const isEditable = this.isEditable(caracteristique.code);
-        const control = this.fb.group({
-          valeurMax: [isEditable ? 3 : { value: 0, disabled: true }, [Validators.required, Validators.min(3), Validators.max(10)]],
-          valeurActuelle: [isEditable ? 3 : 0],
-          code: [caracteristique.code] // Stocker uniquement le code
-        });
-
-        if (isEditable) {
-          this.subscriptions.push(
-            control.get('valeurMax')!.valueChanges.subscribe(() => this.updateValeurActuelle())
-          );
-        }
-
-        return control;
-      })
-    );
-
-    this.form.addControl('caracteristiquePersonnage', caracteristiquePersonnageArray);
-    this.form.addControl('poings', this.fb.control({ value: '', disabled: true }));
-    this.form.addControl('pieds', this.fb.control({ value: '', disabled: true }));
-
-    // Calculer les valeurs initiales après l'initialisation du formulaire
+    this.initializeFormControls();
     this.calculateDerivedValues();
+    this.subscribeToNiveauJeuChanges();
   }
 
   ngOnDestroy() {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
+  // Initialisation des contrôles du formulaire
+  private initializeFormControls() {
+    const caracteristiquePersonnageArray = this.fb.array(
+      this.caracteristiques.map(caracteristique => this.createCaracteristiqueControl(caracteristique.code))
+    );
+
+    this.form.addControl('caracteristiquePersonnage', caracteristiquePersonnageArray);
+    this.form.addControl('poings', this.fb.control({ value: '', disabled: true }));
+    this.form.addControl('pieds', this.fb.control({ value: '', disabled: true }));
+    this.form.addControl('niveauJeu', this.fb.control('libre'));
+  }
+
+  // Création d'un contrôle pour une caractéristique
+  private createCaracteristiqueControl(code: string): FormGroup {
+    const isEditable = this.isEditable(code);
+    const control = this.fb.group({
+      valeurMax: [isEditable ? 3 : { value: 0, disabled: true }, [Validators.required, Validators.min(3), Validators.max(10)]],
+      valeurActuelle: [isEditable ? 3 : 0],
+      code: [code]
+    });
+
+    if (isEditable) {
+      this.subscriptions.push(
+        control.get('valeurMax')!.valueChanges.subscribe(() => {
+          this.updateValeurActuelle();
+          this.updatePointsRestants();
+        })
+      );
+    }
+
+    return control;
+  }
+
+  // Abonnement aux changements du niveau de jeu
+  private subscribeToNiveauJeuChanges() {
+    this.subscriptions.push(
+      this.form.get('niveauJeu')!.valueChanges.subscribe((niveau) => {
+        this.niveauJeu.set(niveau);
+      })
+    );
+  }
+
+  // Récupération du FormArray des caractéristiques
   get caracteristiquePersonnage(): FormArray {
     return this.form.get('caracteristiquePersonnage') as FormArray;
   }
 
+  // Vérification si une caractéristique est éditable
   isEditable(code: string): boolean {
     return ['INT', 'RÉF', 'DEX', 'COR', 'VIT', 'EMP', 'TECH', 'VOL', 'CHA'].includes(code);
   }
 
+  // Mise à jour des valeurs actuelles des caractéristiques
   updateValeurActuelle() {
     this.caracteristiquePersonnage.controls.forEach(control => {
       control.get('valeurActuelle')?.setValue(control.get('valeurMax')?.value);
@@ -67,6 +99,7 @@ export class Part2Component implements OnInit, OnDestroy {
     this.calculateDerivedValues();
   }
 
+  // Calcul des valeurs dérivées (PS, END, RÉC, ÉTOU, ENC, COU, SAUT, poings, pieds)
   calculateDerivedValues() {
     const corIndex = this.caracteristiques.findIndex(c => c.code === 'COR');
     const volIndex = this.caracteristiques.findIndex(c => c.code === 'VOL');
@@ -77,7 +110,6 @@ export class Part2Component implements OnInit, OnDestroy {
     const vitValue = this.caracteristiquePersonnage.at(vitIndex).get('valeurMax')?.value;
 
     const average = Math.floor((corValue + volValue) / 2);
-
     const derivedValues = this.getDerivedValues(average);
 
     this.setDerivedValue('PS', derivedValues.PS);
@@ -89,23 +121,22 @@ export class Part2Component implements OnInit, OnDestroy {
     const couValue = vitValue * 3;
     const sautValue = Math.floor(couValue / 5);
 
-    // Vérifier la race et ajuster l'encombrement si nécessaire
-  const raceId = this.form.get('race')?.value;
-  const raceName = RACE_MAP[raceId];
-  if (raceName === 'Nain') {
-    encValue += 25;
-  }
+    const raceId = this.form.get('race')?.value;
+    const raceName = RACE_MAP[raceId];
+    if (raceName === 'Nain') {
+      encValue += 25;
+    }
 
     this.setDerivedValue('ENC', encValue);
     this.setDerivedValue('COU', couValue);
     this.setDerivedValue('SAUT', sautValue);
 
-    // Calculer les valeurs de poings et pieds
     const { poings, pieds } = this.getPoingsPiedsValues(corValue);
     this.form.get('poings')?.setValue(poings);
     this.form.get('pieds')?.setValue(pieds);
   }
 
+  // Récupération des valeurs dérivées (PS, END, RÉC, ÉTOU) en fonction de la moyenne
   getDerivedValues(average: number) {
     const table: { [key: number]: { PS: number; END: number; RÉC: number; ÉTOU: number } } = {
       2: { PS: 10, END: 10, RÉC: 2, ÉTOU: 2 },
@@ -125,6 +156,7 @@ export class Part2Component implements OnInit, OnDestroy {
     return table[average] || { PS: 0, END: 0, RÉC: 0, ÉTOU: 0 };
   }
 
+  // Récupération des valeurs de poings et pieds en fonction de la valeur de COR
   getPoingsPiedsValues(corValue: number) {
     if (corValue >= 1 && corValue <= 2) {
       return { poings: '1D6 - 4', pieds: '1D6' };
@@ -145,6 +177,7 @@ export class Part2Component implements OnInit, OnDestroy {
     }
   }
 
+  // Mise à jour de la valeur d'une caractéristique dérivée
   setDerivedValue(code: string, value: number) {
     const index = this.caracteristiques.findIndex(c => c.code === code);
     if (index !== -1) {
@@ -152,5 +185,50 @@ export class Part2Component implements OnInit, OnDestroy {
       control.get('valeurMax')?.setValue(value);
       control.get('valeurActuelle')?.setValue(value);
     }
+  }
+
+  // Mise à jour des points restants en fonction du niveau de jeu
+  updatePointsRestants() {
+    const niveau = this.niveauJeu();
+    let totalPoints = 0;
+
+    switch (niveau) {
+      case 'moyen':
+        totalPoints = 60;
+        break;
+      case 'expérimenté':
+        totalPoints = 70;
+        break;
+      case 'heroique':
+        totalPoints = 75;
+        break;
+      case 'legendaire':
+        totalPoints = 80;
+        break;
+      case 'libre':
+      default:
+        this.pointsRestants.set(0);  // Aucun calcul de points en mode "libre"
+        return;
+    }
+    console.log('totalt de points = ', totalPoints);
+    // Calcul des points dépensés
+    const pointsDepenses = this.caracteristiquePersonnage.controls.reduce((sum, control) => {
+      const code = control.get('code')?.value;
+      if (this.isEditable(code)) {
+        return sum + (control.get('valeurMax')?.value || 0);
+      }
+      return sum;
+    }, 0);
+    console.log('pointsDepenses = ', pointsDepenses);
+
+    // Mise à jour des points restants
+    this.pointsRestants.set(totalPoints - pointsDepenses);
+    console.log('pointsRestants = ', totalPoints - pointsDepenses);
+    console.log(`Niveau de jeu: ${niveau}, Points restants: ${this.pointsRestants()}`);
+  }
+
+  // Méthode pour changer le niveau de jeu quand un bouton radio est sélectionné
+  setNiveauJeu(niveau: string) {
+    this.niveauJeu.set(niveau);
   }
 }
