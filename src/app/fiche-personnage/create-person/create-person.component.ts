@@ -6,13 +6,15 @@ import { Part2Component } from './part2/part2.component';
 import { Part3Component } from './part3/part3.component';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { HighlightDirective } from '../../highlight.directive';
+import { Part4Component } from './part4/part4.component';
 
 @Component({
   selector: 'app-create-person',
-  imports: [CommonModule, 
-            Part1Component, 
-            Part2Component, 
-            Part3Component, 
+  imports: [CommonModule,
+            Part1Component,
+            Part2Component,
+            Part3Component,
+            Part4Component,
             HighlightDirective],
   templateUrl: './create-person.component.html',
   styles: ``
@@ -31,7 +33,7 @@ export class CreatePersonComponent {
   }
 
   nextStep() {
-    if (this.currentStep < 3) {
+    if (this.currentStep < 4) {
       console.log(`Etape ${this.currentStep} :`, this.form.value);
       this.currentStep++;
     }
