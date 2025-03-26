@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule, For
 import { Subscription } from 'rxjs';
 import { RACE_MAP } from '../../../fake-data-set/race-fake';
 import { CARACTERISTIQUE_LIST } from '../../../fake-data-set/caracteristiques-fake';
+import { PROFESSION_MAP } from '../../../fake-data-set/profession-fake';
 
 @Component({
   selector: 'app-part2',
@@ -49,6 +50,7 @@ export class Part2Component implements OnInit, OnDestroy {
     this.form.addControl('poings', this.fb.control({ value: '', disabled: true }));
     this.form.addControl('pieds', this.fb.control({ value: '', disabled: true }));
     this.form.addControl('niveauJeu', this.fb.control('libre'));
+    this.form.addControl('vigueur', this.fb.control({ value: '', disabled: true }));
   }
 
   // Création d'un contrôle pour une caractéristique
@@ -104,36 +106,40 @@ export class Part2Component implements OnInit, OnDestroy {
     const corIndex = this.caracteristiques.findIndex(c => c.code === 'COR');
     const volIndex = this.caracteristiques.findIndex(c => c.code === 'VOL');
     const vitIndex = this.caracteristiques.findIndex(c => c.code === 'VIT');
-
+  
     const corValue = this.caracteristiquePersonnage.at(corIndex).get('valeurMax')?.value;
     const volValue = this.caracteristiquePersonnage.at(volIndex).get('valeurMax')?.value;
     const vitValue = this.caracteristiquePersonnage.at(vitIndex).get('valeurMax')?.value;
-
+  
     const average = Math.floor((corValue + volValue) / 2);
     const derivedValues = this.getDerivedValues(average);
-
+  
     this.setDerivedValue('PS', derivedValues.PS);
     this.setDerivedValue('END', derivedValues.END);
     this.setDerivedValue('RÉC', derivedValues.RÉC);
     this.setDerivedValue('ÉTOU', derivedValues.ÉTOU);
-
+  
     let encValue = corValue * 10;
     const couValue = vitValue * 3;
     const sautValue = Math.floor(couValue / 5);
-
+  
     const raceId = this.form.get('race')?.value;
     const raceName = RACE_MAP[raceId];
     if (raceName === 'Nain') {
       encValue += 25;
     }
-
+  
     this.setDerivedValue('ENC', encValue);
     this.setDerivedValue('COU', couValue);
     this.setDerivedValue('SAUT', sautValue);
-
+  
     const { poings, pieds } = this.getPoingsPiedsValues(corValue);
     this.form.get('poings')?.setValue(poings);
     this.form.get('pieds')?.setValue(pieds);
+  
+    // Mettre à jour la vigueur
+    const vigueur = this.getVigueur();
+    this.form.get('vigueur')?.setValue(vigueur);
   }
 
   // Récupération des valeurs dérivées (PS, END, RÉC, ÉTOU) en fonction de la moyenne
@@ -175,6 +181,20 @@ export class Part2Component implements OnInit, OnDestroy {
     } else {
       return { poings: '', pieds: '' };
     }
+  }
+
+  getVigueur(): number {
+    let vigueurValue = 0;
+    const professionId = this.form.get('profession')?.value;
+    const professionName = PROFESSION_MAP[professionId];
+  
+    if (professionName === 'Mage') {
+      vigueurValue = 5;
+    } else if (professionName === 'Prêtre' || professionName === 'Sorceleur') {
+      vigueurValue = 2;
+    }
+  
+    return vigueurValue;
   }
 
   // Mise à jour de la valeur d'une caractéristique dérivée

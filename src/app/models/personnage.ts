@@ -20,6 +20,7 @@ export interface Personnage {
     caracteristiquePersonnage : CaracteristiquePersonnage[];
     pieds: string;
     poings: string;
+    vigueur: number;
     inventaires : Inventaire[];
     //campagne : Campagne;
     //user : User;

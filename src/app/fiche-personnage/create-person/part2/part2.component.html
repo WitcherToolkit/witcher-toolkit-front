@@ -43,21 +43,18 @@
       </label>
     </p>
   </div>
-  <div class="row"><div class="col s1"></div></div>
-
   <div class="col s6" *ngIf="niveauJeu() !== 'libre' && pointsRestants() !== null"> 
     <span class="badge">
       Il vous reste <b>{{ pointsRestants() }}</b> points à dépenser
     </span>
   </div>
-
   <div class="row"></div>
     <div formArrayName="caracteristiquePersonnage">
-    
+      <!-- Colonne 1 - Caractéristiques pincipales : -->
       <div class="col s4">
-        <div *ngFor="let caracteristiqueCtrl of caracteristiquePersonnage.controls; let i = index" [formGroupName]="i">
-          <div *ngIf="isEditable(caracteristiqueCtrl.value.code)" class="row">
-            <div class="col s12">
+        <div class="row">
+          <div *ngFor="let caracteristiqueCtrl of caracteristiquePersonnage.controls; let i = index" [formGroupName]="i"> 
+            <div *ngIf="isEditable(caracteristiqueCtrl.value.code)" class="col s6"> 
               <label>{{ caracteristiqueCtrl.value.code }}</label>
               <input type="number" formControlName="valeurMax" [readonly]="!caracteristiqueCtrl.get('valeurMax')?.enabled">
               <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.invalid && (caracteristiqueCtrl.get('valeurMax')?.dirty || caracteristiqueCtrl.get('valeurMax')?.touched)">
@@ -69,12 +66,12 @@
           </div>
         </div>
       </div>
-
       <div class="col s1"></div>
+      <!-- Colonne 2 - Caractéristiques secondaires : -->
       <div class="col s3">
-        <div *ngFor="let caracteristiqueCtrl of caracteristiquePersonnage.controls; let i = index" [formGroupName]="i">
-          <div *ngIf="!isEditable(caracteristiqueCtrl.value.code)" class="row">
-            <div class="col s12">
+        <div class="row">
+          <div *ngFor="let caracteristiqueCtrl of caracteristiquePersonnage.controls; let i = index" [formGroupName]="i">
+            <div *ngIf="!isEditable(caracteristiqueCtrl.value.code)" class="col s6">
               <label>{{ caracteristiqueCtrl.value.code }}</label>
               <input type="number" formControlName="valeurMax" [readonly]="!caracteristiqueCtrl.get('valeurMax')?.enabled">
               <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.invalid && (caracteristiqueCtrl.get('valeurMax')?.dirty || caracteristiqueCtrl.get('valeurMax')?.touched)">
@@ -88,6 +85,7 @@
       </div>
     </div>
     <div class="col s1"></div>
+    <!-- Colonne 3 - Caractéristiques autre : -->
     <div class="col s3">
       <label>Poings</label>
       <input type="text" formControlName="poings" readonly>
@@ -96,7 +94,7 @@
       <input type="text" formControlName="pieds" readonly>
 
       <label>Vigueur</label>
-      <input type="text" formControlName="pieds" readonly>
+      <input type="text" formControlName="vigueur" readonly>
     </div>
   </div>
 
