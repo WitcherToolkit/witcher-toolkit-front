@@ -1,13 +1,56 @@
-<p>Dépensez 44 points dans les compétences. Points restant à répenser :</p>
 <div [formGroup]="form">
-    <div class="row">
-      <form class="col s12">
-        <div class="row" formArrayName="competences">
-          <div *ngFor="let competenceCtrl of competencesArray.controls; let i = index" [formGroupName]="i" class="input-field col s2">
-            <input type="number" formControlName="valeurMax" class="validate">
-            <label>{{ competenceCtrl.value.competence.nom }} ({{ competenceCtrl.value.competence.caracteristique.code }})</label>
+
+  <!-- Bloc des points restants -->
+  <div class="col s6"> 
+    <span class="badge">
+      Il vous reste <b>{{ pointsRestants() }}</b> points à dépenser :
+    </span>
+  </div>
+
+  <div class="row">
+    <form class="col s12">
+      <div class="row" formArrayName="competences">
+        <div *ngFor="let competenceCtrl of competencesArray.controls; let i = index" [formGroupName]="i" class="col s2">
+          <div class="row">
+            <div class="col s12">
+              <label>{{ competenceCtrl.value.competence.nom }} ({{ competenceCtrl.value.competence.caracteristique.code }})</label>
+              <input type="number" formControlName="valeurMax" class="validate">
+              <div *ngIf="competenceCtrl.get('valeurMax')?.invalid && (competenceCtrl.get('valeurMax')?.dirty || competenceCtrl.get('valeurMax')?.touched)">
+                <div *ngIf="competenceCtrl.get('valeurMax')?.errors?.['required']">Valeur requise.</div>
+                <div *ngIf="competenceCtrl.get('valeurMax')?.errors?.['min']">Valeur minimale: 1.</div>
+                <div *ngIf="competenceCtrl.get('valeurMax')?.errors?.['max']">Valeur maximale: 6.</div>
+              </div>
+            </div>
           </div>
         </div>
-      </form>
-    </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Bloc des compétences non associées -->
+  <div class="col s6"> 
+    <span class="badge">
+      Vous avez <b>20</b> points à mettre dans les compétences suivantes :
+    </span>
+  </div>
+  <div class="row">
+    <form class="col s12">
+      <div class="row" formArrayName="nonAssociatedCompetences">
+        <div *ngFor="let competenceCtrl of nonAssociatedCompetencesArray.controls; let i = index" [formGroupName]="i" class="col s2">
+          <div class="row">
+            <div class="col s12">
+              <label>{{ competenceCtrl.value.competence.nom }} ({{ competenceCtrl.value.competence.caracteristique.code }})</label>
+              <input type="number" formControlName="valeurMax" class="validate">
+              <div *ngIf="competenceCtrl.get('valeurMax')?.invalid && (competenceCtrl.get('valeurMax')?.dirty || competenceCtrl.get('valeurMax')?.touched)">
+                <div *ngIf="competenceCtrl.get('valeurMax')?.errors?.['required']">Valeur requise.</div>
+                <div *ngIf="competenceCtrl.get('valeurMax')?.errors?.['min']">Valeur minimale: 0.</div>
+                <div *ngIf="competenceCtrl.get('valeurMax')?.errors?.['max']">Valeur maximale: 6.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
 </div>

@@ -2,49 +2,48 @@
   <div class="row">
     <p class="flow-text center-align grey darken-1">Choisir le niveaau de jeu :</p>
   </div>
-    <div class="row"><div class="col s1"></div>
-    <div class="col s2"> 
-      <p>
-        <label>
-          <input type="radio" formControlName="niveauJeu" value="libre" checked />
-          <span>Libre</span>
-        </label>
-      </p>
-    </div>
-    <div class="col s2">  
-      <p>
-        <label>
-          <input type="radio" formControlName="niveauJeu" value="moyen" />
-          <span>Moyen : 60 points</span>
-        </label>
-      </p>
-    </div>
-    <div class="col s2"> 
-      <p>
-        <label>
-          <input type="radio" formControlName="niveauJeu" value="expérimenté" />
-          <span>Expérimenté : 70 points</span>
-        </label>
-      </p>
-    </div>
-    <div class="col s2"> 
-      <p>
-        <label>
-          <input type="radio" formControlName="niveauJeu" value="heroique" />
-          <span>Héroïque : 75 points</span>
-        </label>
-      </p>
-    </div>
-    <div class="col s2"> 
-      <p>
-        <label>
-          <input type="radio" formControlName="niveauJeu" value="legendaire" />
-          <span>Légendaire : 80 points</span>
-        </label>
-      </p>
-    </div>
-    <div class="row"><div class="col s1"></div>
+  <div class="row"><div class="col s1"></div>
+  <div class="col s2"> 
+    <p>
+      <label>
+        <input type="radio" formControlName="niveauJeu" value="libre" checked />
+        <span>Libre</span>
+      </label>
+    </p>
   </div>
+  <div class="col s2">  
+    <p>
+      <label>
+        <input type="radio" formControlName="niveauJeu" value="moyen" />
+        <span>Moyen : 60 points</span>
+      </label>
+    </p>
+  </div>
+  <div class="col s2"> 
+    <p>
+      <label>
+        <input type="radio" formControlName="niveauJeu" value="expérimenté" />
+        <span>Expérimenté : 70 points</span>
+      </label>
+    </p>
+  </div>
+  <div class="col s2"> 
+    <p>
+      <label>
+        <input type="radio" formControlName="niveauJeu" value="heroique" />
+        <span>Héroïque : 75 points</span>
+      </label>
+    </p>
+  </div>
+  <div class="col s2"> 
+    <p>
+      <label>
+        <input type="radio" formControlName="niveauJeu" value="legendaire" />
+        <span>Légendaire : 80 points</span>
+      </label>
+    </p>
+  </div>
+  <div class="row"><div class="col s1"></div></div>
 
   <div class="col s6" *ngIf="niveauJeu() !== 'libre' && pointsRestants() !== null"> 
     <span class="badge">
@@ -94,6 +93,9 @@
       <input type="text" formControlName="poings" readonly>
 
       <label>Pieds</label>
+      <input type="text" formControlName="pieds" readonly>
+
+      <label>Vigueur</label>
       <input type="text" formControlName="pieds" readonly>
     </div>
   </div>
