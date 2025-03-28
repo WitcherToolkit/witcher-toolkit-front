@@ -80,6 +80,7 @@ export class Part2Component implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.form.get('niveauJeu')!.valueChanges.subscribe((niveau) => {
         this.niveauJeu.set(niveau);
+        this.resetCaracteristiques();
       })
     );
   }
@@ -275,5 +276,15 @@ export class Part2Component implements OnInit, OnDestroy {
   isIncrementDisabled(index: number): boolean {
     const control = this.caracteristiquePersonnage.at(index).get('valeurMax');
     return control ? control.value >= 10 || (this.niveauJeu() !== 'libre' && this.pointsRestants() <= 0) : true;
+  }
+
+  private resetCaracteristiques(): void {
+    this.caracteristiquePersonnage.controls.forEach(control => {
+      if (this.isEditable(control.get('code')?.value)) {
+        control.get('valeurMax')?.setValue(3); // Réinitialise à 3
+        control.get('valeurActuelle')?.setValue(3); // Réinitialise également la valeur actuelle
+      }
+    });
+    this.updatePointsRestants(); // Met à jour les points restants
   }
 }

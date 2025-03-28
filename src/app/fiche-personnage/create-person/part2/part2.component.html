@@ -86,22 +86,27 @@
             <input type="text" formControlName="valeurMax" [readonly]="!caracteristiqueCtrl.get('valeurMax')?.enabled">
           </div>
         </div>
-
       </div>
     </div>
     </div>
     <div class="col s1"></div>
     <!-- Colonne 3 - Caractéristiques autre : -->
     <div class="col s3">
-
-      <label>Poings</label>
-      <input type="text" formControlName="poings" readonly>
-      <label>Pieds</label>
-      <input type="text" formControlName="pieds" readonly>
-      <label>Vigueur</label>
-      <input type="text" formControlName="vigueur" readonly>
-      
+      <div class="row">
+        <div class="col s6">
+          <label>Poings</label>
+          <input type="text" formControlName="poings" readonly>
+        </div>
+        <div class="col s6">
+          <label>Pieds</label>
+          <input type="text" formControlName="pieds" readonly>
+        </div>
+        <div class="col s6">
+          <label>Vigueur</label>
+          <input type="text" formControlName="vigueur" readonly>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="row"></div>
+ 
 </div>
