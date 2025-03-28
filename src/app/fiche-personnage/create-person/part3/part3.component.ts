@@ -4,6 +4,7 @@ import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } fr
 import { Competence } from '../../../models/competence';
 import { COMPETENCE_LIST } from '../../../fake-data-set/competence-fake';
 import { PROFESSION_LIST } from '../../../fake-data-set/profession-fake';
+import { CompetencePersonnage } from '../../../models/competence-personnage';
 
 @Component({
   selector: 'app-part3',
@@ -21,6 +22,7 @@ export class Part3Component implements OnInit {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
+    this.form.addControl('competencePersonnage', this.fb.array([]));
     this.form.addControl('competences', this.fb.array([]));
     this.form.addControl('nonAssociatedCompetences', this.fb.array([])); // Ajouter un FormArray pour les compétences non associées
     this.initCompetences();
@@ -62,6 +64,7 @@ export class Part3Component implements OnInit {
       this.filteredCompetences = [];
       this.nonAssociatedCompetencesArray.clear();
       this.competencesArray.clear();
+      this.form.get('competencePersonnage')?.reset();
       return;
     }
   
@@ -72,6 +75,7 @@ export class Part3Component implements OnInit {
       this.filteredCompetences = [];
       this.nonAssociatedCompetencesArray.clear();
       this.competencesArray.clear();
+      this.form.get('competencePersonnage')?.reset();
       return;
     }
   
@@ -103,8 +107,27 @@ export class Part3Component implements OnInit {
       }));
     });
   
+    // Mettre à jour competencePersonnage
+    this.updateCompetencePersonnage();
+  
     // Recalculer les points restants
     this.updatePointsRestants();
+  }
+
+  private updateCompetencePersonnage(): void {
+    const competences = this.competencesArray.value; // Récupère les compétences associées
+    const nonAssociatedCompetences = this.nonAssociatedCompetencesArray.value; // Récupère les compétences non associées
+  
+    // Concaténer les deux listes
+    const competencePersonnageArray = this.form.get('competencePersonnage') as FormArray;
+    competencePersonnageArray.clear();
+  
+    [...competences, ...nonAssociatedCompetences].forEach((c: any) => {
+      competencePersonnageArray.push(this.fb.group({
+        valeurActuel: [c.valeurMax, [Validators.min(0), Validators.max(6)]],
+        competence: [c.competence]
+      }));
+    });
   }
 
   private updatePointsRestants() {

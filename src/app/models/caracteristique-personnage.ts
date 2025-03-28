@@ -5,5 +5,5 @@ export interface CaracteristiquePersonnage {
     valeurActuelle : number;
     valeurMax : number;
     caracteristique : Caracteristique;
-    personnage: Personnage
+    //personnage: Personnage
 }
