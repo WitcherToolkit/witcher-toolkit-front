@@ -2,11 +2,12 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { MAGIE_LIST } from '../../fake-data-set/magie-fake';
 import { MagieService } from '../magie.service.spec';
 import { CommonModule } from '@angular/common';
+import { NatureBorderDirective } from '../../directives/nature-border.directive';
 
 @Component({
   selector: 'app-sorts-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [NatureBorderDirective, CommonModule],
   templateUrl: './sorts-list.component.html',
   styles: ``
 })
@@ -28,5 +29,4 @@ export class SortsListComponent {
   trackById(index: number, magie: any): number {
     return magie.id;
   }
-  
 }

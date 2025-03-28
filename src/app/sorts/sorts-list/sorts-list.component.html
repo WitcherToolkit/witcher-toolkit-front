@@ -1,6 +1,4 @@
-
 <h1 class="center-align">La magie</h1>
-
 
 <div class="container mb-5">
   <div class="row">
@@ -35,7 +33,7 @@
     <!-- Afficher les cartes des magie filtrées -->
     <div *ngFor="let magie of magiesListFiltered(); trackBy: trackById">
       <div class="col s12 m4">
-        <div class="card horizontal">
+        <div class="card horizontal" appNatureBorder [natureValue]="magie.nature">
           <div class="card-stacked">
             <span class="card-title center-align">{{ magie.nom }}</span>
             <div class="card-content">
@@ -51,6 +49,5 @@
         </div>
       </div>
     </div>
-    
   </div>
 </div>
