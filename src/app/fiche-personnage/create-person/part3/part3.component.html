@@ -10,16 +10,23 @@
   <div class="row">
     <form class="col s12">
       <div class="row" formArrayName="competences">
-        <div *ngFor="let competenceCtrl of competencesArray.controls; let i = index" [formGroupName]="i" class="col s2">
+        <div *ngFor="let competenceCtrl of competencesArray.controls; let i = index" [formGroupName]="i" class="col s4">
           <div class="row">
-            <div class="col s12">
+            <div class="col s2 center-align">
+              <button type="button" class="btn-floating btn-small" (click)="decrementCaracteristique(i, 'competences')" [disabled]="isDecrementDisabled(i, 'competences')">
+                <i class="material-icons">remove</i>
+              </button>
+            </div>
+            <div class="col s6">
               <label>{{ competenceCtrl.value.competence.nom }} ({{ competenceCtrl.value.competence.caracteristique.code }})</label>
-              <input type="number" formControlName="valeurMax" class="validate">
+              <input type="text" formControlName="valeurMax" class="validate">
               <div *ngIf="competenceCtrl.get('valeurMax')?.invalid && (competenceCtrl.get('valeurMax')?.dirty || competenceCtrl.get('valeurMax')?.touched)">
-                <div *ngIf="competenceCtrl.get('valeurMax')?.errors?.['required']">Valeur requise.</div>
-                <div *ngIf="competenceCtrl.get('valeurMax')?.errors?.['min']">Valeur minimale: 1.</div>
-                <div *ngIf="competenceCtrl.get('valeurMax')?.errors?.['max']">Valeur maximale: 6.</div>
               </div>
+            </div>
+            <div class="col s2 center-align">
+              <button type="button" class="btn-floating btn-small" (click)="incrementCaracteristique(i, 'competences')" [disabled]="isIncrementDisabled(i, 'competences')">
+                <i class="material-icons">add</i>
+              </button>
             </div>
           </div>
         </div>
@@ -30,22 +37,29 @@
   <!-- Bloc des compétences non associées -->
   <div class="col s6"> 
     <span class="badge">
-      Vous avez <b>20</b> points à mettre dans les compétences suivantes :
+      Vous avez <b>{{ pointsDispo }}</b> points à mettre dans les compétences suivantes :
     </span>
   </div>
   <div class="row">
     <form class="col s12">
       <div class="row" formArrayName="nonAssociatedCompetences">
-        <div *ngFor="let competenceCtrl of nonAssociatedCompetencesArray.controls; let i = index" [formGroupName]="i" class="col s2">
+        <div *ngFor="let competenceCtrl of nonAssociatedCompetencesArray.controls; let i = index" [formGroupName]="i" class="col s4">
           <div class="row">
-            <div class="col s12">
+            <div class="col s2 center-align">
+              <button type="button" class="btn-floating btn-small" (click)="decrementCaracteristique(i, 'nonAssociatedCompetences')" [disabled]="isDecrementDisabled(i, 'nonAssociatedCompetences')">
+                <i class="material-icons">remove</i>
+              </button>
+            </div>
+            <div class="col s6">
               <label>{{ competenceCtrl.value.competence.nom }} ({{ competenceCtrl.value.competence.caracteristique.code }})</label>
-              <input type="number" formControlName="valeurMax" class="validate">
+              <input type="text" formControlName="valeurMax" class="validate">
               <div *ngIf="competenceCtrl.get('valeurMax')?.invalid && (competenceCtrl.get('valeurMax')?.dirty || competenceCtrl.get('valeurMax')?.touched)">
-                <div *ngIf="competenceCtrl.get('valeurMax')?.errors?.['required']">Valeur requise.</div>
-                <div *ngIf="competenceCtrl.get('valeurMax')?.errors?.['min']">Valeur minimale: 0.</div>
-                <div *ngIf="competenceCtrl.get('valeurMax')?.errors?.['max']">Valeur maximale: 6.</div>
               </div>
+            </div>
+            <div class="col s2 center-align">
+              <button type="button" class="btn-floating btn-small" (click)="incrementCaracteristique(i, 'nonAssociatedCompetences')" [disabled]="isIncrementDisabled(i, 'nonAssociatedCompetences')">
+                <i class="material-icons">add</i>
+              </button>
             </div>
           </div>
         </div>

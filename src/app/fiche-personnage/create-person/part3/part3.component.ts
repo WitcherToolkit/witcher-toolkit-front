@@ -18,6 +18,7 @@ export class Part3Component implements OnInit {
   competences: Competence[] = COMPETENCE_LIST;
   filteredCompetences: Competence[] = []; // Liste des compétences filtrées
   pointsRestants = signal<number>(0);
+  pointsDispo: number = 0;
 
   constructor(private fb: FormBuilder) {}
 
@@ -26,6 +27,7 @@ export class Part3Component implements OnInit {
     this.form.addControl('competences', this.fb.array([]));
     this.form.addControl('nonAssociatedCompetences', this.fb.array([])); // Ajouter un FormArray pour les compétences non associées
     this.initCompetences();
+    this.calculerPointsDispo(); 
 
     // Écoute les changements de la profession sélectionnée
     this.form.get('profession')?.valueChanges.subscribe(professionId => {
@@ -137,5 +139,43 @@ export class Part3Component implements OnInit {
   
     const pointsTotal = 44; // Total de points disponibles
     this.pointsRestants.set(pointsTotal - totalDepenses);
+  }
+
+  incrementCaracteristique(index: number, listType: 'competences' | 'nonAssociatedCompetences'): void {
+    const control = this.getArrayByType(listType).at(index).get('valeurMax');
+    if (control && control.value < 6) { // Limite maximale : 6
+      control.setValue(control.value + 1);
+    }
+  }
+  
+  decrementCaracteristique(index: number, listType: 'competences' | 'nonAssociatedCompetences'): void {
+    const control = this.getArrayByType(listType).at(index).get('valeurMax');
+    if (control && control.value > 0) { // Limite minimale : 0
+      control.setValue(control.value - 1);
+    }
+  }
+  
+  isDecrementDisabled(index: number, listType: 'competences' | 'nonAssociatedCompetences'): boolean {
+    const control = this.getArrayByType(listType).at(index).get('valeurMax');
+    return control ? control.value <= 0 : true; // Désactive si valeur ≤ 0
+  }
+  
+  isIncrementDisabled(index: number, listType: 'competences' | 'nonAssociatedCompetences'): boolean {
+    const control = this.getArrayByType(listType).at(index).get('valeurMax');
+    return control ? control.value >= 6 : true; // Désactive si valeur ≥ 6
+  }
+
+  private getArrayByType(listType: 'competences' | 'nonAssociatedCompetences'): FormArray {
+    return listType === 'competences' ? this.competencesArray : this.nonAssociatedCompetencesArray;
+  }
+
+  // Calcule la somme de INT + RÉF
+  private calculerPointsDispo() {
+    const caracteristiques = this.form.get('caracteristiquePersonnage')?.value || [];
+    const intelligence = caracteristiques.find((c: any) => c.code === 'INT')?.valeurActuelle || 0;
+    const reflexe = caracteristiques.find((c: any) => c.code === 'RÉF')?.valeurActuelle || 0;
+
+    this.pointsDispo = intelligence + reflexe;
+    console.log(`Points disponibles: ${this.pointsDispo}`);
   }
 }

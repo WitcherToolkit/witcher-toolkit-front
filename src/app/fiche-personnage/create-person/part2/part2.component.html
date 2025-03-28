@@ -52,10 +52,10 @@
   <div formArrayName="caracteristiquePersonnage">
       <!-- Colonne 1 - Caractéristiques pincipales : -->
     <div class="col s4">
-      <div *ngFor="let caracteristiqueCtrl of caracteristiquePersonnage.controls; let i = index" [formGroupName]="i">
+      <div *ngFor="let caracteristiqueCtrl of caracteristiquePersonnage.controls; let i = index" [formGroupName]="i" class="col s6"><!-- <= C'est ici que je gère la largeur de chaquue élément de la colonne 1 !!!!!-->
         <div class="row" *ngIf="isEditable(caracteristiqueCtrl.value.code)">
           <div class="col s2 center-align">
-            <button type="button" class="btn btn-small" (click)="decrementCaracteristique(i)" [disabled]="isDecrementDisabled(i)">
+            <button type="button" class="btn-floating btn-small" (click)="decrementCaracteristique(i)" [disabled]="isDecrementDisabled(i)">
               <i class="material-icons">remove</i>
             </button>
           </div>
@@ -69,14 +69,14 @@
               </div>
           </div>
           <div class="col s2 center-align">
-            <button type="button" class="btn btn-small" (click)="incrementCaracteristique(i)" [disabled]="isIncrementDisabled(i)">
+            <button type="button" class="btn-floating btn-small" (click)="incrementCaracteristique(i)" [disabled]="isIncrementDisabled(i)">
               <i class="material-icons">add</i>
             </button>
           </div>
         </div>
       </div>
     </div>
-    <div class="col s1"></div>
+    
     <!-- Colonne 2 - Caractéristiques secondaires : -->
     <div class="col s3">
       <div class="row">
