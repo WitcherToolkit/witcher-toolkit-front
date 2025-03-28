@@ -1,6 +1,6 @@
 <div [formGroup]="form">
   <div class="row">
-    <p class="flow-text center-align grey darken-1">Choisir le niveaau de jeu :</p>
+    <p class="flow-text center-align grey darken-1">Choisir le niveau de jeu :</p>
   </div>
   <div class="row"><div class="col s1"></div>
   <div class="col s2"> 
@@ -49,55 +49,59 @@
     </span>
   </div>
   <div class="row"></div>
-    <div formArrayName="caracteristiquePersonnage">
+  <div formArrayName="caracteristiquePersonnage">
       <!-- Colonne 1 - Caractéristiques pincipales : -->
-      <div class="col s4">
-        <div class="row">
-          <div *ngFor="let caracteristiqueCtrl of caracteristiquePersonnage.controls; let i = index" [formGroupName]="i"> 
-            <div *ngIf="isEditable(caracteristiqueCtrl.value.code)" class="col s6"> 
-              <label>{{ caracteristiqueCtrl.value.code }}</label>
-              <input type="number" formControlName="valeurMax" [readonly]="!caracteristiqueCtrl.get('valeurMax')?.enabled">
-              <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.invalid && (caracteristiqueCtrl.get('valeurMax')?.dirty || caracteristiqueCtrl.get('valeurMax')?.touched)">
-                <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['required']">Valeur requise.</div>
-                <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['min']">Valeur minimale: 3.</div>
-                <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['max']">Valeur maximale: 10.</div>
-              </div>
-            </div>
+    <div class="col s4">
+      <div *ngFor="let caracteristiqueCtrl of caracteristiquePersonnage.controls; let i = index" [formGroupName]="i">
+        <div class="row" *ngIf="isEditable(caracteristiqueCtrl.value.code)">
+          <div class="col s2 center-align">
+            <button type="button" class="btn btn-small" (click)="decrementCaracteristique(i)" [disabled]="isDecrementDisabled(i)">
+              <i class="material-icons">remove</i>
+            </button>
           </div>
-        </div>
-      </div>
-      <div class="col s1"></div>
-      <!-- Colonne 2 - Caractéristiques secondaires : -->
-      <div class="col s3">
-        <div class="row">
-          <div *ngFor="let caracteristiqueCtrl of caracteristiquePersonnage.controls; let i = index" [formGroupName]="i">
-            <div *ngIf="!isEditable(caracteristiqueCtrl.value.code)" class="col s6">
-              <label>{{ caracteristiqueCtrl.value.code }}</label>
-              <input type="number" formControlName="valeurMax" [readonly]="!caracteristiqueCtrl.get('valeurMax')?.enabled">
+          <div *ngIf="isEditable(caracteristiqueCtrl.value.code)" class="col s6">
+            <label>{{ caracteristiqueCtrl.value.code }}</label>
+            <input type="text" formControlName="valeurMax" [readonly]="!caracteristiqueCtrl.get('valeurMax')?.enabled">
               <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.invalid && (caracteristiqueCtrl.get('valeurMax')?.dirty || caracteristiqueCtrl.get('valeurMax')?.touched)">
                 <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['required']">Valeur requise.</div>
                 <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['min']">Valeur minimale: 3.</div>
                 <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['max']">Valeur maximale: 10.</div>
               </div>
-            </div>
+          </div>
+          <div class="col s2 center-align">
+            <button type="button" class="btn btn-small" (click)="incrementCaracteristique(i)" [disabled]="isIncrementDisabled(i)">
+              <i class="material-icons">add</i>
+            </button>
           </div>
         </div>
       </div>
     </div>
     <div class="col s1"></div>
+    <!-- Colonne 2 - Caractéristiques secondaires : -->
+    <div class="col s3">
+      <div class="row">
+        <div *ngFor="let caracteristiqueCtrl of caracteristiquePersonnage.controls; let i = index" [formGroupName]="i">
+          <div *ngIf="!isEditable(caracteristiqueCtrl.value.code)" class="col s6">
+            <label>{{ caracteristiqueCtrl.value.code }}</label>
+            <input type="text" formControlName="valeurMax" [readonly]="!caracteristiqueCtrl.get('valeurMax')?.enabled">
+          </div>
+        </div>
+
+      </div>
+    </div>
+    </div>
+    <div class="col s1"></div>
     <!-- Colonne 3 - Caractéristiques autre : -->
     <div class="col s3">
+
       <label>Poings</label>
       <input type="text" formControlName="poings" readonly>
-
       <label>Pieds</label>
       <input type="text" formControlName="pieds" readonly>
-
       <label>Vigueur</label>
       <input type="text" formControlName="vigueur" readonly>
+      
     </div>
   </div>
-
-  <div class="row">
-
+  <div class="row"></div>
 </div>

@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { RACE_MAP } from '../../../fake-data-set/race-fake';
 import { CARACTERISTIQUE_LIST } from '../../../fake-data-set/caracteristiques-fake';
 import { PROFESSION_MAP } from '../../../fake-data-set/profession-fake';
+import { CaracteristiquePersonnage } from '../../../models/caracteristique-personnage';
 
 @Component({
   selector: 'app-part2',
@@ -57,7 +58,7 @@ export class Part2Component implements OnInit, OnDestroy {
   private createCaracteristiqueControl(code: string): FormGroup {
     const isEditable = this.isEditable(code);
     const control = this.fb.group({
-      valeurMax: [isEditable ? 3 : { value: 0, disabled: true }, [Validators.required, Validators.min(3), Validators.max(10)]],
+      valeurMax: [isEditable ? 3 : { value: 0, disabled: true }, [Validators.required, Validators.min(3)]],
       valeurActuelle: [isEditable ? 3 : 0],
       code: [code]
     });
@@ -250,5 +251,29 @@ export class Part2Component implements OnInit, OnDestroy {
   // Méthode pour changer le niveau de jeu quand un bouton radio est sélectionné
   setNiveauJeu(niveau: string) {
     this.niveauJeu.set(niveau);
+  }
+
+  incrementCaracteristique(index: number): void {
+    const control = this.caracteristiquePersonnage.at(index).get('valeurMax');
+    if (control && control.value < 10) { // Limite maximale : 10
+      control.setValue(control.value + 1);
+    }
+  }
+  
+  decrementCaracteristique(index: number): void {
+    const control = this.caracteristiquePersonnage.at(index).get('valeurMax');
+    if (control && control.value > 3) { // Limite minimale : 3
+      control.setValue(control.value - 1);
+    }
+  }
+
+  isDecrementDisabled(index: number): boolean {
+    const control = this.caracteristiquePersonnage.at(index).get('valeurMax');
+    return control ? control.value <= 3 : true; // Désactive si valeur ≤ 3
+  }
+  
+  isIncrementDisabled(index: number): boolean {
+    const control = this.caracteristiquePersonnage.at(index).get('valeurMax');
+    return control ? control.value >= 10 || (this.niveauJeu() !== 'libre' && this.pointsRestants() <= 0) : true;
   }
 }
