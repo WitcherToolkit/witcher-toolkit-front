@@ -1,29 +1,52 @@
+
 <h1 class="center-align">Les rituels</h1>
 
-<table class="highlight">
-    <thead>
-      <tr>
-          <th>Nom</th>
-          <th>Coût</th>
-          <th>Effet</th>
-          <th>Temps de préparation</th>
-          <th>SD</th>
-          <th>Durée</th>
-          <th>Composants</th>
-          <th>Niveau</th>
-      </tr>
-    </thead>
+<div class="container mb-5">
+  <div class="row">
+    <div class="col-4 offset-4">
+      <div class="card">
+        <form class="card-body">
+          <div class="form-group">
+            <div class="row">
+              <div class="col s3"></div>
+              <div class="input-field col s6">
+                <i class="material-icons prefix">search</i>
+                <input id="icon_prefix" type="text" name="searchTerm" class="validate"  #searchField [value]="searchTerm()" (input)="searchTerm.set(searchField.value)">
+                <label for="icon_prefix">Rechercher un rituel</label>
+              </div>
+              <div class="col s3"></div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <tbody>
-      <tr>
-        <td>Hydromancie</td>
-        <td>3 END</td>
-        <td>Le compas magique permet de déterminer instantanément la direction vers un endroit où vous êtes déjà allée auparavant.inon, le sort indique le nord.</td>
-        <td>5 Rounds</td>
-        <td>15 (18)</td>
-        <td>Actif (2 END)</td>
-        <td>APlein de composants !!!</td>
-        <td>Novice</td>
-      </tr>
-    </tbody>
-</table>
+<div class="container">
+  <div class="row">
+    
+    <!-- Afficher le message "Aucun résultat" si la liste est vide -->
+    <div *ngIf="rituelsListFiltered().length === 0" class="col-12 text-center">
+      <p>Aucun résultat</p>
+    </div>
+
+    <!-- Afficher les cartes des rituel filtrées -->
+    <div *ngFor="let rituel of rituelsListFiltered(); trackBy: trackById">
+      <div class="col s12 m4">
+        <div class="card horizontal">
+          <div class="card-stacked">
+            <span class="card-title center-align">{{ rituel.nom }}</span>
+            <div class="card-content">
+              <p>Niveau {{ rituel.niveau }} - SD : {{ rituel.sd }} </p>
+              <p><b>Effet</b> : {{ rituel.effet }}</p>
+            </div>
+            <div class="card-action">
+              <a href="#">VOIR</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

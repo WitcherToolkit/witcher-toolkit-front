@@ -61,6 +61,7 @@ export class Part3Component implements OnInit {
     }
   }
 
+  // Filtre des compétences
   private filterCompetences(professionId: number | string) {
     if (!professionId) {
       this.filteredCompetences = [];
@@ -116,6 +117,7 @@ export class Part3Component implements OnInit {
     this.updatePointsRestants();
   }
 
+  // Regrouper les compétences du personnage en une liste
   private updateCompetencePersonnage(): void {
     const competences = this.competencesArray.value; // Récupère les compétences associées
     const nonAssociatedCompetences = this.nonAssociatedCompetencesArray.value; // Récupère les compétences non associées
@@ -132,6 +134,7 @@ export class Part3Component implements OnInit {
     });
   }
 
+  // Mise à jour des point restant
   private updatePointsRestants() {
     const totalDepenses = this.competencesArray?.controls.reduce((sum, control) => {
       return sum + (control.get('valeurMax')?.value || 0);
@@ -141,6 +144,7 @@ export class Part3Component implements OnInit {
     this.pointsRestants.set(pointsTotal - totalDepenses);
   }
 
+  // Ajout de points de caractéristique
   incrementCaracteristique(index: number, listType: 'competences' | 'nonAssociatedCompetences'): void {
     const control = this.getArrayByType(listType).at(index).get('valeurMax');
     if (control && control.value < 6) { // Limite maximale : 6
@@ -148,6 +152,7 @@ export class Part3Component implements OnInit {
     }
   }
   
+  // Supression de points de caractéristique
   decrementCaracteristique(index: number, listType: 'competences' | 'nonAssociatedCompetences'): void {
     const control = this.getArrayByType(listType).at(index).get('valeurMax');
     if (control && control.value > 0) { // Limite minimale : 0
@@ -155,11 +160,13 @@ export class Part3Component implements OnInit {
     }
   }
   
+  // Griser le bouton si le minimum est atteind
   isDecrementDisabled(index: number, listType: 'competences' | 'nonAssociatedCompetences'): boolean {
     const control = this.getArrayByType(listType).at(index).get('valeurMax');
     return control ? control.value <= 0 : true; // Désactive si valeur ≤ 0
   }
   
+  // Griser le bouton si le maximum est atteind
   isIncrementDisabled(index: number, listType: 'competences' | 'nonAssociatedCompetences'): boolean {
     const control = this.getArrayByType(listType).at(index).get('valeurMax');
     return control ? control.value >= 6 : true; // Désactive si valeur ≥ 6

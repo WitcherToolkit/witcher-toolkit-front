@@ -37,13 +37,13 @@
           <div class="card-stacked">
             <span class="card-title center-align">{{ magie.nom }}</span>
             <div class="card-content">
-              <p><b>Type de magie</b> : {{ magie.type }} (niveau {{ magie.niveau }} )</p>
-              <p><b>Portée</b> : {{ magie.portee }}</p>
-              <p><b>Durée</b> : {{ magie.duree }}</p>
-              <p><b>Contre</b> : {{ magie.contre }}</p>
+              <div class="card-text">
+                  <p><b>Type de magie</b> : {{ magie.type }} (niveau {{ magie.niveau }} )</p>
+                  <p><b>Effet</b> : {{ truncateText(magie.effet) }}</p>
+              </div>
             </div>
             <div class="card-action">
-              <a href="#">VOIR</a>
+              <a href="#">Plus d'infos</a>
             </div>
           </div>
         </div>
