@@ -1,23 +1,53 @@
 <h1 class="center-align">Les envoûtements</h1>
 
-<table class="highlight">
-    <thead>
-      <tr>
-          <th>Nom</th>
-          <th>Coût (END)</th>
-          <th>Effet</th>
-          <th>Prérequis</th>
-          <th>Danger</th>
-      </tr>
-    </thead>
+<div class="container mb-5">
+  <div class="row">
+    <div class="col-4 offset-4">
+      <div class="card">
+        <form class="card-body">
+          <div class="form-group">
+            <div class="row">
+              <div class="col s3"></div>
+              <div class="input-field col s6">
+                <i class="material-icons prefix">search</i>
+                <input id="icon_prefix" type="text" name="searchTerm" class="validate"  #searchField [value]="searchTerm()" (input)="searchTerm.set(searchField.value)">
+                <label for="icon_prefix">Rechercher une envoutement</label>
+              </div>
+              <div class="col s3"></div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <tbody>
-      <tr>
-        <td>L'envoûtement des Ombres</td>
-        <td>4</td>
-        <td>L'envoûtement des ombres crée des murmures dans les ténèbres et des silhouettes dans les coins. Le sujet doit faire des jets de vigilance au hasard avec un SD non spécifié, apercevant toujours quelque chose ou quelqu''un du coin de l’œil. Les jets de vigilance ne sont jamais pour une menace réelle, juste des visions.  Le sujet doit apporter un bol d'eau pure, une branche de myrte blanc et une bouteille d''encre dans une clairière lors d’une lune croissante. Quand la lune est au plus haut, le sujet doit verser l’encre dans l’eau, tremper la branche dans le mélange et asperger des gouttelettes en cercle autour de lui tout en retenant sa respiration.</td>
-        <td>Un bol d''eau pure, une branche de myrte blanc, une bouteille d''encre, une clairière, une lune croissante</td>
-        <td>Faible</td>
-      </tr>
-    </tbody>
-</table>
+<div class="container">
+  <div class="row">
+    
+    <!-- Afficher le message "Aucun résultat" si la liste est vide -->
+    <div *ngIf="envoutementsListFiltered().length === 0" class="col-12 text-center">
+      <p>Aucun résultat</p>
+    </div>
+
+    <!-- Afficher les cartes des envoutement filtrées -->
+    <div *ngFor="let envoutement of envoutementsListFiltered(); trackBy: trackById">
+      <div class="col s12 m4">
+        <div class="card horizontal" appDangerBorder [dangerValue]="envoutement.danger">
+          <div class="card-stacked">
+            <span class="card-title center-align">{{ envoutement.nom }}</span>
+            <div class="card-content">
+              <div class="card-text">
+                  <p><b>Type d'envoutement</b> : {{ envoutement.danger }} ({{ envoutement.cout }})</p>
+                  <p><b>Effet</b> : {{ truncateText(envoutement.effet) }}</p>
+              </div>
+            </div>
+            <div class="card-action">
+              <a href="#">Plus d'infos</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
