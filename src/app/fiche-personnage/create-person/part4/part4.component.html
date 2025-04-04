@@ -1,1 +1,38 @@
-<p>part4 works!</p>
+<div [formGroup]="form">
+    <!-- Sorts sélectionnés -->
+    <div class="row">
+      <div class="col s12">
+        <label>{{ magieNom }} sélectionnés :</label>
+        <div class="row">
+          <div *ngFor="let item of selectedMagies.controls" class="chip">
+            {{ item.value }}
+            <i class="close material-icons" (click)="removeChip(item.value)">close</i>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Sorts disponibles -->
+    <div class="row">
+      <div class="col s12">
+        <label>{{ magieInstruction }}</label>
+        <div class="row">
+          <div *ngFor="let magie of magieDisponible; let i = index" class="col s4">
+            <p>
+              <label>
+                <input
+                  type="checkbox"
+                  [value]="magie.nom"
+                  (change)="onCheckboxChange($event)"
+                  [checked]="selectedMagies.value.includes(magie.nom)"
+                  [disabled]="isMagieDisabled(magie.nom)"
+                />
+                <span>{{ magie.nom }}</span>
+              </label>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+  

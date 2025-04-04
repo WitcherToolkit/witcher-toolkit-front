@@ -2,6 +2,7 @@ import { Caracteristique } from "./caracteristique";
 import { CaracteristiquePersonnage } from "./caracteristique-personnage";
 import { CompetencePersonnage } from "./competence-personnage";
 import { Inventaire } from "./inventaire";
+import { Magie } from "./magie";
 import { Profession } from "./profession";
 import { Race } from "./race";
 
@@ -20,10 +21,13 @@ export interface Personnage {
     race : Race;
     caracteristiquePersonnage : CaracteristiquePersonnage[];
     competencePersonnage : CompetencePersonnage[];
+    magiePersonnage : CompetencePersonnage[];
+    magie: Magie[];
     pieds: string;
     poings: string;
     vigueur: number;
     inventaires : Inventaire[];
+
     //campagne : Campagne;
     //user : User;
 }
