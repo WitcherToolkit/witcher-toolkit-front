@@ -4,6 +4,7 @@ import { RACE_LIST } from '../../fake-data-set/race-fake';
 import { RacesService } from '../races.service';
 import { RouterLink } from '@angular/router';
 import { RACE_BASE_PATH } from '../../app-routing/app.routes';
+import { Race } from '../../models/race';
 
 @Component({
     selector: 'app-races-list',
@@ -15,25 +16,23 @@ import { RACE_BASE_PATH } from '../../app-routing/app.routes';
 export class RacesListComponent {
     readonly raceBasePath = RACE_BASE_PATH;
 
-    readonly race = signal(RACE_LIST);
-    readonly #racesService = inject(RacesService);
-    readonly racesList = signal(this.#racesService.getRacesList());
-    readonly searchTerm = signal('');
+  private readonly racesService = inject(RacesService);
 
-    readonly racesListFiltered = computed(() => {
-        const searchTerm = this.searchTerm();
-        const racesList = this.racesList();
+  readonly searchTerm = signal('');
 
-        if (!searchTerm) return racesList;
+  readonly racesListFiltered = computed(() => {
+    const term = this.searchTerm();
+    return this.racesService.searchRaces(term);
+  });
 
-        return racesList.filter(race => race.nom.toLowerCase().includes(searchTerm.trim().toLowerCase()));
-    });
+  particularitesNoms(race: Race): string {
+    return this.racesService.getParticularitesNoms(race);
+  }
 
-    particularitesNoms(race: any): string {
-        return race.particularites.map((particularite: any) => particularite.nom).join(', ');
-    }
+  trackById(index: number, race: Race): number {
+    return race.id;
+  }
 
-    trackById(index: number, race: any): number {
-        return race.id;
-    }
+  // Pour plus tard :
+  // readonly racesList = toSignal(this.racesService.getRacesList());
 }
