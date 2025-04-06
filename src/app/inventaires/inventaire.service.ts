@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { PROFESSION_MAP } from '../fake-data-set/profession-fake';
 import { ARTISAN_INVENTAIRE, BARDE_INVENTAIRE, CRIMINEL_INVENTAIRE, DOCTEUR_INVENTAIRE, HOMME_D_ARME_INVENTAIRE, MAGE_INVENTAIRE, MARCHAND_INVENTAIRE, NOBLE_INVENTAIRE, PRETRE_INVENTAIRE, SORCELEUR_INVENTAIRE } from '../fake-data-set/inventaire-fake';
 import { Inventaire } from '../models/inventaire';
+import { ToolsService } from '../tools/tools.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InventaireService {
 
-  constructor() { }
+  constructor(private toolsService: ToolsService) { }
 
   //Affichage de l'inventaire disponible en fonction de la profession
     updateInventaire(professionId: number | null): any[] {
@@ -51,11 +52,12 @@ export class InventaireService {
 
   // Détermine la limite max d'objets en fonction de la profession
   getMaxInventaireItems(professionId: number | null): number {
-    const professionName = PROFESSION_MAP[professionId || 0];
+    const professionLimits = { 'Sorceleur': 2, 'Marchand': 3 };
 
-    if (professionName === 'Sorceleur') return 2;
-    if (professionName === 'Marchand') return 3;
-    return 5; // Par défaut, 5 objets max
+  // Appel de la méthode générique pour obtenir la limite des objets de l'inventaire
+  const maxItems = this.toolsService.getMaxSelectableItems(professionId, professionLimits);
+
+  return isFinite(maxItems) ? maxItems : 5;
   }
   
 }

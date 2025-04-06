@@ -7,6 +7,8 @@ import { PROFESSION_LIST } from '../../../fake-data-set/profession-fake';
 import { RITUEL_LIST } from '../../../fake-data-set/rituel-fake';
 import { Envoutement } from '../../../models/envoutement';
 import { ENVOUTEMENT_LIST } from '../../../fake-data-set/envoutement-fake';
+import { InventaireService } from '../../../inventaires/inventaire.service';
+import { ToolsService } from '../../../tools/tools.service';
 
 @Component({
   selector: 'app-part4',
@@ -33,7 +35,7 @@ export class Part4Component implements OnInit {
   envoutementInstruction: string = '';
   envoutementNom: string = '';
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private toolsService: ToolsService) {}
 
   ngOnInit(): void {
     // Initialiser les magies dans le formulaire
@@ -112,36 +114,12 @@ export class Part4Component implements OnInit {
 
   clearInvalidMagies() {
     // Supprimer les magies qui ne sont plus valides pour la profession
-    const validNames = this.magieDisponible.map(m => m.nom);
-    const toKeep = this.selectedMagies.controls.filter(ctrl => validNames.includes(ctrl.value));
-
-    this.selectedMagies.clear();
-    toKeep.forEach(ctrl => this.selectedMagies.push(ctrl));
-
-    this.convertMagieToObject();
+    this.toolsService.clearInvalidItems(this.selectedMagies, this.magieDisponible, () => this.convertMagieToObject());
   }
 
   // Méthode pour gérer le changement d'état de la case à cocher
   onCheckboxChangeMagie(e: any) {
-    const value = e.target.value;
-    const isChecked = e.target.checked;
-
-    if (isChecked) {
-      const maxSelectable = this.getMaxSelectableMagies();
-      if (this.selectedMagies.length >= maxSelectable) {
-        alert(`Vous ne pouvez sélectionner que ${maxSelectable} sorts.`);
-        e.target.checked = false;
-        return;
-      }
-      this.selectedMagies.push(new FormControl(value));
-    } else {
-      const index = this.selectedMagies.controls.findIndex(x => x.value === value);
-      if (index !== -1) {
-        this.selectedMagies.removeAt(index);
-      }
-    }
-
-    this.convertMagieToObject();
+    this.toolsService.handleCheckboxChange(e, this.selectedMagies, () => this.getMaxSelectableMagies(), () => this.convertMagieToObject());
   }
 
   // Méthode pour ajouter une magie à la liste des magies sélectionnées
@@ -155,31 +133,20 @@ export class Part4Component implements OnInit {
 
   // Méthode pour supprimer une magie de la liste des magies sélectionnées
   removeChipMagie(nom: string) {
-    const index = this.selectedMagies.controls.findIndex(x => x.value === nom);
-    if (index !== -1) {
-      this.selectedMagies.removeAt(index);
-    }
-    this.convertMagieToObject();
+    this.toolsService.removeItemFromFormArray(this.selectedMagies, nom, () => this.convertMagieToObject());
   }
 
   // Méthode pour vérifier si une magie est déjà sélectionnée
   private getMaxSelectableMagies(): number {
-    const selectedProfessionId = this.form.get('profession')?.value;
-    const selectedProfession = PROFESSION_LIST.find(p => p.id === +selectedProfessionId);
-    if (!selectedProfession) return Infinity;
+    const professionLimits = { 'Prêtre': 2, 'Mage': 5 };
 
-    if (selectedProfession.nom === 'Prêtre') return 2;
-    if (selectedProfession.nom === 'Mage') return 5;
-    return Infinity;
+    return this.toolsService.getMaxSelectableItems(this.form.get('profession')?.value, professionLimits) || Infinity;
   }
 
   // Méthode pour vérifier si une magie est désactivée
   isMagieDisabled(nom: string): boolean {
     const max = this.getMaxSelectableMagies();
-    return (
-      this.selectedMagies.length >= max &&
-      !this.selectedMagies.controls.some(c => c.value === nom)
-    );
+    return this.toolsService.isItemDisabled(this.selectedMagies.controls, max, nom);
   }
   //#endregion Magie
 
@@ -213,33 +180,12 @@ export class Part4Component implements OnInit {
 
   // Supprimer les rituels invalides pour la profession actuelle
   clearInvalidRituels() {
-    const validNames = this.rituelDisponible.map(r => r.nom);
-    const toKeep = this.selectedRituels.controls.filter(ctrl => validNames.includes(ctrl.value));
-    this.selectedRituels.clear();
-    toKeep.forEach(ctrl => this.selectedRituels.push(ctrl));
-    this.convertRituelToObject();
+    this.toolsService.clearInvalidItems(this.selectedRituels, this.rituelDisponible, () => this.convertRituelToObject());
   }
 
   // Gérer le changement d'état des cases à cocher pour les rituels
   onCheckboxChangeRituel(e: any) {
-    const value = e.target.value;
-    const isChecked = e.target.checked;
-
-    if (isChecked) {
-      const maxSelectable = this.getMaxSelectableRituels();
-      if (this.selectedRituels.length >= maxSelectable) {
-        alert(`Vous ne pouvez sélectionner que ${maxSelectable} rituels.`);
-        e.target.checked = false;
-        return;
-      }
-      this.selectedRituels.push(new FormControl(value));
-    } else {
-      const index = this.selectedRituels.controls.findIndex(x => x.value === value);
-      if (index !== -1) {
-        this.selectedRituels.removeAt(index);
-      }
-    }
-    this.convertRituelToObject();
+    this.toolsService.handleCheckboxChange(e, this.selectedRituels, () => this.getMaxSelectableRituels(), () => this.convertRituelToObject());
   }
 
   // Convertir les rituels sélectionnés en objets pour le formulaire
@@ -252,30 +198,20 @@ export class Part4Component implements OnInit {
 
   // Supprimer un rituel de la liste des rituels sélectionnés
   removeChipRituel(nom: string) {
-    const index = this.selectedRituels.controls.findIndex(x => x.value === nom);
-    if (index !== -1) {
-      this.selectedRituels.removeAt(index);
-    }
-    this.convertRituelToObject();
+    this.toolsService.removeItemFromFormArray(this.selectedRituels, nom, () => this.convertRituelToObject());
   }
 
   // Obtenir le nombre maximum de rituels sélectionnables en fonction de la profession
   private getMaxSelectableRituels(): number {
-    const selectedProfessionId = this.form.get('profession')?.value;
-    const selectedProfession = PROFESSION_LIST.find(p => p.id === +selectedProfessionId);
-    if (!selectedProfession) return Infinity;
-    if (selectedProfession.nom === 'Mage') return 1;
-    if (selectedProfession.nom === 'Prêtre') return 2;
-    return Infinity;
+    const professionLimits = { 'Mage': 1, 'Prêtre': 2 };
+
+    return this.toolsService.getMaxSelectableItems(this.form.get('profession')?.value, professionLimits) || Infinity;
   }
 
   // Vérifier si un rituel est désactivé
   isRituelDisabled(nom: string): boolean {
     const max = this.getMaxSelectableRituels();
-    return (
-      this.selectedRituels.length >= max &&
-      !this.selectedRituels.controls.some(c => c.value === nom)
-    );
+    return this.toolsService.isItemDisabled(this.selectedRituels.controls, max, nom);
   }
   //#endregion Rituel
   //#region Envoûtement 
@@ -307,33 +243,12 @@ export class Part4Component implements OnInit {
 
   // Supprimer les envoûtements invalides pour la profession actuelle
   clearInvalidEnvoutements() {
-    const validNames = this.envoutementDisponible.map(e => e.nom);
-    const toKeep = this.selectedEnvoutement.controls.filter(ctrl => validNames.includes(ctrl.value));
-    this.selectedEnvoutement.clear();
-    toKeep.forEach(ctrl => this.selectedEnvoutement.push(ctrl));
-    this.convertEnvoutementToObject();
+    this.toolsService.clearInvalidItems(this.selectedEnvoutement, this.envoutementDisponible, () => this.convertEnvoutementToObject());
   }
 
   // Gérer le changement d'état des cases à cocher pour les envoutements
   onCheckboxChangeEnvoutement(e: any) {
-    const value = e.target.value;
-    const isChecked = e.target.checked;
-
-    if (isChecked) {
-      const maxSelectable = this.getMaxSelectableEnvoutements();
-      if (this.selectedEnvoutement.length >= maxSelectable) {
-        alert(`Vous ne pouvez sélectionner que ${maxSelectable} envoûtements.`);
-        e.target.checked = false;
-        return;
-      }
-      this.selectedEnvoutement.push(new FormControl(value));
-    } else {
-      const index = this.selectedEnvoutement.controls.findIndex(x => x.value === value);
-      if (index !== -1) {
-        this.selectedEnvoutement.removeAt(index);
-      }
-    }
-    this.convertEnvoutementToObject();
+    this.toolsService.handleCheckboxChange(e, this.selectedEnvoutement, () => this.getMaxSelectableEnvoutements(), () => this.convertEnvoutementToObject());
   }
 
   // Convertir les envoûtements sélectionnés en objets pour le formulaire
@@ -345,28 +260,19 @@ export class Part4Component implements OnInit {
   }
   // Supprimer un envoûtement de la liste des envoûtements sélectionnés
   removeChipEnvoutement(nom: string) {
-    const index = this.selectedEnvoutement.controls.findIndex(x => x.value === nom);
-    if (index !== -1) {
-      this.selectedEnvoutement.removeAt(index);
-    }
-    this.convertEnvoutementToObject();
+    this.toolsService.removeItemFromFormArray(this.selectedEnvoutement, nom, () => this.convertEnvoutementToObject());
   }
   // Obtenir le nombre maximum d'envoûtements sélectionnables en fonction de la profession
   private getMaxSelectableEnvoutements(): number {
-    const selectedProfessionId = this.form.get('profession')?.value;
-    const selectedProfession = PROFESSION_LIST.find(p => p.id === +selectedProfessionId);
-    if (!selectedProfession) return Infinity;
-    if (selectedProfession.nom === 'Mage') return 1;
-    if (selectedProfession.nom === 'Prêtre') return 2;
-    return Infinity;
+    const professionLimits = { 'Mage': 1, 'Prêtre': 2 };
+
+    return this.toolsService.getMaxSelectableItems(this.form.get('profession')?.value, professionLimits) || Infinity;
   }
+
   // Vérifier si un envoûtement est désactivé
   isEnvoutementDisabled(nom: string): boolean {
     const max = this.getMaxSelectableEnvoutements();
-    return (
-      this.selectedEnvoutement.length >= max &&
-      !this.selectedEnvoutement.controls.some(c => c.value === nom)
-    );
+    return this.toolsService.isItemDisabled(this.selectedEnvoutement.controls, max, nom);
   }
   //#region Envoûtement
 }
