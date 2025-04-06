@@ -1,38 +1,107 @@
 <div [formGroup]="form">
-    <!-- Sorts sélectionnés -->
-    <div class="row">
-      <div class="col s12">
-        <label>{{ magieNom }} sélectionnés :</label>
-        <div class="row">
-          <div *ngFor="let item of selectedMagies.controls" class="chip">
-            {{ item.value }}
-            <i class="close material-icons" (click)="removeChip(item.value)">close</i>
-          </div>
+  <!-- Magies sélectionnées -->
+  <div class="row">
+    <div class="col s12">
+      <label>{{ magieNom }} sélectionnés :</label>
+      <div class="row">
+        <div *ngFor="let item of selectedMagies.controls" class="chip">
+          {{ item.value }}
+          <i class="close material-icons" (click)="removeChipMagie(item.value)">close</i>
         </div>
       </div>
     </div>
-  
-    <!-- Sorts disponibles -->
-    <div class="row">
-      <div class="col s12">
-        <label>{{ magieInstruction }}</label>
-        <div class="row">
-          <div *ngFor="let magie of magieDisponible; let i = index" class="col s4">
-            <p>
-              <label>
-                <input
-                  type="checkbox"
-                  [value]="magie.nom"
-                  (change)="onCheckboxChange($event)"
-                  [checked]="selectedMagies.value.includes(magie.nom)"
-                  [disabled]="isMagieDisabled(magie.nom)"
-                />
-                <span>{{ magie.nom }}</span>
-              </label>
-            </p>
-          </div>
+  </div>
+
+  <!-- Magies disponibles -->
+  <div class="row">
+    <div class="col s12">
+      <label>{{ magieInstruction }}</label>
+      <div class="row">
+        <div *ngFor="let magie of magieDisponible; let i = index" class="col s4">
+          <p>
+            <label>
+              <input
+                type="checkbox"
+                [value]="magie.nom"
+                (change)="onCheckboxChangeMagie($event)"
+                [checked]="selectedMagies.value.includes(magie.nom)"
+                [disabled]="isMagieDisabled(magie.nom)"
+              />
+              <span>{{ magie.nom }}</span>
+            </label>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rituels sélectionnés -->
+  <div class="row">
+    <div class="col s12">
+      <label>{{ rituelNom }} sélectionnés :</label>
+      <div class="row">
+        <div *ngFor="let item of selectedRituels.controls" class="chip">
+          {{ item.value }}
+          <i class="close material-icons" (click)="removeChipRituel(item.value)">close</i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rituels disponibles -->
+  <div class="row">
+    <div class="col s12">
+      <label>{{ rituelInstruction }}</label>
+      <div class="row">
+        <div *ngFor="let rituel of rituelDisponible; let i = index" class="col s4">
+          <p>
+            <label>
+              <input
+                type="checkbox"
+                [value]="rituel.nom"
+                (change)="onCheckboxChangeRituel($event)"
+                [checked]="selectedRituels.value.includes(rituel.nom)"
+                [disabled]="isRituelDisabled(rituel.nom)"
+              />
+              <span>{{ rituel.nom }}</span>
+            </label>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Envoutements sélectionnés -->
+  <div class="row">
+    <div class="col s12">
+      <label>{{ envoutementNom }} sélectionnés :</label>
+      <div class="row">
+        <div *ngFor="let item of selectedEnvoutement.controls" class="chip">
+          {{ item.value }}
+          <i class="close material-icons" (click)="removeChipEnvoutement(item.value)">close</i>
+        </div>
+      </div>
+    </div>
+
+  <!-- Envoutements disponibles -->
+  <div class="row">
+    <div class="col s12">
+      <label>{{ envoutementInstruction }}</label>
+      <div class="row">
+        <div *ngFor="let envoutement of envoutementDisponible; let i = index" class="col s4">
+          <p>
+            <label>
+              <input
+                type="checkbox"
+                [value]="envoutement.nom"
+                (change)="onCheckboxChangeEnvoutement($event)"
+                [checked]="selectedEnvoutement.value.includes(envoutement.nom)"
+                [disabled]="isEnvoutementDisabled(envoutement.nom)"
+              />
+              <span>{{ envoutement.nom }}</span>
+            </label>
+          </p>
         </div>
       </div>
     </div>
 </div>
-  
