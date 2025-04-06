@@ -12,30 +12,25 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['envoutements-list.component.scss']
 })
 export class EnvoutementsListComponent {
-  readonly MAX_LENGTH = 100;// Nombre max de caractères avant troncature
-  readonly envoutement = signal(ENVOUTEMENT_LIST);
-  readonly #envoutementService = inject(EnvoutementService);
-  readonly envoutementsList = signal(this.#envoutementService.getEnvoutementList());
-  readonly searchTerm = signal(''); // signal pour la recherche
+  private readonly envoutementService = inject(EnvoutementService);
+
+  readonly MAX_LENGTH = 100;
+
+  readonly searchTerm = signal('');
 
   readonly envoutementsListFiltered = computed(() => {
-    const searchTerm = this.searchTerm();
-    const envoutementsList = this.envoutementsList();
-    // filtrage de la liste des compétences
-    if (!searchTerm) return envoutementsList;
-    // sinon on retourne les sorts dont le nom contient le terme de recherche
-    return envoutementsList.filter(envoutement => envoutement.nom.toLowerCase().includes(searchTerm.trim().toLowerCase()));
+    const term = this.searchTerm();
+    return this.envoutementService.searchEnvoutements(term);
   });
 
   trackById(index: number, envoutement: any): number {
     return envoutement.id;
   }
 
-  truncateText(text: string): string {
-    if (text.length > this.MAX_LENGTH) {
-      return text.substring(0, this.MAX_LENGTH) + '...';
-    }
-    return text;
+  truncate(text: string): string {
+    return this.envoutementService.truncateText(text, this.MAX_LENGTH);
   }
 
+  // Prévu pour le backend plus tard :
+  // readonly envoutementsList = toSignal(this.envoutementService.getEnvoutementList());
 }
