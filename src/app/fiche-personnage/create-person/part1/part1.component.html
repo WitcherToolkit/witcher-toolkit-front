@@ -13,7 +13,7 @@
     <div class="input-field col s3">
         <select #raceSelect id="race" formControlName="race" class="browser-default">
           <option value="">Choisir Race</option>
-          <option *ngFor="let race of races" [value]="race.id">{{ race.nom }}</option>
+          <option *ngFor="let race of races" [value]="race.idRace">{{ race.nom }}</option>
       </select>
     </div>
     
