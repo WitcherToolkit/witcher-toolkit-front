@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { PROFESSION_LIST } from '../../fake-data-set/profession-fake';
 import { ProfessionsService } from '../professions.service';
+import { Profession } from '../../models/profession';
 
 @Component({
   selector: 'app-professions-list',
@@ -11,26 +12,19 @@ import { ProfessionsService } from '../professions.service';
   styleUrl: './professions-list.component.scss'
 })
 export class ProfessionsListComponent {
-  readonly profession = signal(PROFESSION_LIST);
-  readonly #professionsService = inject(ProfessionsService);
-  readonly professionsList = signal(this.#professionsService.getProfessionsList());
+  private readonly professionsService = inject(ProfessionsService);
+
   readonly searchTerm = signal('');
 
   readonly professionsListFiltered = computed(() => {
-      const searchTerm = this.searchTerm();
-      const professionsList = this.professionsList();
-
-      if (!searchTerm) return professionsList;
-
-      return professionsList.filter(profession => profession.nom.toLowerCase().includes(searchTerm.trim().toLowerCase()));
+    const term = this.searchTerm();
+    return this.professionsService.searchProfessions(term);
   });
 
-  particularitesNoms(profession: any): string {
-      return profession.particularites.map((particularite: any) => particularite.nom).join(', ');
+  trackById(index: number, profession: Profession): number {
+    return profession.id;
   }
 
-  trackById(index: number, profession: any): number {
-      return profession.id;
-  }
-
+  // Pour le futur :
+  // readonly professionsList = toSignal(this.professionsService.getProfessionsList());
 }
