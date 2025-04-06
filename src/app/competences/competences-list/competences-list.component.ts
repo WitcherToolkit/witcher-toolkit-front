@@ -11,19 +11,17 @@ import { CompetenceService } from '../competence.service';
   styles: []
 })
 export class CompetencesListComponent {
-  readonly competences = signal(COMPETENCE_LIST);
-  readonly #competenceService = inject(CompetenceService); // injection de la dépendance
-  readonly competencesList = signal(this.#competenceService.getCompetencesList()); // récupération de la liste des compétences
-  readonly searchTerm = signal(''); // signal pour la recherche
+  private readonly competenceService = inject(CompetenceService);
 
+  readonly searchTerm = signal('');
+  
   readonly competencesListFiltered = computed(() => {
-    const searchTerm = this.searchTerm();
-    const competencesList = this.competencesList();
-    // filtrage de la liste des compétences
-    if (!searchTerm) return competencesList;
-    // sinon on retourne les compétences dont le nom contient le terme de recherche
-    return competencesList.filter(competence => competence.nom.toLowerCase().includes(searchTerm.trim().toLowerCase()));
+    const term = this.searchTerm();
+    return this.competenceService.searchCompetences(term);
   });
+
+  // Pour un futur appel API avec Observable + toSignal
+  // readonly competencesList = toSignal(this.competenceService.getCompetencesList());
 
   trackById(index: number, competence: any): number {
     return competence.id;
