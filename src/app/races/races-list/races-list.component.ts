@@ -30,7 +30,7 @@ export class RacesListComponent {
   }
 
   trackById(index: number, race: Race): number {
-    return race.id;
+    return race.idRace;
   }
 
   // Pour plus tard :
