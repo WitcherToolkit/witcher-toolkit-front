@@ -35,7 +35,9 @@ export class Part1Component implements OnInit {
     this.initializeForm();
 
     // Charger les races depuis le service
-    this.races = this.racesService.getRacesList();
+    this.racesService.getRacesList().subscribe((races: Race[]) => {
+      this.races = races;
+    });
 
     // Charger les professions depuis le service
     this.professionsService.getProfessionsList().subscribe((professions: Profession[]) => {

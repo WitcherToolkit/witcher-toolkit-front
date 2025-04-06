@@ -1,6 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { Magie } from '../models/magie';
 import { MAGIE_LIST } from '../fake-data-set/magie-fake';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,27 +9,25 @@ import { MAGIE_LIST } from '../fake-data-set/magie-fake';
 export class MagieService {
   private readonly magies = signal<Magie[]>(MAGIE_LIST);
 
-  getMagieList(): Magie[] {
-    return this.magies();
+  getMagiesList(): Observable<Magie[]> {
+    return of(this.magies());
+    //return this.http.get<Magie[]>('url/api/magies');
   }
 
   searchMagies(term: string): Magie[] {
     const lowerTerm = term.trim().toLowerCase();
-    const list = this.getMagieList();
-
-    if (!lowerTerm) return list;
-
-    return list.filter(magie =>
-      magie.nom.toLowerCase().includes(lowerTerm)
-    );
+    let filteredMagies: Magie[] = [];
+      this.getMagiesList().subscribe(list => {
+        if (!lowerTerm) {
+          filteredMagies = list;
+        } else {
+          filteredMagies = list.filter(magie =>
+            magie.nom.toLowerCase().includes(lowerTerm)
+          );
+        }
+      });
+  
+    return filteredMagies;
   }
 
-  // Prévu pour l'API REST dans le futur :
-  /*
-  constructor(private http: HttpClient) {}
-
-  getMagieList(): Observable<Magie[]> {
-    return this.http.get<Magie[]>('url/api/magies');
-  }
-  */
 }

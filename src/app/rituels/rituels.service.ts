@@ -1,6 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { Rituel } from '../models/rituel';
 import { RITUEL_LIST } from '../fake-data-set/rituel-fake';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,27 +9,25 @@ import { RITUEL_LIST } from '../fake-data-set/rituel-fake';
 export class RituelsService {
   private readonly rituels = signal<Rituel[]>(RITUEL_LIST);
 
-  getRituelList(): Rituel[] {
-    return this.rituels();
+  getRituelsList():  Observable<Rituel[]> {
+    return of(this.rituels());
+    //return this.http.get<Rituel[]>('url/api/rituels');
   }
 
   searchRituels(term: string): Rituel[] {
     const lowerTerm = term.trim().toLowerCase();
-    const list = this.getRituelList();
+    let filteredRituels: Rituel[] = [];
+      this.getRituelsList().subscribe(list => {
+        if (!lowerTerm) {
+          filteredRituels = list;
+        } else {
+          filteredRituels = list.filter(rituel =>
+            rituel.nom.toLowerCase().includes(lowerTerm)
+          );
+        }
+      });
+  
+    return filteredRituels;
+    }
 
-    if (!lowerTerm) return list;
-
-    return list.filter(rituel =>
-      rituel.nom.toLowerCase().includes(lowerTerm)
-    );
-  }
-
-  // Prévu pour une API REST :
-  /*
-  constructor(private http: HttpClient) {}
-
-  getRituelList(): Observable<Rituel[]> {
-    return this.http.get<Rituel[]>('url/api/rituels');
-  }
-  */
 }
