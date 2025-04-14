@@ -79,4 +79,20 @@ export class ToolsService {
   isItemDisabled(selectedItems: any[], maxSelectable: number, itemName: string): boolean {
     return (selectedItems.length >= maxSelectable && !selectedItems.some(c => c.value === itemName));
   }
+
+  // Incrémentation générique d'une valeur dans un FormGroup (par index)
+  incrementFormControlValue(formArray: FormArray, index: number, controlName: string, maxValue: number): void {
+    const control = formArray.at(index).get(controlName);
+    if (control && control.value < maxValue) {
+      control.setValue(control.value + 1);
+    }
+  }
+
+  // Décrémentation générique d'une valeur dans un FormGroup (par index)
+  decrementFormControlValue(formArray: FormArray, index: number, controlName: string, minValue: number): void {
+    const control = formArray.at(index).get(controlName);
+    if (control && control.value > minValue) {
+      control.setValue(control.value - 1);
+    }
+  }
 }

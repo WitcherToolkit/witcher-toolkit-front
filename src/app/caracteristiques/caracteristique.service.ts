@@ -35,7 +35,13 @@ export class CaracteristiqueService {
     return filteredCaracteristiques;
   }
 
-  // Récupération des valeurs dérivées (PS, END, RÉC, ÉTOU) en fonction de la moyenne
+  // Vérification si une caractéristique est éditable
+  isEditable(code: string): boolean {
+    return ['INT', 'RÉF', 'DEX', 'COR', 'VIT', 'EMP', 'TECH', 'VOL', 'CHA'].includes(code);
+  }
+
+  //#region caractéristiques dérivées
+  // Récupération des valeurs dérivées (PS, END, RÉC, ÉTOU) en fonction de la moyenne de COR et de VOL
   getDerivedValues(average: number) {
     const table: { [key: number]: { PS: number; END: number; RÉC: number; ÉTOU: number } } = {
       2: { PS: 10, END: 10, RÉC: 2, ÉTOU: 2 },
@@ -54,6 +60,17 @@ export class CaracteristiqueService {
 
     return table[average] || { PS: 0, END: 0, RÉC: 0, ÉTOU: 0 };
   }
+
+  // Mise à jour de la valeur d'une caractéristique dérivée
+  setDerivedValue(formArray: FormArray, caracteristiques: Caracteristique[], code: string, value: number): void {
+    const index = caracteristiques.findIndex(c => c.code === code);
+    if (index !== -1 && formArray.at(index)) {
+      const control = formArray.at(index);
+      control.get('valeurMax')?.setValue(value);
+      control.get('valeurActuelle')?.setValue(value);
+    }
+  }
+  //#endregion caractéristiques dérivées
 
   // Récupération des valeurs de poings et pieds en fonction de la valeur de COR
   getPoingsPiedsValues(corValue: number) {
@@ -76,29 +93,5 @@ export class CaracteristiqueService {
     }
   }
 
-   // Cette méthode met à jour la valeur actuelle des caractéristiques
-   /*updateValeurActuelle(caracteristiquePersonnage: FormArray): void {
-    caracteristiquePersonnage.controls.forEach(control => {
-      control.get('valeurActuelle')?.setValue(control.get('valeurMax')?.value);
-    });
-  }*/
-
-  // Externaliser la méthode createCaracteristiqueControl
-  /*createCaracteristiqueControl(code: string, isEditable: boolean): FormGroup {
-    const control = this.fb.group({
-      valeurMax: [isEditable ? 3 : { value: 0, disabled: true }, [Validators.required, Validators.min(3)]],
-      valeurActuelle: [isEditable ? 3 : 0],
-      code: [code]
-    });
-
-    if (isEditable) {
-      control.get('valeurMax')!.valueChanges.subscribe(() => {
-        // Logique mise à jour de la valeur actuelle
-        this.updateValeurActuelle(control);
-      });
-    }
-
-    return control;
-  }*/
 
 }

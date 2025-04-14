@@ -13,7 +13,7 @@
         <div *ngFor="let competenceCtrl of competencesArray.controls; let i = index" [formGroupName]="i" class="col s4">
           <div class="row">
             <div class="col s2 center-align">
-              <button type="button" class="btn-floating btn-small" (click)="decrementCaracteristique(i, 'competences')" [disabled]="isDecrementDisabled(i, 'competences')">
+              <button type="button" class="btn-floating btn-small" (click)="decrementCompetence(i, 'competences')" [disabled]="isDecrementDisabled(i, 'competences')">
                 <i class="material-icons">remove</i>
               </button>
             </div>
@@ -24,7 +24,7 @@
               </div>
             </div>
             <div class="col s2 center-align">
-              <button type="button" class="btn-floating btn-small" (click)="incrementCaracteristique(i, 'competences')" [disabled]="isIncrementDisabled(i, 'competences')">
+              <button type="button" class="btn-floating btn-small" (click)="incrementCompetence(i, 'competences')" [disabled]="isIncrementDisabled(i, 'competences')">
                 <i class="material-icons">add</i>
               </button>
             </div>
@@ -46,7 +46,7 @@
         <div *ngFor="let competenceCtrl of nonAssociatedCompetencesArray.controls; let i = index" [formGroupName]="i" class="col s4">
           <div class="row">
             <div class="col s2 center-align">
-              <button type="button" class="btn-floating btn-small" (click)="decrementCaracteristique(i, 'nonAssociatedCompetences')" [disabled]="isDecrementDisabled(i, 'nonAssociatedCompetences')">
+              <button type="button" class="btn-floating btn-small" (click)="decrementCompetence(i, 'nonAssociatedCompetences')" [disabled]="isDecrementDisabled(i, 'nonAssociatedCompetences')">
                 <i class="material-icons">remove</i>
               </button>
             </div>
@@ -57,7 +57,7 @@
               </div>
             </div>
             <div class="col s2 center-align">
-              <button type="button" class="btn-floating btn-small" (click)="incrementCaracteristique(i, 'nonAssociatedCompetences')" [disabled]="isIncrementDisabled(i, 'nonAssociatedCompetences')">
+              <button type="button" class="btn-floating btn-small" (click)="incrementCompetence(i, 'nonAssociatedCompetences')" [disabled]="isIncrementDisabled(i, 'nonAssociatedCompetences')">
                 <i class="material-icons">add</i>
               </button>
             </div>

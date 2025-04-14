@@ -5,6 +5,7 @@ import { Competence } from '../../../models/competence';
 import { COMPETENCE_LIST } from '../../../fake-data-set/competence-fake';
 import { PROFESSION_LIST } from '../../../fake-data-set/profession-fake';
 import { CompetencePersonnage } from '../../../models/competence-personnage';
+import { ToolsService } from '../../../tools/tools.service';
 
 @Component({
   selector: 'app-part3',
@@ -20,7 +21,7 @@ export class Part3Component implements OnInit {
   pointsRestants = signal<number>(0);
   pointsDispo: number = 0;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private toolsService: ToolsService) {}
 
   ngOnInit() {
     this.form.addControl('competencePersonnage', this.fb.array([]));
@@ -145,19 +146,15 @@ export class Part3Component implements OnInit {
   }
 
   // Ajout de points de caractéristique
-  incrementCaracteristique(index: number, listType: 'competences' | 'nonAssociatedCompetences'): void {
-    const control = this.getArrayByType(listType).at(index).get('valeurMax');
-    if (control && control.value < 6) { // Limite maximale : 6
-      control.setValue(control.value + 1);
-    }
+  incrementCompetence(index: number, listType: 'competences' | 'nonAssociatedCompetences'): void {
+    const formArray = this.getArrayByType(listType);
+    this.toolsService.incrementFormControlValue(formArray, index, 'valeurMax', 6);
   }
-  
-  // Supression de points de caractéristique
-  decrementCaracteristique(index: number, listType: 'competences' | 'nonAssociatedCompetences'): void {
-    const control = this.getArrayByType(listType).at(index).get('valeurMax');
-    if (control && control.value > 0) { // Limite minimale : 0
-      control.setValue(control.value - 1);
-    }
+    // Supression de points de caractéristique
+
+  decrementCompetence(index: number, listType: 'competences' | 'nonAssociatedCompetences'): void {
+    const formArray = this.getArrayByType(listType);
+    this.toolsService.decrementFormControlValue(formArray, index, 'valeurMax', 0); // ou autre valeur minimale si applicable
   }
   
   // Griser le bouton si le minimum est atteind

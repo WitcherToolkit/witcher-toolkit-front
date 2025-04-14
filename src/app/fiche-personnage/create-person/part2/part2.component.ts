@@ -7,6 +7,7 @@ import { PROFESSION_MAP } from '../../../fake-data-set/profession-fake';
 import { CaracteristiquePersonnage } from '../../../models/caracteristique-personnage';
 import { Caracteristique } from '../../../models/caracteristique';
 import { CaracteristiqueService } from '../../../caracteristiques/caracteristique.service';
+import { ToolsService } from '../../../tools/tools.service';
 
 @Component({
   selector: 'app-part2',
@@ -24,7 +25,7 @@ export class Part2Component implements OnInit, OnDestroy {
   niveauJeu = signal<string>('libre');
   pointsRestants = signal<number>(0);
 
-  constructor(private fb: FormBuilder, private caracteristiqueService: CaracteristiqueService) {
+  constructor(private fb: FormBuilder, private caracteristiqueService: CaracteristiqueService, private toolsService: ToolsService) {
     // Écoute les changements de niveau et met à jour les points restants
     effect(() => {
       this.updatePointsRestants();
@@ -64,7 +65,7 @@ export class Part2Component implements OnInit, OnDestroy {
 
   // Création d'un contrôle pour une caractéristique
   private createCaracteristiqueControl(code: string): FormGroup {
-    const isEditable = this.isEditable(code);
+    const isEditable = this.caracteristiqueService.isEditable(code);
     const control = this.fb.group({
       valeurMax: [isEditable ? 3 : { value: 0, disabled: true }, [Validators.required, Validators.min(3)]],
       valeurActuelle: [isEditable ? 3 : 0],
@@ -98,11 +99,7 @@ export class Part2Component implements OnInit, OnDestroy {
     return this.form.get('caracteristiquePersonnage') as FormArray;
   }
 
-  // Vérification si une caractéristique est éditable
-  isEditable(code: string): boolean {
-    return ['INT', 'RÉF', 'DEX', 'COR', 'VIT', 'EMP', 'TECH', 'VOL', 'CHA'].includes(code);
-  }
-
+  // Lors le la création, valeur actuelle = valeur max
   // Mise à jour des valeurs actuelles des caractéristiques
   updateValeurActuelle() {
     this.caracteristiquePersonnage.controls.forEach(control => {
@@ -124,11 +121,11 @@ export class Part2Component implements OnInit, OnDestroy {
     const average = Math.floor((corValue + volValue) / 2);
     const derivedValues = this.caracteristiqueService.getDerivedValues(average);
   
-    this.setDerivedValue('PS', derivedValues.PS);
-    this.setDerivedValue('END', derivedValues.END);
-    this.setDerivedValue('RÉC', derivedValues.RÉC);
-    this.setDerivedValue('ÉTOU', derivedValues.ÉTOU);
-  
+    this.caracteristiqueService.setDerivedValue(this.caracteristiquePersonnage, this.caracteristiques, 'PS', derivedValues.PS);
+    this.caracteristiqueService.setDerivedValue(this.caracteristiquePersonnage, this.caracteristiques, 'END', derivedValues.END);
+    this.caracteristiqueService.setDerivedValue(this.caracteristiquePersonnage, this.caracteristiques, 'RÉC', derivedValues.RÉC);
+    this.caracteristiqueService.setDerivedValue(this.caracteristiquePersonnage, this.caracteristiques, 'ÉTOU', derivedValues.ÉTOU);
+
     let encValue = corValue * 10;
     const couValue = vitValue * 3;
     const sautValue = Math.floor(couValue / 5);
@@ -138,11 +135,10 @@ export class Part2Component implements OnInit, OnDestroy {
     if (raceName === 'Nain') {
       encValue += 25;
     }
-  
-    this.setDerivedValue('ENC', encValue);
-    this.setDerivedValue('COU', couValue);
-    this.setDerivedValue('SAUT', sautValue);
-  
+    this.caracteristiqueService.setDerivedValue(this.caracteristiquePersonnage, this.caracteristiques, 'ENC', encValue);
+    this.caracteristiqueService.setDerivedValue(this.caracteristiquePersonnage, this.caracteristiques, 'COU', couValue);
+    this.caracteristiqueService.setDerivedValue(this.caracteristiquePersonnage, this.caracteristiques, 'SAUT', sautValue);
+
     const { poings, pieds } = this.caracteristiqueService.getPoingsPiedsValues(corValue);
     this.form.get('poings')?.setValue(poings);
     this.form.get('pieds')?.setValue(pieds);
@@ -164,16 +160,6 @@ export class Part2Component implements OnInit, OnDestroy {
     }
   
     return vigueurValue;
-  }
-
-  // Mise à jour de la valeur d'une caractéristique dérivée
-  setDerivedValue(code: string, value: number) {
-    const index = this.caracteristiques.findIndex(c => c.code === code);
-    if (index !== -1) {
-      const control = this.caracteristiquePersonnage.at(index);
-      control.get('valeurMax')?.setValue(value);
-      control.get('valeurActuelle')?.setValue(value);
-    }
   }
 
   // Mise à jour des points restants en fonction du niveau de jeu
@@ -203,7 +189,7 @@ export class Part2Component implements OnInit, OnDestroy {
     // Calcul des points dépensés
     const pointsDepenses = this.caracteristiquePersonnage.controls.reduce((sum, control) => {
       const code = control.get('code')?.value;
-      if (this.isEditable(code)) {
+      if (this.caracteristiqueService.isEditable(code)) {
         return sum + (control.get('valeurMax')?.value || 0);
       }
       return sum;
@@ -222,17 +208,11 @@ export class Part2Component implements OnInit, OnDestroy {
   }
 
   incrementCaracteristique(index: number): void {
-    const control = this.caracteristiquePersonnage.at(index).get('valeurMax');
-    if (control && control.value < 10) { // Limite maximale : 10
-      control.setValue(control.value + 1);
-    }
+    this.toolsService.incrementFormControlValue(this.caracteristiquePersonnage, index, 'valeurMax', 10);
   }
   
   decrementCaracteristique(index: number): void {
-    const control = this.caracteristiquePersonnage.at(index).get('valeurMax');
-    if (control && control.value > 3) { // Limite minimale : 3
-      control.setValue(control.value - 1);
-    }
+    this.toolsService.decrementFormControlValue(this.caracteristiquePersonnage, index, 'valeurMax', 3);
   }
 
   isDecrementDisabled(index: number): boolean {
@@ -247,11 +227,15 @@ export class Part2Component implements OnInit, OnDestroy {
 
   private resetCaracteristiques(): void {
     this.caracteristiquePersonnage.controls.forEach(control => {
-      if (this.isEditable(control.get('code')?.value)) {
+      if (this.caracteristiqueService.isEditable(control.get('code')?.value)) {
         control.get('valeurMax')?.setValue(3); // Réinitialise à 3
         control.get('valeurActuelle')?.setValue(3); // Réinitialise également la valeur actuelle
       }
     });
     this.updatePointsRestants(); // Met à jour les points restants
+  }
+
+  isEditable(code: string): boolean {
+    return this.caracteristiqueService.isEditable(code);
   }
 }
