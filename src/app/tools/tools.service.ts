@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormArray, FormControl } from '@angular/forms';
 import { PROFESSION_MAP } from '../fake-data-set/profession-fake';
+import { CaracteristiqueService } from '../caracteristiques/caracteristique.service';
 
 @Injectable({
   providedIn: 'root'
@@ -95,4 +96,20 @@ export class ToolsService {
       control.setValue(control.value - 1);
     }
   }
+
+  // Méthode générique pour calculer les points restants
+  calculatePointsRestants(totalPoints: number, formArray: FormArray, isEditableFn: (code: string) => boolean): number {
+    // Calcul des points dépensés
+    const pointsDepenses = formArray.controls.reduce((sum, control) => {
+      const code = control.get('code')?.value;
+      if (isEditableFn(code)) {
+        return sum + (control.get('valeurMax')?.value || 0);
+      }
+      return sum;
+    }, 0);
+
+    // Mise à jour des points restants
+    return totalPoints - pointsDepenses;
+  }
+
 }

@@ -1,8 +1,10 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, Signal, signal } from '@angular/core';
 import { Caracteristique } from '../models/caracteristique';
 import { CARACTERISTIQUE_LIST } from '../fake-data-set/caracteristiques-fake';
 import { Observable, of } from 'rxjs';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { PROFESSION_MAP } from '../fake-data-set/profession-fake';
+import { RACE_MAP } from '../fake-data-set/race-fake';
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +42,42 @@ export class CaracteristiqueService {
     return ['INT', 'RÉF', 'DEX', 'COR', 'VIT', 'EMP', 'TECH', 'VOL', 'CHA'].includes(code);
   }
 
+  // Récupération des valeurs de poings et pieds en fonction de la valeur de COR
+  getPoingsPiedsValues(corValue: number) {
+    if (corValue >= 1 && corValue <= 2) {
+      return { poings: '1D6 - 4', pieds: '1D6' };
+    } else if (corValue >= 3 && corValue <= 4) {
+      return { poings: '1D6 - 2', pieds: '1D6 + 2' };
+    } else if (corValue >= 5 && corValue <= 6) {
+      return { poings: '1D6', pieds: '1D6 + 4' };
+    } else if (corValue >= 7 && corValue <= 8) {
+      return { poings: '1D6 + 2', pieds: '1D6 + 6' };
+    } else if (corValue >= 9 && corValue <= 10) {
+      return { poings: '1D6 + 4', pieds: '1D6 + 8' };
+    } else if (corValue >= 11 && corValue <= 12) {
+      return { poings: '1D6 + 6', pieds: '1D6 + 10' };
+    } else if (corValue === 13) {
+      return { poings: '1D6 + 8', pieds: '1D6 + 12' };
+    } else {
+      return { poings: '', pieds: '' };
+    }
+  }
+
+  // Méthode pour obtenir la vigueur
+  getVigueur(form: FormGroup): number {
+    let vigueurValue = 0;
+    const professionId = form.get('profession')?.value;
+    const professionName = PROFESSION_MAP[professionId];
+
+    if (professionName === 'Mage') {
+      vigueurValue = 5;
+    } else if (professionName === 'Prêtre' || professionName === 'Sorceleur') {
+      vigueurValue = 2;
+    }
+
+    return vigueurValue;
+  }
+
   //#region caractéristiques dérivées
   // Récupération des valeurs dérivées (PS, END, RÉC, ÉTOU) en fonction de la moyenne de COR et de VOL
   getDerivedValues(average: number) {
@@ -70,28 +108,63 @@ export class CaracteristiqueService {
       control.get('valeurActuelle')?.setValue(value);
     }
   }
+
+  // Calcul des valeurs dérivées (PS, END, RÉC, ÉTOU, ENC, COU, SAUT, poings, pieds)
+  calculateDerivedValues(caracteristiquePersonnage: FormArray, caracteristiques: Caracteristique[], form: FormGroup) {
+    const corIndex = caracteristiques.findIndex(c => c.code === 'COR');
+    const volIndex = caracteristiques.findIndex(c => c.code === 'VOL');
+    const vitIndex = caracteristiques.findIndex(c => c.code === 'VIT');
+
+    const corValue = caracteristiquePersonnage.at(corIndex).get('valeurMax')?.value;
+    const volValue = caracteristiquePersonnage.at(volIndex).get('valeurMax')?.value;
+    const vitValue = caracteristiquePersonnage.at(vitIndex).get('valeurMax')?.value;
+
+    const average = Math.floor((corValue + volValue) / 2);
+    const derivedValues = this.getDerivedValues(average);
+
+    this.setDerivedValue(caracteristiquePersonnage, caracteristiques, 'PS', derivedValues.PS);
+    this.setDerivedValue(caracteristiquePersonnage, caracteristiques, 'END', derivedValues.END);
+    this.setDerivedValue(caracteristiquePersonnage, caracteristiques, 'RÉC', derivedValues.RÉC);
+    this.setDerivedValue(caracteristiquePersonnage, caracteristiques, 'ÉTOU', derivedValues.ÉTOU);
+
+    let encValue = corValue * 10;
+    const couValue = vitValue * 3;
+    const sautValue = Math.floor(couValue / 5);
+
+    const raceId = form.get('race')?.value;
+    const raceName = RACE_MAP[raceId];
+    if (raceName === 'Nain') {
+      encValue += 25;
+    }
+    this.setDerivedValue(caracteristiquePersonnage, caracteristiques, 'ENC', encValue);
+    this.setDerivedValue(caracteristiquePersonnage, caracteristiques, 'COU', couValue);
+    this.setDerivedValue(caracteristiquePersonnage, caracteristiques, 'SAUT', sautValue);
+
+    const { poings, pieds } = this.getPoingsPiedsValues(corValue);
+    form.get('poings')?.setValue(poings);
+    form.get('pieds')?.setValue(pieds);
+
+    // Mettre à jour la vigueur
+    const vigueur = this.getVigueur(form);
+    form.get('vigueur')?.setValue(vigueur);
+  }
+  
   //#endregion caractéristiques dérivées
 
-  // Récupération des valeurs de poings et pieds en fonction de la valeur de COR
-  getPoingsPiedsValues(corValue: number) {
-    if (corValue >= 1 && corValue <= 2) {
-      return { poings: '1D6 - 4', pieds: '1D6' };
-    } else if (corValue >= 3 && corValue <= 4) {
-      return { poings: '1D6 - 2', pieds: '1D6 + 2' };
-    } else if (corValue >= 5 && corValue <= 6) {
-      return { poings: '1D6', pieds: '1D6 + 4' };
-    } else if (corValue >= 7 && corValue <= 8) {
-      return { poings: '1D6 + 2', pieds: '1D6 + 6' };
-    } else if (corValue >= 9 && corValue <= 10) {
-      return { poings: '1D6 + 4', pieds: '1D6 + 8' };
-    } else if (corValue >= 11 && corValue <= 12) {
-      return { poings: '1D6 + 6', pieds: '1D6 + 10' };
-    } else if (corValue === 13) {
-      return { poings: '1D6 + 8', pieds: '1D6 + 12' };
-    } else {
-      return { poings: '', pieds: '' };
-    }
+  // Mise à jour des valeurs actuelles des caractéristiques (Lors le la création, valeur actuelle = valeur max)
+  updateValeurActuelle(caracteristiquePersonnage: FormArray) {
+    caracteristiquePersonnage.controls.forEach(control => {
+      control.get('valeurActuelle')?.setValue(control.get('valeurMax')?.value);
+    });
   }
 
+  // Méthode pour réinitialiser les caractéristiques
+  resetCaracteristiques(caracteristiquePersonnage: FormArray, niveauJeu: Signal<string>, pointsRestants: Signal<number>) {
+    //
+  }
 
+  // Méthode pour mettre à jour les points restants
+  updatePointsRestants(caracteristiquePersonnage: FormArray, niveauJeu: Signal<string>, pointsRestants: Signal<number>) {
+    //
+  }
 }

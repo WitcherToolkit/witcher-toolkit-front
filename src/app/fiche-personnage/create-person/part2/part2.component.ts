@@ -2,9 +2,6 @@ import { Component, OnInit, OnDestroy, Input, signal, effect } from '@angular/co
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { RACE_MAP } from '../../../fake-data-set/race-fake';
-import { PROFESSION_MAP } from '../../../fake-data-set/profession-fake';
-import { CaracteristiquePersonnage } from '../../../models/caracteristique-personnage';
 import { Caracteristique } from '../../../models/caracteristique';
 import { CaracteristiqueService } from '../../../caracteristiques/caracteristique.service';
 import { ToolsService } from '../../../tools/tools.service';
@@ -41,7 +38,7 @@ export class Part2Component implements OnInit, OnDestroy {
     });
 
     this.initializeFormControls();
-    this.calculateDerivedValues();
+    this.caracteristiqueService.calculateDerivedValues(this.caracteristiquePersonnage, this.caracteristiques, this.form);
     this.subscribeToNiveauJeuChanges();
   }
 
@@ -75,7 +72,8 @@ export class Part2Component implements OnInit, OnDestroy {
     if (isEditable) {
       this.subscriptions.push(
         control.get('valeurMax')!.valueChanges.subscribe(() => {
-          this.updateValeurActuelle();
+          this.caracteristiqueService.updateValeurActuelle(this.caracteristiquePersonnage);
+          this.caracteristiqueService.calculateDerivedValues(this.caracteristiquePersonnage, this.caracteristiques, this.form);
           this.updatePointsRestants();
         })
       );
@@ -97,69 +95,6 @@ export class Part2Component implements OnInit, OnDestroy {
   // Récupération du FormArray des caractéristiques
   get caracteristiquePersonnage(): FormArray {
     return this.form.get('caracteristiquePersonnage') as FormArray;
-  }
-
-  // Lors le la création, valeur actuelle = valeur max
-  // Mise à jour des valeurs actuelles des caractéristiques
-  updateValeurActuelle() {
-    this.caracteristiquePersonnage.controls.forEach(control => {
-      control.get('valeurActuelle')?.setValue(control.get('valeurMax')?.value);
-    });
-    this.calculateDerivedValues();
-  }
-
-  // Calcul des valeurs dérivées (PS, END, RÉC, ÉTOU, ENC, COU, SAUT, poings, pieds)
-  calculateDerivedValues() {
-    const corIndex = this.caracteristiques.findIndex(c => c.code === 'COR');
-    const volIndex = this.caracteristiques.findIndex(c => c.code === 'VOL');
-    const vitIndex = this.caracteristiques.findIndex(c => c.code === 'VIT');
-  
-    const corValue = this.caracteristiquePersonnage.at(corIndex).get('valeurMax')?.value;
-    const volValue = this.caracteristiquePersonnage.at(volIndex).get('valeurMax')?.value;
-    const vitValue = this.caracteristiquePersonnage.at(vitIndex).get('valeurMax')?.value;
-  
-    const average = Math.floor((corValue + volValue) / 2);
-    const derivedValues = this.caracteristiqueService.getDerivedValues(average);
-  
-    this.caracteristiqueService.setDerivedValue(this.caracteristiquePersonnage, this.caracteristiques, 'PS', derivedValues.PS);
-    this.caracteristiqueService.setDerivedValue(this.caracteristiquePersonnage, this.caracteristiques, 'END', derivedValues.END);
-    this.caracteristiqueService.setDerivedValue(this.caracteristiquePersonnage, this.caracteristiques, 'RÉC', derivedValues.RÉC);
-    this.caracteristiqueService.setDerivedValue(this.caracteristiquePersonnage, this.caracteristiques, 'ÉTOU', derivedValues.ÉTOU);
-
-    let encValue = corValue * 10;
-    const couValue = vitValue * 3;
-    const sautValue = Math.floor(couValue / 5);
-  
-    const raceId = this.form.get('race')?.value;
-    const raceName = RACE_MAP[raceId];
-    if (raceName === 'Nain') {
-      encValue += 25;
-    }
-    this.caracteristiqueService.setDerivedValue(this.caracteristiquePersonnage, this.caracteristiques, 'ENC', encValue);
-    this.caracteristiqueService.setDerivedValue(this.caracteristiquePersonnage, this.caracteristiques, 'COU', couValue);
-    this.caracteristiqueService.setDerivedValue(this.caracteristiquePersonnage, this.caracteristiques, 'SAUT', sautValue);
-
-    const { poings, pieds } = this.caracteristiqueService.getPoingsPiedsValues(corValue);
-    this.form.get('poings')?.setValue(poings);
-    this.form.get('pieds')?.setValue(pieds);
-  
-    // Mettre à jour la vigueur
-    const vigueur = this.getVigueur();
-    this.form.get('vigueur')?.setValue(vigueur);
-  }
-
-  getVigueur(): number {
-    let vigueurValue = 0;
-    const professionId = this.form.get('profession')?.value;
-    const professionName = PROFESSION_MAP[professionId];
-  
-    if (professionName === 'Mage') {
-      vigueurValue = 5;
-    } else if (professionName === 'Prêtre' || professionName === 'Sorceleur') {
-      vigueurValue = 2;
-    }
-  
-    return vigueurValue;
   }
 
   // Mise à jour des points restants en fonction du niveau de jeu
@@ -185,21 +120,9 @@ export class Part2Component implements OnInit, OnDestroy {
         this.pointsRestants.set(0);  // Aucun calcul de points en mode "libre"
         return;
     }
-    console.log('totalt de points = ', totalPoints);
-    // Calcul des points dépensés
-    const pointsDepenses = this.caracteristiquePersonnage.controls.reduce((sum, control) => {
-      const code = control.get('code')?.value;
-      if (this.caracteristiqueService.isEditable(code)) {
-        return sum + (control.get('valeurMax')?.value || 0);
-      }
-      return sum;
-    }, 0);
-    console.log('pointsDepenses = ', pointsDepenses);
-
-    // Mise à jour des points restants
-    this.pointsRestants.set(totalPoints - pointsDepenses);
-    console.log('pointsRestants = ', totalPoints - pointsDepenses);
-    console.log(`Niveau de jeu: ${niveau}, Points restants: ${this.pointsRestants()}`);
+    // Calcul des points restants
+    const pointsRestants = this.toolsService.calculatePointsRestants(totalPoints, this.caracteristiquePersonnage, this.caracteristiqueService.isEditable);
+    this.pointsRestants.set(pointsRestants);
   }
 
   // Méthode pour changer le niveau de jeu quand un bouton radio est sélectionné
