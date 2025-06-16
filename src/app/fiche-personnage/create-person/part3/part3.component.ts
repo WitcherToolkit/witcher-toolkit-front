@@ -4,7 +4,6 @@ import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } fr
 import { Competence } from '../../../models/competence';
 import { COMPETENCE_LIST } from '../../../fake-data-set/competence-fake';
 import { PROFESSION_LIST } from '../../../fake-data-set/profession-fake';
-import { CompetencePersonnage } from '../../../models/competence-personnage';
 import { ToolsService } from '../../../tools/tools.service';
 
 @Component({
@@ -27,7 +26,7 @@ export class Part3Component implements OnInit {
     // Initialisation du FormGroup
     this.form.addControl('competencePersonnage', this.fb.array([]));
     this.form.addControl('competences', this.fb.array([]));
-    this.form.addControl('nonAssociatedCompetences', this.fb.array([])); // Ajouter un FormArray pour les compétences non associées
+    this.form.addControl('nonAssociatedCompetences', this.fb.array([]));
     this.initCompetences();
     this.calculerPointsDispo(); 
 
@@ -43,11 +42,13 @@ export class Part3Component implements OnInit {
     // Écoute les changements des valeurs des compétences associées
     this.competencesArray.valueChanges.subscribe(() => {
       this.updatePointsRestants();
+      this.updateCompetencePersonnage();
     });
 
     // Écoute les changements des valeurs des compétences non associées
     this.nonAssociatedCompetencesArray.valueChanges.subscribe(() => {
       this.calculerPointsDispo();
+      this.updateCompetencePersonnage();
     });
   }
 
@@ -130,8 +131,8 @@ export class Part3Component implements OnInit {
     const nonAssociatedCompetences = this.nonAssociatedCompetencesArray.value; // Récupère les compétences non associées
   
     // Concaténer les deux listes
-    const competencePersonnageArray = this.form.get('competencePersonnage') as FormArray;
-    competencePersonnageArray.clear();
+    const competencePersonnageArray = this.form.get('competencePersonnage') as FormArray;// Récupère le FormArray competencePersonnage
+    competencePersonnageArray.clear();// Vide le FormArray avant de le remplir
   
     [...competences, ...nonAssociatedCompetences].forEach((c: any) => {
       competencePersonnageArray.push(this.fb.group({

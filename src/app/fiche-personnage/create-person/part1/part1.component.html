@@ -66,8 +66,8 @@
       <label>Dans l'inventaire :</label>
       <div class="row">
         <div *ngFor="let item of selectedInventaire.controls" class="chip">
-          {{ item.value }}
-          <i class="close material-icons" (click)="removeChip(item.value)">close</i>
+          {{ item.value.nom }}
+          <i class="close material-icons" (click)="removeChip(item.value.nom)">close</i>
         </div>
       </div>
     </div>
@@ -90,4 +90,3 @@
   </div>
   
 </div>
-  

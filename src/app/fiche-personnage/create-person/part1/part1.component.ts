@@ -70,8 +70,10 @@ export class Part1Component implements OnInit {
 
     // Synchroniser le contrôle 'inventaires' à chaque changement de selectedInventaire
     this.selectedInventaire.valueChanges.subscribe(values => {
-      this.form.get('inventaires')?.setValue(values, { emitEvent: false });
-    });
+    // Ne garder que le champ nom, le reste vide
+    const inventaires = values.map((item: any) => ({ nom: item.nom }));
+    this.form.get('inventaires')?.setValue(inventaires, { emitEvent: false });
+  });
   }
 
   //Initialisation du formulaire
@@ -94,8 +96,20 @@ export class Part1Component implements OnInit {
 
   //Comportement des checkbox
   onCheckboxChange(e: any) {
-    this.toolsService.handleCheckboxChange(e, this.selectedInventaire, () => this.inventaireService.getMaxInventaireItems(this.form.get('profession')?.value), () => this.inventaireService.convertInventaireToObject(this.selectedInventaire.controls));
+  const value = e.target.value;
+  const checked = e.target.checked;
+
+  if (checked) {
+    // Ajoute un objet { nom: string }
+    this.selectedInventaire.push(this.fb.group({ nom: value }));
+  } else {
+    // Supprime l'objet correspondant
+    const index = this.selectedInventaire.controls.findIndex(ctrl => ctrl.value.nom === value);
+    if (index !== -1) {
+      this.selectedInventaire.removeAt(index);
+    }
   }
+}
 
   // Vérifie si on doit désactiver les checkboxes
   isCheckboxDisabled(item: any): boolean {
@@ -106,7 +120,10 @@ export class Part1Component implements OnInit {
 
   removeChip(item: string) {
     // Utilisation de la méthode générique pour supprimer l'élément
-    this.toolsService.removeItemFromFormArray(this.selectedInventaire, item, () => this.inventaireService.convertInventaireToObject(this.selectedInventaire.controls));
+    const index = this.selectedInventaire.controls.findIndex(ctrl => ctrl.value.nom === item);
+    if (index !== -1) {
+      this.selectedInventaire.removeAt(index);
+    }
   }
 
   // Fonction pour réinitialiser les sélections
