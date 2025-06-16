@@ -1,84 +1,156 @@
-<div class="container">
-  <h2 class="center-align">Fiche du personnage</h2>
+<div class="row">
+  <div class="col s12"></div>
+</div>
 
-  <!-- Identité -->
-  <section>
-    <h4>Identité</h4>
-    <ul>
-      <li><b>Nom du personnage :</b> {{ characterData.nomPersonnage }}</li>
-      <li><b>Nom du joueur :</b> {{ characterData.nomJoueur }}</li>
-      <li><b>Genre :</b> {{ characterData.genre }}</li>
-      <li><b>Race :</b> {{ characterData.race }}</li>
-      <li><b>Profession :</b> {{ characterData.profession }}</li>
-      <li><b>Terre natale :</b> {{ characterData.terreNatale }}</li>
-      <li><b>Âge :</b> {{ characterData.age }}</li>
-      <li><b>Historique :</b> {{ characterData.historique }}</li>
-      <li><b>Inventaire :</b>
-        <span *ngFor="let item of characterData.inventaires">{{ item.nom }}</span>
-      </li>
-    </ul>
-  </section>
-
-  <!-- Caractéristiques -->
-  <section>
-    <h4>Caractéristiques</h4>
-    <table class="striped">
-      <thead>
-        <tr>
-          <th>Code</th>
-          <th>Valeur Max</th>
-          <th>Valeur Actuelle</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let carac of characterData.caracteristiquePersonnage">
-          <td>{{ carac.code }}</td>
-          <td>{{ carac.valeurMax }}</td>
-          <td>{{ carac.valeurActuelle }}</td>
-        </tr>
-      </tbody>
-    </table>
-    <ul>
-      <li><b>Poings :</b> {{ characterData.poings }}</li>
-      <li><b>Pieds :</b> {{ characterData.pieds }}</li>
-      <li><b>Vigueur :</b> {{ characterData.vigueur }}</li>
-    </ul>
-  </section>
-
-  <!-- Compétences -->
-  <section>
-    <h4>Compétences</h4>
+<div class="row">
+  <div class="col s2"></div>
+  <div class="col s2">
     <table class="striped">
       <thead>
         <tr>
           <th>Nom</th>
-          <th>Caractéristique</th>
           <th>Valeur</th>
+          <th>Max</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let comp of characterData.competencePersonnage">
-          <td>{{ comp.competence.nom }}</td>
-          <td>{{ comp.competence.caracteristique.code }}</td>
-          <td>{{ comp.valeurActuel }}</td>
+        <tr *ngFor="let cateristique of isEditableCaracteristiques()">
+          <td>{{ cateristique.code }}</td>
+          <td>{{ cateristique.valeurActuelle }}</td>
+          <td>{{ cateristique.valeurMax }}</td>
         </tr>
       </tbody>
     </table>
-  </section>
+  </div>
 
-  <!-- Magies, Rituels, Envoûtements -->
-  <section>
-    <h4>Magies</h4>
-    <ul>
-      <li *ngFor="let magie of characterData.magiePersonnage">{{ magie.nom }}</li>
-    </ul>
-    <h4>Rituels</h4>
-    <ul>
-      <li *ngFor="let rituel of characterData.rituelPersonnage">{{ rituel.nom }}</li>
-    </ul>
-    <h4>Envoûtements</h4>
-    <ul>
-      <li *ngFor="let envoutement of characterData.envoutementPersonnage">{{ envoutement.nom }}</li>
-    </ul>
-  </section>
+  <div class="col s4">
+    <div class="card horizontal">
+      <div class="card-image">
+        <img src="img/photo_default.jpg">
+      </div>
+      <div class="card-stacked">
+        <div class="card-content">
+          <span class="card-title activator grey-text text-darken-4">{{ characterData.nomPersonnage }}</span>
+          <p><b>Joueur :</b> {{ characterData.nomJoueur }}</p>
+          <p><b>Genre :</b> {{ characterData.genre }}</p>
+          <p><b>Âge :</b> {{ characterData.age }} ans</p>
+          <p><b>Race :</b> {{ characterData.race }}</p>
+          <p><b>Profession :</b> {{ characterData.profession }}</p>
+          <p><b>Origine :</b> {{ characterData.terreNatale }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col s2">
+    <table class="striped">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Valeur</th>
+          <th>Max</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cateristique of nonEditableCaracteristiques()">
+          <td>{{ cateristique.code }}</td>
+          <td>{{ cateristique.valeurActuelle }}</td>
+          <td>{{ cateristique.valeurMax }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="striped">
+      <thead>
+        <tr>
+          <th>Poings</th>
+          <th>Pieds</th>
+          <th>Vigueur</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ characterData.poings }}</td>
+          <td>{{ characterData.pieds }}</td>
+          <td>{{ characterData.vigueur }}</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="col s2"></div>
+
+<div class="row">
+  <div class="col s2"></div>
+
+  <div class="col s8">
+    <div class="card-tabs">
+      <ul class="tabs tabs-fixed-width">
+        <li class="tab"><a class="active" href="#inventaire">Inventaire</a></li>
+        <li class="tab"><a href="#competences">Compétences</a></li>
+        <li class="tab"><a href="#sorts">Sorts</a></li>
+        <li class="tab"><a href="#signes">Signes</a></li>
+        <li class="tab"><a href="#rituels">Rituels</a></li>
+        <li class="tab"><a href="#envoutements">Envoûtements</a></li>
+      </ul>
+    </div>
+
+    <div class="card-content grey lighten-4">
+      <div id="inventaire">
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>Type</th>
+              <th>Effet</th>
+              <th>Quantité</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let inventaire of characterData.inventaires">
+              <td>{{ inventaire.nom }}</td>
+              <td>{{ inventaire.type }}</td>
+              <td>{{ inventaire.effet }}</td>
+              <td>{{ inventaire.quantite }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="competences">
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>Valeur</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let comp of characterData.competencePersonnage">
+              <td>{{ comp.competence.nom }} ({{ comp.competence.caracteristique.code }})</td>
+              <td>{{ comp.valeurActuel }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="sorts">
+        <li *ngFor="let magie of characterData.magiePersonnage">{{ magie.nom }}</li>
+      </div>
+
+      <div id="signes">Ici la liste des Signes si la personne est un sorceleur.</div>
+      
+      <div id="rituels">
+        <li *ngFor="let rituel of characterData.rituelPersonnage">{{ rituel.nom }}</li>
+      </div>
+
+      <div id="envoutements">
+        <li *ngFor="let envoutement of characterData.envoutementPersonnage">{{ envoutement.nom }}</li>
+      </div>
+    </div>
+  </div>
+
+  <div class="col s2"></div>
+
 </div>
