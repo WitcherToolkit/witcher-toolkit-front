@@ -63,9 +63,10 @@ export class Part2Component implements OnInit, OnDestroy {
   // Création d'un contrôle pour une caractéristique
   private createCaracteristiqueControl(code: string): FormGroup {
     const isEditable = this.caracteristiqueService.isEditable(code);
+    const initialValue = isEditable ? 3 : 0;
     const control = this.fb.group({
-      valeurMax: [isEditable ? 3 : { value: 0, disabled: true }, [Validators.required, Validators.min(3)]],
-      valeurActuelle: [isEditable ? 3 : 0],
+      valeurMax: [initialValue, [Validators.required, Validators.min(3)]],
+      valeurActuelle: [initialValue],
       code: [code]
     });
 
@@ -77,6 +78,10 @@ export class Part2Component implements OnInit, OnDestroy {
           this.updatePointsRestants();
         })
       );
+    } else {
+      control.get('valeurMax')!.valueChanges.subscribe(val => {
+        control.get('valeurActuelle')?.setValue(val, { emitEvent: false });
+      });
     }
 
     return control;

@@ -14,7 +14,7 @@
       <li><b>Âge :</b> {{ characterData.age }}</li>
       <li><b>Historique :</b> {{ characterData.historique }}</li>
       <li><b>Inventaire :</b>
-        <span *ngFor="let item of characterData.selectedInventaire">{{ item.value }}<span *ngIf="!$last">, </span></span>
+        <span *ngFor="let item of characterData.selectedInventaire">{{ item.value }}</span>
       </li>
     </ul>
   </section>
