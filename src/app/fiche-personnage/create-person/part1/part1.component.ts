@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, Signal, signal, computed } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormArray, FormControl } from '@angular/forms';
-import { Inventaire } from '../../../models/inventaire';
 import { Profession } from '../../../models/profession';
 import { ProfessionsService } from '../../../professions/professions.service';
 import { InventaireService } from '../../../inventaires/inventaire.service';
@@ -67,6 +66,11 @@ export class Part1Component implements OnInit {
           this.form.get('profession')?.setValue('', { emitEvent: false });
         }
       });
+    });
+
+    // Synchroniser le contrôle 'inventaires' à chaque changement de selectedInventaire
+    this.selectedInventaire.valueChanges.subscribe(values => {
+      this.form.get('inventaires')?.setValue(values, { emitEvent: false });
     });
   }
 
