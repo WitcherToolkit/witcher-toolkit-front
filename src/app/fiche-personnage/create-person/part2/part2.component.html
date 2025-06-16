@@ -83,7 +83,7 @@
         <div *ngFor="let caracteristiqueCtrl of caracteristiquePersonnage.controls; let i = index" [formGroupName]="i">
           <div *ngIf="!isEditable(caracteristiqueCtrl.value.code)" class="col s6">
             <label>{{ caracteristiqueCtrl.value.code }}</label>
-            <input type="text" formControlName="valeurMax" readonly tabindex="-1" style="pointer-events: none;" class="grey lighten-3">
+            <input type="text" formControlName="valeurMax" readonly>
           </div>
         </div>
       </div>

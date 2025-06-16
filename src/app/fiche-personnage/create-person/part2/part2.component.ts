@@ -54,10 +54,10 @@ export class Part2Component implements OnInit, OnDestroy {
     );
 
     this.form.addControl('caracteristiquePersonnage', caracteristiquePersonnageArray);
-    this.form.addControl('poings', this.fb.control({ value: '', disabled: true }));
-    this.form.addControl('pieds', this.fb.control({ value: '', disabled: true }));
+    this.form.addControl('poings', this.fb.control(''));
+  this.form.addControl('pieds', this.fb.control(''));
     this.form.addControl('niveauJeu', this.fb.control('libre'));
-    this.form.addControl('vigueur', this.fb.control({ value: '', disabled: true }));
+    this.form.addControl('vigueur', this.fb.control(''));
   }
 
   // Création d'un contrôle pour une caractéristique
