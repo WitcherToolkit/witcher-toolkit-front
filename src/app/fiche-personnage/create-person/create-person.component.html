@@ -8,9 +8,9 @@
         <div class="nav-wrapper grey darken-3">
           <div class="col s12">
             <a [appHighlight]="currentStep === 1" (click)="goToStep(1)" class="breadcrumb">Identité</a>
-            <a [appHighlight]="currentStep === 2" (click)="goToStep(2)" class="breadcrumb">Caractéristiques</a>
-            <a [appHighlight]="currentStep === 3" (click)="goToStep(3)" class="breadcrumb">Compétences</a>
-            <a [appHighlight]="currentStep === 4" (click)="goToStep(4)" class="breadcrumb">Magie</a>
+            <a *ngIf="currentStep > 1" [appHighlight]="currentStep === 2" (click)="goToStep(2)" class="breadcrumb">Caractéristiques</a>
+            <a *ngIf="currentStep > 2" [appHighlight]="currentStep === 3" (click)="goToStep(3)" class="breadcrumb">Compétences</a>
+            <a *ngIf="currentStep > 3" [appHighlight]="currentStep === 4" (click)="goToStep(4)" class="breadcrumb">Magie</a>
           </div>
         </div>
       </nav>
@@ -52,9 +52,9 @@
 
         </div>
         <div class="card-action">
-          <button class="waves-light btn grey darken-3" (click)="previousStep()" [disabled]="currentStep === 1">Précédent</button>
-          <button class="waves-light btn grey darken-3" (click)="nextStep()" [disabled]="currentStep === 4">Suivant</button>
-          <button class="waves-light btn grey darken-3" (click)="submitForm()" [disabled]="currentStep !== 4">Soumettre</button>
+          <button *ngIf="currentStep !== 1" class="waves-light btn grey darken-3" (click)="previousStep()" [disabled]="currentStep === 1">Précédent</button>
+          <button *ngIf="currentStep !== 4" class="waves-light btn grey darken-3" (click)="nextStep()" [disabled]="currentStep === 4">Suivant</button>
+          <button *ngIf="currentStep === 4" class="waves-light btn grey darken-3" (click)="submitForm()" [disabled]="currentStep !== 4">Soumettre</button>
         </div>
       </div>
     </div>

@@ -24,6 +24,7 @@ export class Part3Component implements OnInit {
   constructor(private fb: FormBuilder, private toolsService: ToolsService) {}
 
   ngOnInit() {
+    // Initialisation du FormGroup
     this.form.addControl('competencePersonnage', this.fb.array([]));
     this.form.addControl('competences', this.fb.array([]));
     this.form.addControl('nonAssociatedCompetences', this.fb.array([])); // Ajouter un FormArray pour les compétences non associées
@@ -39,9 +40,14 @@ export class Part3Component implements OnInit {
     const selectedProfessionId = this.form.get('profession')?.value;
     this.filterCompetences(selectedProfessionId);
 
-    // Écoute les changements des valeurs des compétences
+    // Écoute les changements des valeurs des compétences associées
     this.competencesArray.valueChanges.subscribe(() => {
       this.updatePointsRestants();
+    });
+
+    // Écoute les changements des valeurs des compétences non associées
+    this.nonAssociatedCompetencesArray.valueChanges.subscribe(() => {
+      this.calculerPointsDispo();
     });
   }
 
@@ -160,13 +166,21 @@ export class Part3Component implements OnInit {
   // Griser le bouton si le minimum est atteind
   isDecrementDisabled(index: number, listType: 'competences' | 'nonAssociatedCompetences'): boolean {
     const control = this.getArrayByType(listType).at(index).get('valeurMax');
-    return control ? control.value <= 0 : true; // Désactive si valeur ≤ 0
+    if (listType === 'competences') {
+    return control ? control.value <= 1 : true; // Désactive si valeur ≤ 1
+    } else {
+      return control ? control.value <= 0 : true; // Désactive si valeur ≤ 0
+    }
   }
   
   // Griser le bouton si le maximum est atteind
   isIncrementDisabled(index: number, listType: 'competences' | 'nonAssociatedCompetences'): boolean {
     const control = this.getArrayByType(listType).at(index).get('valeurMax');
-    return control ? control.value >= 6 : true; // Désactive si valeur ≥ 6
+    //si listeType est 'competences'
+    if (listType === 'competences') {
+      return control ? control.value >= 6 || this.pointsRestants() <= 0 : true;
+    } else 
+      return control ? control.value >= 6 || this.pointsDispo <= 0 : true; // Désactive si valeur ≥ 6 ou si les points disponibles sont insuffisants
   }
 
   private getArrayByType(listType: 'competences' | 'nonAssociatedCompetences'): FormArray {
@@ -178,8 +192,13 @@ export class Part3Component implements OnInit {
     const caracteristiques = this.form.get('caracteristiquePersonnage')?.value || [];
     const intelligence = caracteristiques.find((c: any) => c.code === 'INT')?.valeurActuelle || 0;
     const reflexe = caracteristiques.find((c: any) => c.code === 'RÉF')?.valeurActuelle || 0;
+    const total = intelligence + reflexe;
 
-    this.pointsDispo = intelligence + reflexe;
+    // Calculer les poinnts déjà dépensés dans les compétences non associées
+    const nonAssociatedCompetences = this.nonAssociatedCompetencesArray.value || [];
+    const depenses = nonAssociatedCompetences.reduce((sum: number, c: any) => sum + (c.valeurMax || 0), 0);
+    
+    this.pointsDispo = total - depenses;
     console.log(`Points disponibles: ${this.pointsDispo}`);
   }
 }

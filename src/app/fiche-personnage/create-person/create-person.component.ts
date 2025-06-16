@@ -7,6 +7,7 @@ import { Part3Component } from './part3/part3.component';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { HighlightDirective } from '../../highlight.directive';
 import { Part4Component } from './part4/part4.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-person',
@@ -24,7 +25,7 @@ export class CreatePersonComponent {
   //formData: Personnage = new Personnage();
   form: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private router: Router) {
     this.form = this.fb.group({});
   }
 
@@ -48,7 +49,8 @@ export class CreatePersonComponent {
 
   submitForm() {
     console.log('Form Data:', this.form.value);
-    // Handle form submission
+    
+    this.router.navigate(['/personnage/consult'], { state: { data: this.form.value } });
   }
 
   getProgressWidth(): string {

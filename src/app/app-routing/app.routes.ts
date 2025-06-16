@@ -13,6 +13,7 @@ import { PageNotFoundComponent } from '../page-not-found/page-not-found.componen
 import { CreatePersonComponent } from '../fiche-personnage/create-person/create-person.component';
 import { ProfessionsListComponent } from '../professions/professions-list/professions-list.component';
 import { RacesDetailComponent } from '../races/races-detail/races-detail.component';
+import { ConsultCharacterComponent } from '../fiche-personnage/consult-person/consult-character.component';
 
 
 export const ENVOUTEMENT_BASE_PATH = 'grimoire';
@@ -42,6 +43,7 @@ export const routes: Routes = [
     { path: `${PROFESSION_BASE_PATH}/profession`, component: ProfessionsListComponent },
     //Parite fiche personnage
     { path: `${PERSONNAGE_BASE_PATH}/nouveau`, component: CreatePersonComponent },
+    { path: `${PERSONNAGE_BASE_PATH}/consult`, component: ConsultCharacterComponent },
 
     { path: 'home', component: HomePageComponent },
     { path: '', redirectTo: 'home', pathMatch: 'full' },
