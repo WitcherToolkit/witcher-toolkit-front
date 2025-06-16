@@ -8,6 +8,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { HighlightDirective } from '../../highlight.directive';
 import { Part4Component } from './part4/part4.component';
 import { Router } from '@angular/router';
+import { PROFESSION_LIST } from '../../fake-data-set/profession-fake';
 
 @Component({
   selector: 'app-create-person',
@@ -23,10 +24,17 @@ import { Router } from '@angular/router';
 export class CreatePersonComponent {
   currentStep = 1;
   //formData: Personnage = new Personnage();
+  selectedProfession: any = null;
   form: FormGroup;
 
   constructor(private fb: FormBuilder, private router: Router) {
     this.form = this.fb.group({});
+
+    // Ajout d'un écouteur pour mettre à jour selectedProfession
+    this.form.valueChanges.subscribe(() => {
+      const professionId = this.form.get('profession')?.value;
+      this.selectedProfession = PROFESSION_LIST.find(p => p.id === +professionId);
+    });
   }
 
   goToStep(step: number) {
@@ -66,6 +74,12 @@ export class CreatePersonComponent {
       default:
         return '0%';
     }
+  }
+
+  isSubmitAvailableOnPart3(): boolean {
+    const professionId = this.form.get('profession')?.value;
+    const selectedProfession = PROFESSION_LIST.find(p => p.id === +professionId);
+    return !!(this.currentStep === 3 && selectedProfession && selectedProfession.nom !== 'Mage' && selectedProfession.nom !== 'Prêtre');
   }
 
 }

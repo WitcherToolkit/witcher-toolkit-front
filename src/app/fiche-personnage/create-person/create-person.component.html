@@ -46,15 +46,15 @@
           <div *ngIf="currentStep === 3">
             <app-part3 [form]="form"></app-part3>
           </div>
-          <div *ngIf="currentStep === 4">
+          <div *ngIf="currentStep === 4 && (selectedProfession?.nom === 'Mage' || selectedProfession?.nom === 'Prêtre')">
             <app-part4 [form]="form"></app-part4>
           </div>
 
         </div>
         <div class="card-action">
           <button *ngIf="currentStep !== 1" class="waves-light btn grey darken-3" (click)="previousStep()" [disabled]="currentStep === 1">Précédent</button>
-          <button *ngIf="currentStep !== 4" class="waves-light btn grey darken-3" (click)="nextStep()" [disabled]="currentStep === 4">Suivant</button>
-          <button *ngIf="currentStep === 4" class="waves-light btn grey darken-3" (click)="submitForm()" [disabled]="currentStep !== 4">Soumettre</button>
+          <button *ngIf="currentStep !== 4 && !isSubmitAvailableOnPart3()" class="waves-light btn grey darken-3" (click)="nextStep()">Suivant</button>
+          <button *ngIf="currentStep === 4 || isSubmitAvailableOnPart3()" class="waves-light btn grey darken-3" (click)="submitForm()">Soumettre</button>
         </div>
       </div>
     </div>
