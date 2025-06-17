@@ -1,33 +1,21 @@
 import { Injectable, signal } from '@angular/core';
 import { Magie } from '../models/magie';
-import { MAGIE_LIST } from '../fake-data-set/magie-fake';
 import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { EnvironmentConfig } from '../environment.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MagieService {
-  private readonly magies = signal<Magie[]>(MAGIE_LIST);
+  private readonly magies = signal<Magie[]>([]);
+
+  constructor(private http: HttpClient) { }
 
   getMagiesList(): Observable<Magie[]> {
-    return of(this.magies());
-    //return this.http.get<Magie[]>('url/api/magies');
-  }
-
-  searchMagies(term: string): Magie[] {
-    const lowerTerm = term.trim().toLowerCase();
-    let filteredMagies: Magie[] = [];
-      this.getMagiesList().subscribe(list => {
-        if (!lowerTerm) {
-          filteredMagies = list;
-        } else {
-          filteredMagies = list.filter(magie =>
-            magie.nom.toLowerCase().includes(lowerTerm)
-          );
-        }
-      });
-  
-    return filteredMagies;
+    console.log('Fetching rituels from API...');
+    console.log(`API Base URL: ${EnvironmentConfig.apiBaseUrl}`);
+    return this.http.get<Magie[]>(`${EnvironmentConfig.apiBaseUrl}/magies`);
   }
 
 }
