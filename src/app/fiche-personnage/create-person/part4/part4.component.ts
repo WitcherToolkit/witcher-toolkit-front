@@ -7,7 +7,6 @@ import { PROFESSION_LIST } from '../../../fake-data-set/profession-fake';
 import { RITUEL_LIST } from '../../../fake-data-set/rituel-fake';
 import { Envoutement } from '../../../models/envoutement';
 import { ENVOUTEMENT_LIST } from '../../../fake-data-set/envoutement-fake';
-import { InventaireService } from '../../../inventaires/inventaire.service';
 import { ToolsService } from '../../../tools/tools.service';
 
 @Component({

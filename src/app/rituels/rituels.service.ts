@@ -21,21 +21,4 @@ export class RituelsService {
     console.log(`API Base URL: ${EnvironmentConfig.apiBaseUrl}`);
     return this.http.get<Rituel[]>(`${EnvironmentConfig.apiBaseUrl}/rituels`);
   }
-
-  /*searchRituels(term: string): Rituel[] {
-    const lowerTerm = term.trim().toLowerCase();
-    let filteredRituels: Rituel[] = [];
-      this.getRituelsList().subscribe(list => {
-        if (!lowerTerm) {
-          filteredRituels = list;
-        } else {
-          filteredRituels = list.filter(rituel =>
-            rituel.nom.toLowerCase().includes(lowerTerm)
-          );
-        }
-      });
-  
-    return filteredRituels;
-    }*/
-
 }

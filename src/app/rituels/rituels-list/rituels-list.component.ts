@@ -1,7 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { NatureBorderDirective } from '../../directives/nature-border.directive';
 import { CommonModule } from '@angular/common';
-import { RITUEL_LIST } from '../../fake-data-set/rituel-fake';
 import { RituelsService } from '../rituels.service';
 import { Rituel } from '../../models/rituel';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -15,15 +13,10 @@ import { toSignal } from '@angular/core/rxjs-interop';
 })
 export class RituelsListComponent {
   private readonly rituelsService = inject(RituelsService);
-  // 1. Convertir l'Observable en Signal. 'undefined' est la valeur initiale avant que l'Observable n'émette.
-  // Vous pouvez aussi passer { initialValue: [] } si vous voulez un tableau vide par défaut.
+  
   readonly rituels = toSignal(this.rituelsService.getRituelsList(), { initialValue: [] });
-
-  // 2. Signal pour le terme de recherche, modifiable par l'utilisateur (via un input par exemple)
   readonly searchTerm = signal('');
 
-  // 3. Computed Signal pour les rituels filtrés.
-  // Il dépend de 'rituels' (les données brutes) et de 'searchTerm'.
   readonly rituelsListFiltered = computed(() => {
     const term = this.searchTerm().trim().toLowerCase(); // Terme de recherche actuel
     const allRituels = this.rituels(); // Tous les rituels chargés (c'est un signal !)
