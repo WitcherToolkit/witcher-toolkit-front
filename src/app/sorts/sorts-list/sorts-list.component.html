@@ -43,7 +43,7 @@
               </div>
             </div>
             <div class="card-action">
-              <a href="#">Plus d'infos</a>
+              <a class="waves-light btn-flat" (click)="openModal(magie)" href="javascript:void(0)">Plus d'infos</a>
             </div>
           </div>
         </div>
@@ -51,3 +51,7 @@
     </div>
   </div>
 </div>
+
+<!-- Ajoute ceci à la fin de ton fichier HTML -->
+<app-sorts-detail-modal [magie]="selectedMagie"></app-sorts-detail-modal>
+
