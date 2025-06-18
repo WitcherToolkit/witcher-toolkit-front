@@ -42,7 +42,7 @@
               <p><b>Effet</b> : {{ rituel.effet }}</p>
             </div>
             <div class="card-action">
-              <a href="#">VOIR</a>
+              <a class="waves-light btn-flat" (click)="openModal(rituel)" href="javascript:void(0)">VOIR</a>
             </div>
           </div>
         </div>
@@ -50,3 +50,6 @@
     </div>
   </div>
 </div>
+
+<!-- Ajoute ceci à la fin de ton fichier HTML -->
+<app-rituels-detail-modal [rituel]="selectedRituel"></app-rituels-detail-modal>

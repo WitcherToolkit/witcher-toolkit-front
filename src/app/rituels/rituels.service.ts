@@ -21,4 +21,11 @@ export class RituelsService {
     console.log(`API Base URL: ${EnvironmentConfig.apiBaseUrl}`);
     return this.http.get<Rituel[]>(`${EnvironmentConfig.apiBaseUrl}/rituels`);
   }
+  
+  // Méthode pour récupérer un rituels depuis l'API questConnect
+  /*getRituelById(id: number): Observable<Rituel | null> {
+    console.log(`Fetching rituel with ID: ${id}`);
+    return this.http.get<Rituel>(`${EnvironmentConfig.apiBaseUrl}/rituels/${id}`);
+  }*/
+
 }

@@ -1,1 +1,43 @@
-<p>rituels-detail works!</p>
+<div #modal id="modal1" class="modal">
+  <div class="modal-content">
+    <h4 class="center-align">{{ rituel?.nom }}</h4>
+    
+    <div class="row">
+      <div class="col s1"></div>
+      <div class="col s3"><b>Niveau :</b> {{ rituel?.niveau }}</div>
+      <div class="col s4"><b>SD :</b> {{ rituel?.sd }}</div>
+      <div class="col s4"></div>
+    </div>
+
+    <div class="row">
+      <div class="col s1"></div>
+      <div class="col s3"><b>Temps de préparation :</b> {{ rituel?.tempPreparation }}</div>
+      <div class="col s4"><b>Durée :</b> {{ rituel?.duree }}</div>
+      <div class="col s3"><b>Coût :</b> {{ rituel?.cout }}</div>
+      <div class="col s1"></div>
+    </div>
+
+    <div class="row">
+      <div class="col s1"></div>
+      <div class="col s10"><b>Effet :</b></div>
+      <div class="col s1"></div>
+    </div>
+
+    <div class="row">
+      <div class="col s1"></div>
+      <div class="col s10">{{ rituel?.effet }}</div>
+      <div class="col s1"></div>
+    </div>
+
+    <div class="row">
+      <div class="col s1"></div>
+      <div class="col s10"><b>Composants :</b> {{ rituel?.composant }}</div>
+      <div class="col s1"></div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="modal-close waves-effect waves-green btn-flat">Modifier</button>
+    <button type="button" class="modal-close waves-effect waves-green btn-flat">Fermer</button>
+  </div>
+</div>

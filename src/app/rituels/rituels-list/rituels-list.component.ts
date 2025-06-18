@@ -1,13 +1,14 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, computed, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RituelsService } from '../rituels.service';
 import { Rituel } from '../../models/rituel';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { RituelsDetailComponent } from '../rituels-detail/rituels-detail.component';
 
 @Component({
   selector: 'app-rituels-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RituelsDetailComponent],
   templateUrl: './rituels-list.component.html',
   styles: ``
 })
@@ -39,4 +40,16 @@ export class RituelsListComponent {
   trackById(index: number, rituel: Rituel): number {
     return rituel.idRituel; // Assurez-vous que 'idRituel' est la bonne propriété d'ID
   }
+
+  //#Region boite de rialogue
+  @ViewChild(RituelsDetailComponent) detailModal!: RituelsDetailComponent;// Référence à la boîte de dialogue
+  // Ajoute une propriété pour le rituel sélectionné
+  selectedRituel: Rituel | null = null;
+
+  // Modifie openModal pour recevoir le rituel
+  openModal(rituel: Rituel) {
+    this.selectedRituel = rituel;
+    this.detailModal.open();
+  }
+  //#EndRegion boite de dialogue
 }
