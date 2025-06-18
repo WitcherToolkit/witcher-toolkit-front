@@ -1,26 +1,24 @@
 <div #modal id="modal1" class="modal">
   <div class="modal-content">
-    <h4 class="center-align">{{ magie?.type }} : {{ magie?.nom }}</h4>
+    <h4 class="center-align">{{ magie?.nom }}</h4>
     
     <div class="row">
       <div class="col s1"></div>
-      <div class="col s3"><b>Niveau :</b> {{ magie?.niveau }}</div>
-      <div class="col s4"><b>Portée :</b> {{ magie?.portee }}</div>
-      <div class="col s3"><b>Élément :</b> {{ magie?.nature }}</div>
+      <div class="col s2"><b>Coût :</b> {{ magie?.cout }}</div>
+      <div class="col s3"><b>Durée :</b> {{ magie?.duree }}</div>
+      <div class="col s3"><b>Portée :</b> {{ magie?.portee }}</div>
+      <div class="col s2"><b>Élément :</b> {{ magie?.nature }}</div>
+      <div class="col s1"></div>
+    </div>
+    <div class="row"*ngIf="magie?.contre;">
+      <div class="col s1"></div>
+      <div class="col s10" ><b>Contre :</b> {{ magie?.contre }}</div>
       <div class="col s1"></div>
     </div>
 
     <div class="row">
       <div class="col s1"></div>
-      <div class="col s3"><b>Contre :</b> {{ magie?.contre }}</div>
-      <div class="col s4"><b>Durée :</b> {{ magie?.duree }}</div>
-      <div class="col s3"><b>Coût :</b> {{ magie?.cout }}</div>
-      <div class="col s1"></div>
-    </div>
-
-    <div class="row">
-      <div class="col s1"></div>
-      <div class="col s10"><b>Effet :</b></div>
+      <div class="col s10"><b>{{ magie?.niveau }} :</b></div>
       <div class="col s1"></div>
     </div>
 
@@ -31,8 +29,9 @@
     </div>
 
   </div>
+
   <div class="modal-footer">
-    <button type="button" class="modal-close waves-effect waves-green btn-flat">Modifier</button>
-    <button type="button" class="modal-close waves-effect waves-green btn-flat">Fermer</button>
+    <button type="button" class="modal-close btn-flat">Modifier</button>
+    <button type="button" class="modal-close btn-flat">Fermer</button>
   </div>
 </div>

@@ -1,9 +1,11 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { Magie } from '../../models/magie';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-sorts-detail-modal',
   standalone: true,
+  imports: [CommonModule],
   templateUrl: './sorts-detail.component.html',
   styleUrls: []
 })
