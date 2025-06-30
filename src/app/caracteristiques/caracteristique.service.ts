@@ -3,38 +3,25 @@ import { Caracteristique } from '../models/caracteristique';
 import { CARACTERISTIQUE_LIST } from '../fake-data-set/caracteristiques-fake';
 import { Observable, of } from 'rxjs';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+
 import { PROFESSION_MAP } from '../fake-data-set/profession-fake';
 import { RACE_MAP } from '../fake-data-set/race-fake';
+import { EnvironmentConfig } from '../environment.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CaracteristiqueService {
   // Signal local (temporaire) pour l'état en mémoire
-  private readonly caracteristiques = signal<Caracteristique[]>(CARACTERISTIQUE_LIST);
+  private readonly caracteristiques = signal<Caracteristique[]>([]);
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private http: HttpClient, private fb: FormBuilder) {}
 
   getCaracteristiquesList(): Observable<Caracteristique[]> {
-      return of(this.caracteristiques()); // Simule une requête HTTP
-      //return this.http.get<Caracteristique[]>('url/api/caracteristiques');
-  }
-
-  // Cette méthode permet de créer un groupe de formulaire pour une caractéristique
-  searchCaracteristiques(term: string): Caracteristique[] {
-    const lowerTerm = term.trim().toLowerCase();
-    let filteredCaracteristiques: Caracteristique[] = [];
-      this.getCaracteristiquesList().subscribe(list => {
-        if (!lowerTerm) {
-          filteredCaracteristiques = list;
-        } else {
-          filteredCaracteristiques = list.filter(caracteristique =>
-            caracteristique.nom.toLowerCase().includes(lowerTerm)
-          );
-        }
-      });
-
-    return filteredCaracteristiques;
+    console.log('Fetching rituels from API...');
+    console.log(`API Base URL: ${EnvironmentConfig.apiBaseUrl}`);
+    return this.http.get<Caracteristique[]>(`${EnvironmentConfig.apiBaseUrl}/caracteristiques`);
   }
 
   // Vérification si une caractéristique est éditable

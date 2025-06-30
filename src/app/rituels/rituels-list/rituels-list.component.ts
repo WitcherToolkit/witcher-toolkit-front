@@ -38,7 +38,7 @@ export class RituelsListComponent {
   }
 
   trackById(index: number, rituel: Rituel): number {
-    return rituel.idRituel; // Assurez-vous que 'idRituel' est la bonne propriété d'ID
+    return rituel.idRituel;
   }
 
   //#Region boite de rialogue

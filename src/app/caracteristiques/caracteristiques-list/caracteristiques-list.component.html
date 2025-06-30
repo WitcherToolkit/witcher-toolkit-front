@@ -39,10 +39,10 @@
           <div class="card-stacked">
             <span class="card-title center-align">{{ caracteristique.nom }} ({{ caracteristique.code }})</span>
             <div class="card-content">
-              <p>{{ caracteristique.description }}</p>
+              <p>{{ truncateText(caracteristique.description) }}</p>
             </div>
             <div class="card-action">
-              <a href="#">VOIR</a>
+              <a class="waves-light btn-flat" (click)="openModal(caracteristique)" href="javascript:void(0)">VOIR</a>
             </div>
           </div>
         </div>
@@ -50,3 +50,5 @@
     </div>    
   </div>
 </div>
+
+<app-caracteristiques-detail-modal [caracteristique]="selectedCaracteristique"></app-caracteristiques-detail-modal>
