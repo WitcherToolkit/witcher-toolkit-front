@@ -12,7 +12,7 @@ export interface Competence {
     specialisation?: string;
     exclusif: boolean;
     caracteristique?: Caracteristique
-    tags?: string[];
+    tags?: string[];// Liste des professions associées
     professions?: Profession[];
 }
 
