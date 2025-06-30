@@ -20,8 +20,32 @@ export class SortsListComponent {
   readonly MAX_LENGTH = 100; // Nombre max de caractères avant troncature
   readonly magie = toSignal(this.magieService.getMagiesList(), { initialValue: [] });
   readonly searchTerm = signal('');
+  readonly selectedType = signal('Tout les types'); // Par defaut, aucun filtre ur le type
 
-  readonly magiesListFiltered = computed(() => {
+   readonly magiesListFiltered = computed(() => {
+    const term = this.searchTerm().trim().toLowerCase();
+    const selectedType = this.selectedType();
+    let allMagies = this.magie();
+
+    if (allMagies === undefined) {
+      return [];
+    }
+
+    // Filtrer par type si un type spécifique est sélectionné
+    if (selectedType !== 'Tout les types') {
+      allMagies = allMagies.filter(magie => magie.type === selectedType);
+    }
+
+    // Filtrer par terme de recherche
+    if (term) {
+      allMagies = allMagies.filter(magie =>
+        magie.nom.toLowerCase().includes(term)
+      );
+    }
+
+    return allMagies;
+  });
+  /*readonly magiesListFiltered = computed(() => {
     const term = this.searchTerm().trim().toLowerCase();
     const allMagies = this.magie(); // Tous les sorts chargés (c'est un signal !)
     if (!term || allMagies === undefined || allMagies.length === 0) {
@@ -30,7 +54,7 @@ export class SortsListComponent {
     return allMagies.filter(magie =>
       magie.nom.toLowerCase().includes(term)
     );
-  });
+  });*/
 
   // Méthode pour mettre à jour le searchTerm (peut être liée à un événement input)
   onSearchChange(event: Event) {

@@ -1,14 +1,15 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { ENVOUTEMENT_LIST } from '../../fake-data-set/envoutement-fake';
+import { Component, computed, inject, signal, ViewChild } from '@angular/core';
 import { EnvoutementService } from '../envoutement.service';
 import { DangerBorderDirective } from '../../directives/danger-border.directive';
 import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { EnvoutementsDetailComponent } from '../envoutements-detail/envoutements-detail.component';
+import { Envoutement } from '../../models/envoutement';
 
 @Component({
   selector: 'app-envoutements-list',
   standalone: true,
-  imports: [DangerBorderDirective, CommonModule],
+  imports: [DangerBorderDirective, CommonModule, EnvoutementsDetailComponent],
   templateUrl: './envoutements-list.component.html',
   styleUrls: ['envoutements-list.component.scss']
 })
@@ -38,4 +39,15 @@ export class EnvoutementsListComponent {
     return this.envoutementService.truncateText(text, this.MAX_LENGTH);
   }
 
+  //#Region boite de rialogue
+    @ViewChild(EnvoutementsDetailComponent) detailModal!: EnvoutementsDetailComponent;// Référence à la boîte de dialogue
+    // Ajoute une propriété pour le rituel sélectionné
+    selectedEnvoutement: Envoutement | null = null;
+  
+    // Modifie openModal pour recevoir le rituel
+    openModal(envoutement: Envoutement) {
+      this.selectedEnvoutement = envoutement;
+      this.detailModal.open();
+    }
+    //#EndRegion boite de dialogue
 }
