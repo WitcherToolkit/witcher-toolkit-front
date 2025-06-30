@@ -45,16 +45,6 @@ export class SortsListComponent {
 
     return allMagies;
   });
-  /*readonly magiesListFiltered = computed(() => {
-    const term = this.searchTerm().trim().toLowerCase();
-    const allMagies = this.magie(); // Tous les sorts chargés (c'est un signal !)
-    if (!term || allMagies === undefined || allMagies.length === 0) {
-      return allMagies || []; // Retourne tous les sorts si le terme est vide ou si pas de données
-    }
-    return allMagies.filter(magie =>
-      magie.nom.toLowerCase().includes(term)
-    );
-  });*/
 
   // Méthode pour mettre à jour le searchTerm (peut être liée à un événement input)
   onSearchChange(event: Event) {

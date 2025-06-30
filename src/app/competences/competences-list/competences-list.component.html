@@ -42,7 +42,7 @@
               <p>{{ competence.description }}</p>
             </div>
             <div class="card-action">
-              <a href="#">VOIR</a>
+              <a class="waves-light btn-flat" (click)="openModal(competence)" href="javascript:void(0)">VOIR</a>
             </div>
           </div>
         </div>
@@ -50,3 +50,5 @@
     </div>    
   </div>
 </div>
+
+<app-competences-detail-modal [competence]="selectedCompetence"></app-competences-detail-modal>
