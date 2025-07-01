@@ -1,6 +1,5 @@
 import { Component, computed, inject, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { COMPETENCE_LIST } from '../../fake-data-set/competence-fake';
 import { CompetenceService } from '../competence.service';
 import { CompetencesDetailComponent } from '../competences-detail/competences-detail.component';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -16,6 +15,7 @@ import { Competence } from '../../models/competence';
 export class CompetencesListComponent {
   private readonly competenceService = inject(CompetenceService);
 
+  readonly MAX_LENGTH = 100;
   readonly competences = toSignal(this.competenceService.getCompetencesList(), { initialValue: [] });
   readonly searchTerm = signal('');
   
@@ -42,6 +42,13 @@ export class CompetencesListComponent {
     return competence.id;
   }
 
+  truncateText(text: string): string {
+    if (text.length > this.MAX_LENGTH) {
+      return text.substring(0, this.MAX_LENGTH) + '...';
+    }
+    return text;
+  }
+  
   //#Region boite de rialogue
     @ViewChild(CompetencesDetailComponent) detailModal!: CompetencesDetailComponent;// Référence à la boîte de dialogue
     // Ajoute une propriété pour le Competence sélectionné
