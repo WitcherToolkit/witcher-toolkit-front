@@ -1,1 +1,40 @@
-<p>races-detail works!</p>
+<div #modal id="modal1" class="modal">
+  <div class="modal-content">
+    <h4 class="center-align">{{ race?.nom }}</h4>
+    
+    <div class="row"*ngFor="let particularite of race?.particulariteList">
+      <div class="col s1"></div>
+      <div class="col s10"><b>{{ particularite.nom }} :</b> {{ particularite.description }}</div>
+      <div class="col s1"></div>
+    </div>
+
+    <div class="row">
+      <div class="col s1"></div>
+      <div class="col s10">
+        <table class="highlight">
+          <thead>
+              <tr>
+                  <th>Territoire</th>
+                  <th>Réputation</th>
+              </tr>
+          </thead>
+
+          <tbody>
+              <tr *ngFor="let reputation of race?.reputationWikiList">
+                  <td>{{ reputation.territoire }}</td>
+                  <td>{{ reputation.valeur }}</td>
+              </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col s1"></div>
+    </div>
+
+    
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="modal-close btn-flat">Modifier</button>
+    <button type="button" class="modal-close btn-flat">Fermer</button>
+  </div>
+</div>

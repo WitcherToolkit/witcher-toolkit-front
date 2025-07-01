@@ -1,5 +1,3 @@
-import { race } from "rxjs";
-
 export const PARTICULARITE_SORCELEUR = [
     { id: 1, nom: "Sens accrus", description: "Les sorceleurs ont des sens plus développés que la moyenne des humains." },
     { id: 2, nom: "Mutation durable", description: "Les sorceleurs ont subi des mutations qui les rendent différents des autres humains." },

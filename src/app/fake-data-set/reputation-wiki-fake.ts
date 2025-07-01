@@ -1,4 +1,3 @@
-import { race } from "rxjs";
 
 export const REPUTATION_SORCELEUR = [
     { id: 1, territoire: "Nord", valeur: "Craint et haïs" },

@@ -4,8 +4,8 @@ import { ReputationWiki } from "./reputation-wiki";
 export interface Race {
     idRace: number;
     nom: string;
-    reputations: ReputationWiki[];
-    particularites: Particularite[];
+    reputationWikiList: ReputationWiki[];
+    particulariteList: Particularite[];
 }
 
 export type RaceList = Race[];

@@ -1,8 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { Rituel } from '../../models/rituel';
 
-declare var M: any;//Déclaration de M pour Materialize CSS
-
 @Component({
   selector: 'app-rituels-detail-modal',
   standalone: true,

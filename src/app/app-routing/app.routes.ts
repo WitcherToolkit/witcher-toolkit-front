@@ -38,7 +38,6 @@ export const routes: Routes = [
     { path: `${COMPTETENCE_BASE_PATH}/competence`, component: CompetencesListComponent },
     { path: `${CARACTERISTIQUE_BASE_PATH}/caracteristique`, component: CaracteristiquesListComponent },
     //Patie Classe 
-    { path: `${RACE_BASE_PATH}/race/:id`, component: RacesDetailComponent },
     { path: `${RACE_BASE_PATH}/race`, component: RacesListComponent },
     { path: `${PROFESSION_BASE_PATH}/profession`, component: ProfessionsListComponent },
     //Parite fiche personnage

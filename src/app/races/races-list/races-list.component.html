@@ -29,12 +29,12 @@
       </div>
 
       <div *ngFor="let race of racesListFiltered(); trackBy: trackById">
-          <div class="col s12 m4">
-              <div class="card horizontal">
+          <div class="col s12 m4 ">
+              <div class="card horizontal size-card">
                   <div class="card-stacked">
                       <span class="card-title center-align">{{ race.nom }}</span>
                       <div class="card-content">
-                          <p>Les {{ race.nom }}s possèdes plusieurs particularités : {{ particularitesNoms(race) }}</p>
+                          <p>{{ getParticularitesAsLine(race) }}</p>
                       </div>
                       <table class="highlight">
                           <thead>
@@ -45,7 +45,7 @@
                           </thead>
 
                           <tbody>
-                              <tr *ngFor="let reputation of race.reputations">
+                              <tr *ngFor="let reputation of race.reputationWikiList">
                                   <td>{{ reputation.territoire }}</td>
                                   <td>{{ reputation.valeur }}</td>
                               </tr>
@@ -53,7 +53,7 @@
                       </table>
 
                       <div class="card-action">
-                        <a [routerLink]="['/' + raceBasePath + '/race', race.idRace]">VOIR</a>
+                        <a class="waves-light btn-flat" (click)="openModal(race)" href="javascript:void(0)">VOIR</a>
                       </div>
                   </div>
               </div>
@@ -61,3 +61,5 @@
       </div>
   </div>
 </div>
+
+<app-races-detail-modal [race]="selectedRace"></app-races-detail-modal>

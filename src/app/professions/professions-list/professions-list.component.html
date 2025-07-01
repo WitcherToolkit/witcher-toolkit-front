@@ -24,25 +24,22 @@
 
 <div class="container">
   <div class="row">
-      <div *ngIf="professionsListFiltered().length === 0" class="col-12 text-center">
-          <p>Aucun résultat</p>
+    <div *ngIf="professionsListFiltered().length === 0" class="col-12 text-center">
+        <p>Aucun résultat</p>
+    </div>
+
+    <div *ngFor="let profession of professionsListFiltered(); trackBy: trackById">
+        <div class="col s12 m4">
+            <div class="card horizontal">
+                <div class="card-stacked">
+                    <span class="card-title center-align">{{ profession.nom }}</span>
+                    <div class="card-content">
+                        <p> {{ profession.description }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
       </div>
 
-      <div *ngFor="let profession of professionsListFiltered(); trackBy: trackById">
-          <div class="col s12 m4">
-              <div class="card horizontal">
-                  <div class="card-stacked">
-                      <span class="card-title center-align">{{ profession.nom }}</span>
-                      <div class="card-content">
-                          <p> {{ profession.description }}</p>
-                      </div>
-                    
-                      <div class="card-action">
-                          <a href="#">VOIR</a>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
   </div>
 </div>
