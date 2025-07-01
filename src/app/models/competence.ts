@@ -5,14 +5,11 @@ export interface Competence {
     idCompetence: number;
     nom: string;
     description: string;
-    descriptionBase10?: string;
-    descriptionBase13?: string;
-    descriptionBase16?: string;
-    descriptionBase20?: string;
+    prerequis?: string;
     specialisation?: string;
     exclusif: boolean;
     caracteristique?: Caracteristique
-    tags?: string[];// Liste des professions associées
+    tags?: string;
     professions?: Profession[];
 }
 

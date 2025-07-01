@@ -1,6 +1,13 @@
 <div #modal id="modal1" class="modal">
   <div class="modal-content">
+
     <h4 class="center-align">{{ competence?.nom }}</h4>
+
+    <div class="row" *ngIf="competence?.specialisation">
+      <div class="col s1"></div>
+      <div class="col s10">{{ competence?.specialisation }} - {{ competence?.prerequis }}</div>
+      <div class="col s1"></div>
+    </div>
 
     <div class="row">
       <div class="col s1"></div>
@@ -8,31 +15,8 @@
       <div class="col s1"></div>
     </div>
 
-    <div class="row">
-      <div class="col s1"></div>
-      <div class="col s10"><b>Base de 10 :</b> {{ competence?.descriptionBase10 }}</div>
-      <div class="col s1"></div>
-    </div>
-
-    <div class="row">
-      <div class="col s1"></div>
-      <div class="col s10"><b>Base de 13 :</b> {{ competence?.descriptionBase13 }}</div>
-      <div class="col s1"></div>
-    </div>
-
-    <div class="row">
-      <div class="col s1"></div>
-      <div class="col s10"><b>Base de 16 :</b> {{ competence?.descriptionBase16 }}</div>
-      <div class="col s1"></div>
-    </div>
-
-    <div class="row">
-      <div class="col s1"></div>
-      <div class="col s10"><b>Base de 20 :</b> {{ competence?.descriptionBase20 }}</div>
-      <div class="col s1"></div>
-    </div>
-
   </div>
+
   <div class="modal-footer">
     <button type="button" class="modal-close btn-flat">Modifier</button>
     <button type="button" class="modal-close btn-flat">Fermer</button>

@@ -1,9 +1,11 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { Competence } from '../../models/competence';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-competences-detail-modal',
   standalone: true,
+  imports: [CommonModule],
   templateUrl: './competences-detail.component.html'
 })
 export class CompetencesDetailComponent implements AfterViewInit {
