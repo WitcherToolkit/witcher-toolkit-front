@@ -30,7 +30,7 @@
 
     <div *ngFor="let profession of professionsListFiltered(); trackBy: trackById">
         <div class="col s12 m4">
-            <div class="card horizontal" appSelectionBorder >
+            <div class="card horizontal" appSelectionBorder (click)="openModal(profession)" href="javascript:void(0)">
                 <div class="card-stacked">
                     <span class="card-title center-align">{{ profession.nom }}</span>
                     <div class="card-content">
@@ -43,3 +43,5 @@
 
   </div>
 </div>
+
+<app-professions-detail-modal [profession]="selectedProfession"></app-professions-detail-modal>

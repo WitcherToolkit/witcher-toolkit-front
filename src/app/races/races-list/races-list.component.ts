@@ -31,13 +31,7 @@ export class RacesListComponent {
         race.nom.toLowerCase().includes(term)
       );
     });
-  
-    // Méthode pour mettre à jour le searchTerm (peut être liée à un événement input)
-    onSearchChange(event: Event) {
-      const inputElement = event.target as HTMLInputElement;
-      this.searchTerm.set(inputElement.value);
-    }
-  
+    
     trackById(index: number, race: Race): number {
       return race.idRace;
     }

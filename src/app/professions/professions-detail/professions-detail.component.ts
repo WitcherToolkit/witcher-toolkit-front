@@ -1,15 +1,15 @@
-import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { Race } from '../../models/race';
 import { CommonModule } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Profession } from '../../models/profession';
 
 @Component({
-  selector: 'app-races-detail-modal',
+  selector: 'app-professions-detail-modal',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './races-detail.component.html'
+  templateUrl: './professions-detail.component.html'
 })
-export class RacesDetailComponent implements AfterViewInit {
-  @Input() race: Race | null = null;
+export class ProfessionsDetailComponent implements AfterViewInit {
+  @Input() profession: Profession | null = null;
   @ViewChild('modal') modalRef!: ElementRef;
 
   ngAfterViewInit() {
