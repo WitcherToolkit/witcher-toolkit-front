@@ -3,11 +3,12 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { PROFESSION_LIST } from '../../fake-data-set/profession-fake';
 import { ProfessionsService } from '../professions.service';
 import { Profession } from '../../models/profession';
+import { SelectionBorderDirective } from '../../directives/selection-border.directive';
 
 @Component({
   selector: 'app-professions-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [SelectionBorderDirective, CommonModule],
   templateUrl: './professions-list.component.html',
   styleUrl: './professions-list.component.scss'
 })

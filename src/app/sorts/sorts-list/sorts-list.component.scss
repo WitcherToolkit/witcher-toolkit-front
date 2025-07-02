@@ -1,3 +1,10 @@
-.card-content {
-    min-height: 115px;//a adapter pas la suite en fonction du texte qu'il y aura.
+.card {
+   border: 1px solid transparent; // ou danger par défaut
+    box-sizing: border-box; // pour que la bordure soit prise en compte dans la taille de la carte
+    transition: box-shadow 0.15s, border-color 0.15s;// pour une transition douce
+
+    .card-content {
+        min-height: 115px;//a adapter pas la suite en fonction du texte qu'il y aura.
+    }
+
 }

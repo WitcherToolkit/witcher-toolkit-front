@@ -35,14 +35,11 @@
     <div *ngFor="let competence of competencesListFiltered(); trackBy: trackById">
 
       <div class="col s12 m4">
-        <div class="card horizontal">
+        <div class="card horizontal" appSelectionBorder (click)="openModal(competence)" href="javascript:void(0)">
           <div class="card-stacked">
             <span class="card-title  center-align">{{ competence.nom }} <span *ngIf="competence.caracteristique">({{ competence.caracteristique.code }})</span></span>
             <div class="card-content">
               <p>{{ truncateText(competence.description) }}</p>
-            </div>
-            <div class="card-action">
-              <a class="waves-light btn-flat" (click)="openModal(competence)" href="javascript:void(0)">VOIR</a>
             </div>
           </div>
         </div>

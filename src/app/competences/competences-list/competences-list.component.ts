@@ -4,11 +4,12 @@ import { CompetenceService } from '../competence.service';
 import { CompetencesDetailComponent } from '../competences-detail/competences-detail.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Competence } from '../../models/competence';
+import { SelectionBorderDirective } from '../../directives/selection-border.directive';
 
 @Component({
   selector: 'app-competences-list',
   standalone: true,
-  imports: [CommonModule, CompetencesDetailComponent],
+  imports: [SelectionBorderDirective, CommonModule, CompetencesDetailComponent],
   templateUrl: './competences-list.component.html',
   styleUrl: './competences-list.component.scss'
 })

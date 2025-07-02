@@ -67,7 +67,7 @@
     <!-- Afficher les cartes des magie filtrées -->
     <div *ngFor="let magie of magiesListFiltered(); trackBy: trackById">
       <div class="col s12 m4">
-        <div class="card horizontal" appNatureBorder [natureValue]="magie.nature">
+        <div class="card horizontal" appNatureBorder [natureValue]="magie.nature" (click)="openModal(magie)" href="javascript:void(0)">
           <div class="card-stacked">
             <span class="card-title center-align">{{ magie.nom }}</span>
             <div class="card-content">
@@ -75,9 +75,6 @@
                   <p><b>Type de magie</b> : {{ magie.type }} ({{ magie.niveau }} )</p>
                   <p><b>Effet</b> : {{ truncateText(magie.effet) }}</p>
               </div>
-            </div>
-            <div class="card-action">
-              <a class="waves-light btn-flat" (click)="openModal(magie)" href="javascript:void(0)">Plus d'infos</a>
             </div>
           </div>
         </div>

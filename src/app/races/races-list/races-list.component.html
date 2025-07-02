@@ -30,7 +30,7 @@
 
       <div *ngFor="let race of racesListFiltered(); trackBy: trackById">
           <div class="col s12 m4 ">
-              <div class="card horizontal size-card">
+              <div class="card horizontal size-card" appSelectionBorder (click)="openModal(race)" href="javascript:void(0)">
                   <div class="card-stacked">
                       <span class="card-title center-align">{{ race.nom }}</span>
                       <div class="card-content">
@@ -51,10 +51,6 @@
                               </tr>
                           </tbody>
                       </table>
-
-                      <div class="card-action">
-                        <a class="waves-light btn-flat" (click)="openModal(race)" href="javascript:void(0)">VOIR</a>
-                      </div>
                   </div>
               </div>
           </div>

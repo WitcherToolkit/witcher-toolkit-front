@@ -4,13 +4,14 @@ import { RituelsService } from '../rituels.service';
 import { Rituel } from '../../models/rituel';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RituelsDetailComponent } from '../rituels-detail/rituels-detail.component';
+import { SelectionBorderDirective } from '../../directives/selection-border.directive';
 
 @Component({
   selector: 'app-rituels-list',
   standalone: true,
-  imports: [CommonModule, RituelsDetailComponent],
+  imports: [SelectionBorderDirective, CommonModule, RituelsDetailComponent],
   templateUrl: './rituels-list.component.html',
-  styles: ``
+  styleUrl: './rituels-list.component.scss'
 })
 export class RituelsListComponent {
   private readonly rituelsService = inject(RituelsService);

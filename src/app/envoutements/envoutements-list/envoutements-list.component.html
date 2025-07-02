@@ -33,7 +33,7 @@
     <!-- Afficher les cartes des envoutement filtrées -->
     <div *ngFor="let envoutement of envoutementsListFiltered(); trackBy: trackById">
       <div class="col s12 m4">
-        <div class="card horizontal" appDangerBorder [dangerValue]="envoutement.danger">
+        <div class="card horizontal" appDangerBorder [dangerValue]="envoutement.danger" (click)="openModal(envoutement)" href="javascript:void(0)">
           <div class="card-stacked">
             <span class="card-title center-align">{{ envoutement.nom }}</span>
             <div class="card-content">
@@ -41,9 +41,6 @@
                   <p><b>Type d'envoutement</b> : {{ envoutement.danger }} ({{ envoutement.cout }})</p>
                   <p><b>Effet</b> : {{ truncate(envoutement.effet) }}</p>
               </div>
-            </div>
-            <div class="card-action">
-              <a class="waves-light btn-flat" (click)="openModal(envoutement)" href="javascript:void(0)">Plus d'infos</a>
             </div>
           </div>
         </div>

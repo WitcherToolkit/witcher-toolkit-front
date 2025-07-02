@@ -30,7 +30,7 @@
 
     <div *ngFor="let profession of professionsListFiltered(); trackBy: trackById">
         <div class="col s12 m4">
-            <div class="card horizontal">
+            <div class="card horizontal" appSelectionBorder >
                 <div class="card-stacked">
                     <span class="card-title center-align">{{ profession.nom }}</span>
                     <div class="card-content">

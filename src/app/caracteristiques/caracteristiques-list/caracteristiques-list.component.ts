@@ -5,11 +5,12 @@ import { CaracteristiqueService } from '../caracteristique.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CaracteristiquesDetailComponent } from '../caracteristiques-detail/caracteristiques-detail.component';
 import { Caracteristique } from '../../models/caracteristique';
+import { SelectionBorderDirective } from '../../directives/selection-border.directive';
 
 @Component({
   selector: 'app-caracteristiques-list',
   standalone: true,
-  imports: [CommonModule, CaracteristiquesDetailComponent],
+  imports: [SelectionBorderDirective, CommonModule, CaracteristiquesDetailComponent],
   templateUrl: './caracteristiques-list.component.html',
   styleUrls: ['caracteristiques-list.component.scss']
 })

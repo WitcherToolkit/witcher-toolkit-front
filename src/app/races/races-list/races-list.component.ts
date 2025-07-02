@@ -1,15 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal, ViewChild } from '@angular/core';
 import { RacesService } from '../races.service';
-import { RouterLink } from '@angular/router';
 import { Race } from '../../models/race';
 import { RacesDetailComponent } from '../races-detail/races-detail.component';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { SelectionBorderDirective } from '../../directives/selection-border.directive';
 
 @Component({
     selector: 'app-races-list',
     standalone: true,
-    imports: [CommonModule, RacesDetailComponent],
+    imports: [SelectionBorderDirective, CommonModule, RacesDetailComponent],
     templateUrl: './races-list.component.html',
     styleUrls: ['races-list.component.scss']
 })

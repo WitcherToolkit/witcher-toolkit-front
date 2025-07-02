@@ -34,15 +34,12 @@
     <!-- Afficher les cartes des rituel filtrées -->
     <div *ngFor="let rituel of rituelsListFiltered(); trackBy: trackById">
       <div class="col s12 m4">
-        <div class="card horizontal">
+        <div class="card horizontal" appSelectionBorder (click)="openModal(rituel)" href="javascript:void(0)">
           <div class="card-stacked">
             <span class="card-title center-align">{{ rituel.nom }}</span>
             <div class="card-content">
               <p>Niveau {{ rituel.niveau }} - SD : {{ rituel.sd }} </p>
               <p><b>Effet</b> : {{ rituel.effet }}</p>
-            </div>
-            <div class="card-action">
-              <a class="waves-light btn-flat" (click)="openModal(rituel)" href="javascript:void(0)">VOIR</a>
             </div>
           </div>
         </div>
