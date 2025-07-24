@@ -41,6 +41,13 @@
               <p>Niveau {{ rituel.niveau }} - SD : {{ rituel.sd }} </p>
               <p><b>Effet</b> : {{ rituel.effet }}</p>
             </div>
+
+            <div class="card-action">
+              <a (click)="openModal(rituel)" href="javascript:void(0)">Voir</a>
+              <a href="#">Modifier</a>
+              <a href="#">Supprimer</a>
+            </div>
+
           </div>
         </div>
       </div>

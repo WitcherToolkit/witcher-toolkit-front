@@ -30,12 +30,18 @@
 
     <div *ngFor="let profession of professionsListFiltered(); trackBy: trackById">
         <div class="col s12 m4">
-            <div class="card horizontal" appSelectionBorder (click)="openModal(profession)" href="javascript:void(0)">
+            <div class="card horizontal" appSelectionBorder>
                 <div class="card-stacked">
-                    <span class="card-title center-align">{{ profession.nom }}</span>
-                    <div class="card-content">
-                        <p> {{ profession.description }}</p>
-                    </div>
+                  <span class="card-title center-align">{{ profession.nom }}</span>
+                  <div class="card-content">
+                      <p> {{ profession.description }}</p>
+                  </div>
+
+                  <div class="card-action">
+                    <a (click)="openModal(profession)" href="javascript:void(0)">Voir</a>
+                    <a href="#">Modifier</a>
+                    <a href="#">Supprimer</a>
+                  </div>
                 </div>
             </div>
         </div>

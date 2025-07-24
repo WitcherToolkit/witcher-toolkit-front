@@ -30,27 +30,33 @@
 
       <div *ngFor="let race of racesListFiltered(); trackBy: trackById">
           <div class="col s12 m4 ">
-              <div class="card horizontal size-card" appSelectionBorder (click)="openModal(race)" href="javascript:void(0)">
+              <div class="card horizontal size-card" appSelectionBorder >
                   <div class="card-stacked">
-                      <span class="card-title center-align">{{ race.nom }}</span>
-                      <div class="card-content">
-                          <p>{{ getParticularitesAsLine(race) }}</p>
-                      </div>
-                      <table class="highlight">
-                          <thead>
-                              <tr>
-                                  <th>Territoire</th>
-                                  <th>Réputation</th>
-                              </tr>
-                          </thead>
+                    <span class="card-title center-align">{{ race.nom }}</span>
+                    <div class="card-content">
+                        <p>{{ getParticularitesAsLine(race) }}</p>
+                    </div>
+                    <table class="highlight">
+                        <thead>
+                            <tr>
+                                <th>Territoire</th>
+                                <th>Réputation</th>
+                            </tr>
+                        </thead>
 
-                          <tbody>
-                              <tr *ngFor="let reputation of race.reputationWikiList">
-                                  <td>{{ reputation.territoire }}</td>
-                                  <td>{{ reputation.valeur }}</td>
-                              </tr>
-                          </tbody>
-                      </table>
+                        <tbody>
+                            <tr *ngFor="let reputation of race.reputationWikiList">
+                                <td>{{ reputation.territoire }}</td>
+                                <td>{{ reputation.valeur }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="card-action">
+                      <a (click)="openModal(race)" href="javascript:void(0)">Voir</a>
+                      <a href="#">Modifier</a>
+                      <a href="#">Supprimer</a>
+                    </div>
                   </div>
               </div>
           </div>

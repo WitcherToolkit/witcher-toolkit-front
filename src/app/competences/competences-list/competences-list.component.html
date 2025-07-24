@@ -41,6 +41,12 @@
             <div class="card-content">
               <p>{{ truncateText(competence.description) }}</p>
             </div>
+
+            <div class="card-action">
+              <a (click)="openModal(competence)" href="javascript:void(0)">Voir</a>
+              <a href="#">Modifier</a>
+              <a href="#">Supprimer</a>
+            </div>
           </div>
         </div>
       </div>
