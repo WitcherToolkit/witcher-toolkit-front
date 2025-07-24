@@ -33,7 +33,7 @@ export class CreatePersonComponent {
     // Ajout d'un écouteur pour mettre à jour selectedProfession
     this.form.valueChanges.subscribe(() => {
       const professionId = this.form.get('profession')?.value;
-      this.selectedProfession = PROFESSION_LIST.find(p => p.id === +professionId);
+      this.selectedProfession = PROFESSION_LIST.find(p => p.idProfession === +professionId);
     });
   }
 
@@ -78,7 +78,7 @@ export class CreatePersonComponent {
 
   isSubmitAvailableOnPart3(): boolean {
     const professionId = this.form.get('profession')?.value;
-    const selectedProfession = PROFESSION_LIST.find(p => p.id === +professionId);
+    const selectedProfession = PROFESSION_LIST.find(p => p.idProfession === +professionId);
     return !!(this.currentStep === 3 && selectedProfession && selectedProfession.nom !== 'Mage' && selectedProfession.nom !== 'Prêtre');
   }
 

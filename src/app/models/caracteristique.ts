@@ -1,5 +1,5 @@
 export interface Caracteristique {
-    idCaracteristique : number;
+    idCaracteristique : number; // TODO A voir si necessaire côté front
     code : string;
     nom : string;
     description : string;

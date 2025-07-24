@@ -1,8 +1,24 @@
 <div #modal id="modal1" class="modal">
   <div class="modal-content">
-    <h4 class="center-align">{{ profession?.nom }}</h4>
+    <!-- Display profession name from the detailedProfession signal -->
+    <h4 class="center-align">{{ detailedProfession()?.nom }}</h4>
+
+    <div class="modal-body">
+      <!-- Display profession description from the detailedProfession signal -->
+      <p>{{ detailedProfession()?.description }}</p>
+
+      <h5>Compétences associées :</h5>
+      <ul>
+        <!-- Iterate over the competences getter, which uses the detailedProfession signal -->
+        <li *ngFor="let compProfession of competences; trackBy: trackCompetenceProfessionById">
+          <!-- Access competence name and characteristic code from the nested objects -->
+          {{ compProfession.competence.nom }} ({{ compProfession.competence.caracteristique?.code }})
+        </li>
+        <li *ngIf="competences.length === 0">Aucune compétence associée.</li>
+      </ul>
+    </div>
   </div>
-  
+
   <div class="modal-footer">
     <button type="button" class="modal-close btn-flat">Fermer</button>
   </div>

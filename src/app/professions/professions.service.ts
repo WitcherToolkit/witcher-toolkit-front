@@ -3,31 +3,28 @@ import { Profession } from '../models/profession';
 import { PROFESSION_LIST, PROFESSION_MAP } from '../fake-data-set/profession-fake';
 import { map, Observable, of } from 'rxjs';
 import { RACE_MAP } from '../fake-data-set/race-fake';
+import { HttpClient } from '@angular/common/http';
+import { EnvironmentConfig } from '../environment.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProfessionsService {
-  private readonly professions = signal<Profession[]>(PROFESSION_LIST);
+  private readonly professions = signal<Profession[]>([]);
+
+  constructor(private http: HttpClient) {}
 
   getProfessionsList(): Observable<Profession[]> {
-    return of(this.professions()); // Simule une requête HTTP
-    //return this.http.get<Profession[]>('url/api/professions');
+    console.log('Fetching professions list from API...');
+    console.log(`API Base URL: ${EnvironmentConfig.apiBaseUrl}`);
+    return this.http.get<Profession[]>(`${EnvironmentConfig.apiBaseUrl}/professions`);
   }
 
-  searchProfessions(term: string): Profession[] {
-    const lowerTerm = term.trim().toLowerCase();
-    let filteredProfessions: Profession[] = [];
-    this.getProfessionsList().subscribe(list => {
-      if (!lowerTerm) {
-        filteredProfessions = list;
-      } else {
-        filteredProfessions = list.filter(profession =>
-          profession.nom.toLowerCase().includes(lowerTerm)
-        );
-      }
-    });
-    return filteredProfessions;
+  getProfessionCompetences(id: number): Observable<Profession> {
+
+    console.log('Fetching profession detail from API...');
+    console.log(`API Base URL: ${EnvironmentConfig.apiBaseUrl}/professions/${id}/competences`);
+    return this.http.get<Profession>(`${EnvironmentConfig.apiBaseUrl}/professions/${id}/competences`);
   }
 
   filterProfessions(raceId: number): Observable<Profession[]> {

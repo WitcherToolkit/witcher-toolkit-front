@@ -34,7 +34,7 @@
                 <div class="card-stacked">
                   <span class="card-title center-align">{{ profession.nom }}</span>
                   <div class="card-content">
-                      <p> {{ profession.description }}</p>
+                      <p> {{ truncateText(profession.description) }}</p>
                   </div>
 
                   <div class="card-action">
@@ -50,4 +50,4 @@
   </div>
 </div>
 
-<app-professions-detail-modal [profession]="selectedProfession"></app-professions-detail-modal>
+<app-professions-detail-modal [professionId]="selectedProfessionId"></app-professions-detail-modal>

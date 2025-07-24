@@ -62,7 +62,7 @@ export class Part1Component implements OnInit {
 
         // Réinitialiser la profession si elle n'est plus valide
         const currentProfessionId = this.form.get('profession')?.value;
-        if (!this.filteredProfessions.some(prof => prof.id === +currentProfessionId)) {
+        if (!this.filteredProfessions.some(prof => prof.idProfession === +currentProfessionId)) {
           this.form.get('profession')?.setValue('', { emitEvent: false });
         }
       });

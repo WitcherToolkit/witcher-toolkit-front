@@ -82,7 +82,7 @@ export class Part4Component implements OnInit {
   // Méthode pour mettre à jour la liste des magies disponibles en fonction de la profession sélectionnée
   updateMagieDisponible() {
     const selectedProfessionId = this.form.get('profession')?.value;
-    const selectedProfession = PROFESSION_LIST.find(p => p.id === +selectedProfessionId);
+    const selectedProfession = PROFESSION_LIST.find(p => p.idProfession === +selectedProfessionId);
   
     // Si aucune profession n'est sélectionnée, vider la liste des magies disponibles
     if (!selectedProfession) {
@@ -153,7 +153,7 @@ export class Part4Component implements OnInit {
   // Mettre à jour la liste des rituels disponibles en fonction de la profession
   updateRituelDisponible() {
     const selectedProfessionId = this.form.get('profession')?.value;
-    const selectedProfession = PROFESSION_LIST.find(p => p.id === +selectedProfessionId);
+    const selectedProfession = PROFESSION_LIST.find(p => p.idProfession === +selectedProfessionId);
 
     // Si aucune profession n'est sélectionnée, vider la liste des rituels disponibles
     if (!selectedProfession) {
@@ -216,7 +216,7 @@ export class Part4Component implements OnInit {
   //#region Envoûtement 
   updateEnvoutementDisponible() {
     const selectedProfessionId = this.form.get('profession')?.value;
-    const selectedProfession = PROFESSION_LIST.find(p => p.id === +selectedProfessionId);
+    const selectedProfession = PROFESSION_LIST.find(p => p.idProfession === +selectedProfessionId);
 
     // Si aucune profession n'est sélectionnée, vider la liste des envoûtements disponibles
     if (!selectedProfession) {

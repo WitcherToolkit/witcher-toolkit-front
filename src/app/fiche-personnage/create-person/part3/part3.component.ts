@@ -80,7 +80,7 @@ export class Part3Component implements OnInit {
     }
   
     // Convertir l'ID de la profession en un objet profession
-    const selectedProfession = PROFESSION_LIST.find(prof => prof.id === +professionId);
+    const selectedProfession = PROFESSION_LIST.find(prof => prof.idProfession === +professionId);
     if (!selectedProfession) {
       console.error(`Profession with ID ${professionId} not found.`);
       this.filteredCompetences = [];
@@ -91,14 +91,14 @@ export class Part3Component implements OnInit {
     }
   
     // Filtrer les compétences associées à la profession sélectionnée
-    this.filteredCompetences = this.competences.filter(competence =>
-      competence.professions?.some(prof => prof.id === selectedProfession.id)
+    /*this.filteredCompetences = this.competences.filter(competence =>
+      competence.professions?.some(prof => prof.idProfession === selectedProfession.idProfession)
     );
   
     // Filtrer les compétences non associées à la profession sélectionnée
     const nonAssociatedCompetences = this.competences.filter(competence =>
-      !competence.professions?.some(prof => prof.id === selectedProfession.id) && !competence.exclusif
-    );
+      !competence.professions?.some(prof => prof.idProfession === selectedProfession.idProfession) && !competence.exclusif
+    );*/
   
     // Réinitialiser le tableau des compétences associées dans le formulaire
     this.competencesArray.clear();
@@ -110,13 +110,13 @@ export class Part3Component implements OnInit {
     });
   
     // Réinitialiser le tableau des compétences non associées dans le formulaire
-    this.nonAssociatedCompetencesArray.clear();
+    /*this.nonAssociatedCompetencesArray.clear();
     nonAssociatedCompetences.forEach(competence => {
       this.nonAssociatedCompetencesArray.push(this.fb.group({
         valeurMax: [0, [Validators.min(0), Validators.max(6)]], // Valeur minimale 0, maximale 6
         competence: [competence]
       }));
-    });
+    });*/
   
     // Mettre à jour competencePersonnage
     this.updateCompetencePersonnage();

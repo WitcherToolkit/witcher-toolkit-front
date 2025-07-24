@@ -45,7 +45,7 @@
     <div class="input-field col s4">
       <select #professionSelect id="profession" formControlName="profession" class="browser-default">
             <option value="">Choisir Profession</option>
-        <option *ngFor="let profession of filteredProfessions" [value]="profession.id">{{ profession.nom }}</option>
+        <option *ngFor="let profession of filteredProfessions" [value]="profession.idProfession">{{ profession.nom }}</option>
       </select>
     </div>
   </div>
