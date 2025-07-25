@@ -18,8 +18,6 @@ export class SortsUpdateComponent implements AfterViewInit, OnChanges {
 
   constructor(private fb: FormBuilder){}
 
-  
-
   ngOnChanges(changes: SimpleChanges) {// SimpleChanges permet de détecter les changements dans les propriétés d'entrée
     if (changes['magie'] && this.magie) {
       this.magieForm = this.fb.group({

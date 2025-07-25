@@ -4,10 +4,9 @@
             <!-- ngIf permet de s'assurer que le formulaire est prêt avant de l'afficher -->
 
             <h4 class="center-align">Modifier un(e) {{ magie?.type}} </h4>
-
+            <!--Ligne-->
             <div class="row">
                 <div class="input-field col s6">
-                    <!--<label [class.active]="magieForm.get('nom')?.value" for="nom">Nom</label>-->
                     <label class="active" for="nom">Nom</label>
                     <input id="nom" type="text" formControlName="nom">
                 </div>
@@ -17,7 +16,7 @@
                     <input id="cout" type="text" formControlName="cout">
                 </div>
             </div>
-
+            <!--Ligne-->
             <div class="row">
                 <div class="input-field col s4">
                     <label class="active" for="duree">Durée</label>
@@ -30,19 +29,32 @@
                 </div>
 
                 <div class="input-field col s4">
-                    <label class="active" for="nature">Élément</label>
-                    <input id="nature" type="text" formControlName="nature">
+                    <select id="nature" formControlName="nature" class="browser-default">
+                        <option value="" disabled selected>Élément</option>
+                        <option value="Feu">Feu</option>
+                        <option value="Eau">Eau</option>
+                        <option value="Terre">Terre</option>
+                        <option value="Air">Air</option>
+                        <option value="Mixte">Mixte</option>
+                    </select>
+                    <label for="nature" class="active">Élément</label>
                 </div>
             </div>
-
+            <!--Ligne-->
             <div class="row">
                 <div class="input-field col s4">
-                    <label class="active" for="type">Type</label>
-                    <input id="type" type="text" formControlName="type">
+                    <select id="type" formControlName="type" class="browser-default">
+                        <option value="" disabled selected>Type</option>
+                        <option value="Sort">Sort</option>
+                        <option value="Invocation">Invocation</option>
+                        <option value="Signe">Signe</option>
+                    </select>
+                    <label for="type" class="active">Type</label>
                 </div>
 
                 <div class="input-field col s4">
-                    <label class="active" for="contre">Contre</label>
+                    <!-- L'attribut [class.active] évite la superposition du label avec le champ de saisie -->
+                    <label [class.active]="magieForm.get('contre')?.value" class="active" for="contre">Contre</label>
                     <input id="contre" type="text" formControlName="contre">
                 </div>
 
@@ -51,7 +63,7 @@
                     <input id="niveau" type="text" formControlName="niveau">
                 </div>
             </div>
-
+            <!--Ligne-->
             <div class="row">
                 <div class="input-field col s12">
                     <textarea id="effet" class="materialize-textarea" formControlName="effet"></textarea>
