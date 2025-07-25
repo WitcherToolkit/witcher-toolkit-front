@@ -78,7 +78,7 @@
 
             <div class="card-action">
               <a (click)="openModal(magie)" href="javascript:void(0)">Voir</a>
-              <a href="#">Modifier</a>
+              <a (click)="openUpdateModal(magie)" href="javascript:void(0)">Modifier</a>
               <a href="#">Supprimer</a>
             </div>
 
@@ -90,4 +90,5 @@
 </div>
 
 <app-sorts-detail-modal [magie]="selectedMagie"></app-sorts-detail-modal>
+<app-sorts-update-modal [magie]="selectedMagie"></app-sorts-update-modal>
 

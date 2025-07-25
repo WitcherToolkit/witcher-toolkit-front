@@ -1,0 +1,68 @@
+<div #modal id="updateModal" class="modal">
+    <div class="row">
+        <form *ngIf="magieForm" [formGroup]="magieForm" (ngSubmit)="onSubmit()">
+            <!-- ngIf permet de s'assurer que le formulaire est prêt avant de l'afficher -->
+
+            <h4 class="center-align">Modifier un(e) {{ magie?.type}} </h4>
+
+            <div class="row">
+                <div class="input-field col s6">
+                    <!--<label [class.active]="magieForm.get('nom')?.value" for="nom">Nom</label>-->
+                    <label class="active" for="nom">Nom</label>
+                    <input id="nom" type="text" formControlName="nom">
+                </div>
+
+                <div class="input-field col s6">
+                    <label class="active" for="cout">Coût</label>
+                    <input id="cout" type="text" formControlName="cout">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s4">
+                    <label class="active" for="duree">Durée</label>
+                    <input id="duree" type="text" formControlName="duree">
+                </div>
+
+                <div class="input-field col s4">
+                    <label class="active" for="portee">Portée</label>
+                    <input id="portee" type="text" formControlName="portee">
+                </div>
+
+                <div class="input-field col s4">
+                    <label class="active" for="nature">Élément</label>
+                    <input id="nature" type="text" formControlName="nature">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s4">
+                    <label class="active" for="type">Type</label>
+                    <input id="type" type="text" formControlName="type">
+                </div>
+
+                <div class="input-field col s4">
+                    <label class="active" for="contre">Contre</label>
+                    <input id="contre" type="text" formControlName="contre">
+                </div>
+
+                <div class="input-field col s4">
+                    <label class="active" for="niveau">Niveau</label>
+                    <input id="niveau" type="text" formControlName="niveau">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s12">
+                    <textarea id="effet" class="materialize-textarea" formControlName="effet"></textarea>
+                    <label class="active" for="effet">Effet</label>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="modal-close btn-flat">Valider</button>
+                <button type="button" class="modal-close btn-flat">Annuler</button>
+            </div>
+        </form>
+    </div>
+</div>

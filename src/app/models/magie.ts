@@ -13,8 +13,7 @@ export interface Magie {
 
 export type MagieList = Magie[];
 
-export function getNatureColor(type: string): string {
-    console.log(type);
+export function getNatureColor(type: string): string {;
     switch (type) {
       case 'Feu':
         return '#EF5350';

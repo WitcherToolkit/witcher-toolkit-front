@@ -60,10 +60,8 @@ export class ProfessionsListComponent {
   openModal(profession: Profession) {
     // Assigner l'ID de la profession sélectionnée à selectedProfessionId
     this.selectedProfessionId = profession.idProfession || null;
-    console.log(`Setting selectedProfessionId to: ${this.selectedProfessionId}`); // Log pour vérifier la valeur
 
     this.detailModal.open();
-    console.log(`Opening modal for profession ID: ${this.selectedProfessionId}`); // Log pour vérifier la valeur après l'ouverture
   }
   //#EndRegion boite de dialogue
 

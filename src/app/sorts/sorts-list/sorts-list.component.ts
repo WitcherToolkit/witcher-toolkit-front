@@ -6,11 +6,12 @@ import { MagieService } from '../magie.service';
 import { Magie } from '../../models/magie';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SortsDetailComponent } from '../sorts-detail/sorts-detail.component';
+import { SortsUpdateComponent } from '../sorts-update/sorts-update.component';
 
 @Component({
   selector: 'app-sorts-list',
   standalone: true,
-  imports: [NatureBorderDirective, CommonModule, SortsDetailComponent],
+  imports: [NatureBorderDirective, CommonModule, SortsDetailComponent, SortsUpdateComponent],
   templateUrl: './sorts-list.component.html',
   styles: ``
 })
@@ -63,16 +64,22 @@ export class SortsListComponent {
     return text;
   }
 
-  //#Region boite de rialogue
-    @ViewChild(SortsDetailComponent) detailModal!: SortsDetailComponent;// Référence à la boîte de dialogue
-    // Ajoute une propriété pour le rituel sélectionné
-    selectedMagie: Magie | null = null;
-  
-    // Modifie openModal pour recevoir le rituel
-    openModal(magie: Magie) {
-      this.selectedMagie = magie;
-      this.detailModal.open();
-    }
+  //#Region boite de dialogue
+  @ViewChild(SortsDetailComponent) detailModal!: SortsDetailComponent;// Référence à la boîte de dialogue
+  @ViewChild(SortsUpdateComponent) updateModal!: SortsUpdateComponent;
+  // Ajoute une propriété pour le rituel sélectionné
+  selectedMagie: Magie | null = null;
+
+  // Modifie openModal pour recevoir le rituel
+  openModal(magie: Magie) {
+    this.selectedMagie = magie;
+    this.detailModal.open();
+  }
+
+    openUpdateModal(magie: Magie) {
+    this.selectedMagie = magie;
+    this.updateModal.open();
+  }
     //#EndRegion boite de dialogue
 
 }
