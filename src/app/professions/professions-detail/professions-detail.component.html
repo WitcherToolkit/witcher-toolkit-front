@@ -1,23 +1,70 @@
 <div #modal id="modal1" class="modal">
   <div class="modal-content">
-    <!-- Display profession name from the detailedProfession signal -->
+    <!-- Afficher le nom de la profession à partir du signal detailedProfession -->
     <h4 class="center-align">{{ detailedProfession()?.nom }}</h4>
 
     <div class="modal-body">
-      <!-- Display profession description from the detailedProfession signal -->
+      <!-- Afficher la description de la profession à partir du signal detailedProfession -->
       <p>{{ detailedProfession()?.description }}</p>
 
-      <h5>Compétences associées :</h5>
-      <ul>
-        <!-- Iterate over the competences getter, which uses the detailedProfession signal -->
-        <li *ngFor="let compProfession of competences; trackBy: trackCompetenceProfessionById">
-          <!-- Access competence name and characteristic code from the nested objects -->
-          {{ compProfession.competence.nom }} ({{ compProfession.competence.caracteristique?.code }})
-        </li>
-        <li *ngIf="competences.length === 0">Aucune compétence associée.</li>
-      </ul>
+      
+    <div class="row">
+      <div class="col s4">
+        <h6><b>Compétences associées :</b></h6>
+        <ul>
+          <!-- Itérer sur le getter de compétences, qui utilise le signal detailedProfession -->
+          <li *ngFor="let compProfession of competences; trackBy: trackCompetenceProfessionById">
+            <!--Accéder au nom de la compétence et au code caractéristique à partir des objets imbriqués -->
+            {{ compProfession.competence.nom }} ({{ compProfession.competence.caracteristique?.code }})
+          </li>
+          <li *ngIf="competences.length === 0">Aucune compétence associée.</li>
+        </ul> 
+      </div>
+
+      <div class="col s4">
+        <h6><b>X équipements parmi :</b></h6>
+        <ul>
+          <li *ngFor="let item of inventaireNormaux">
+            {{ item.quantite }} {{ item.nom }}
+          </li>
+          <li *ngIf="inventaireNormaux.length === 0">Aucun objet d'inventaire associé.</li>
+        </ul>
+      </div>
+
+      <div *ngIf="detailedProfession() as prof ; else rien">
+
+        <ng-container *ngIf="
+          (prof.maxSort != null && prof.maxSort > 0) ||
+          (prof.maxRituel != null && prof.maxRituel > 0) ||
+          (prof.maxEnvoutement != null && prof.maxEnvoutement > 0) ||
+          (prof.maxInvocation != null && prof.maxInvocation > 0)
+        ">
+          <div class="col s4">
+            <h6><b>Atouts magique :</b></h6>
+            <ul>
+              <li *ngIf="prof.maxSort != null && prof.maxSort > 0">{{ prof.maxSort }} sorts de novice</li>
+              <li *ngIf="prof.maxRituel != null && prof.maxRituel > 0">{{ prof.maxRituel }} rituel(s) novice</li>
+              <li *ngIf="prof.maxEnvoutement != null && prof.maxEnvoutement > 0">{{ prof.maxEnvoutement }} envoûtement peu dangereux</li>
+              <li *ngIf="prof.maxInvocation != null && prof.maxInvocation > 0">{{ prof.maxInvocation }} invocations peu dangereux</li>
+            </ul>
+          </div>
+
+        </ng-container>
+      </div>
+      
+      <ng-template #rien></ng-template>
+      
+      <div class="col s4" *ngIf="inventaireSpeciaux.length">
+        <h6 ><b>Spécial :</b></h6>
+        <ul *ngIf="inventaireSpeciaux.length">
+          <li *ngFor="let item of inventaireSpeciaux">
+            {{ item.quantite }} {{ item.nom }}
+          </li>
+        </ul>
+        <p> <b>Atouts Magique :</b> tout les signes de base</p>
+      </div>
+
     </div>
-  </div>
 
   <div class="modal-footer">
     <button type="button" class="modal-close btn-flat">Fermer</button>

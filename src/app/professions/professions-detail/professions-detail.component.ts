@@ -12,21 +12,7 @@ import { ProfessionsService } from '../professions.service';
   templateUrl: './professions-detail.component.html'
 })
 export class ProfessionsDetailComponent implements AfterViewInit {
-  /*@Input() profession: Profession | null = null;
-  @ViewChild('modal') modalRef!: ElementRef;
 
-  ngAfterViewInit() {
-    if (this.modalRef) {
-      M.Modal.init(this.modalRef.nativeElement);
-    }
-  }
-
-  open() {
-    if (this.modalRef) {
-      const instance = M.Modal.getInstance(this.modalRef.nativeElement);
-      instance.open();
-    }
-  }*/
  // Use a setter for the input to react to changes and fetch data
   @Input() set professionId(id: number | null) {
     if (id !== null) {
@@ -41,6 +27,14 @@ export class ProfessionsDetailComponent implements AfterViewInit {
   private readonly professionsService = inject(ProfessionsService);
   readonly detailedProfession = signal<Profession | null>(null); // Signal pour conserver les données détaillées sur la profession
   constructor() {}
+
+  get inventaireNormaux() {
+    return this.detailedProfession()?.inventaireWikiList?.filter(i => !i.special) || [];
+  }
+
+  get inventaireSpeciaux() {
+    return this.detailedProfession()?.inventaireWikiList?.filter(i => i.special === true) || [];
+  }
 
   ngAfterViewInit() {
     // Initialize Materialize modal after the view has been initialized

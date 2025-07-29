@@ -10,6 +10,6 @@ export interface InventaireWiki {
 
     effet: string;
 
-    isSpecial: boolean;
+    special: boolean;
     
 }
