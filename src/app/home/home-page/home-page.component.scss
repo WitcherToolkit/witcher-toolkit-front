@@ -16,7 +16,6 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    min-height: 180px!important;//a adapter pas la suite en fonction du texte qu'il y aura.
 }
 
 .card-content {
@@ -31,5 +30,5 @@
 }
 
 .card.medium { 
-    margin-bottom: 250px; 
+    margin-bottom: 100px; 
 }
