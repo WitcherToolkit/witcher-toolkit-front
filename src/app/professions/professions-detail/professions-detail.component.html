@@ -31,7 +31,7 @@
         </ul>
       </div>
 
-      <div *ngIf="detailedProfession() as prof ; else rien">
+      <div *ngIf="detailedProfession() as prof ">
 
         <ng-container *ngIf="
           (prof.maxSort != null && prof.maxSort > 0) ||
@@ -51,9 +51,7 @@
 
         </ng-container>
       </div>
-      
-      <ng-template #rien></ng-template>
-      
+
       <div class="col s4" *ngIf="inventaireSpeciaux.length">
         <h6 ><b>Spécial :</b></h6>
         <ul *ngIf="inventaireSpeciaux.length">
