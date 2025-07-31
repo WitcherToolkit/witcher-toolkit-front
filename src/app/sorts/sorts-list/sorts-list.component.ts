@@ -64,7 +64,7 @@ export class SortsListComponent implements OnInit {
     return text;
   }
 
-  //#Region boite de dialogue
+  //#region boite de dialogue
   @ViewChild(SortsDetailComponent) detailModal!: SortsDetailComponent;// Référence à la boîte de dialogue
   @ViewChild(SortsUpdateComponent) updateModal!: SortsUpdateComponent;
   // Ajoute une propriété pour le rituel sélectionné
@@ -76,18 +76,19 @@ export class SortsListComponent implements OnInit {
     this.detailModal.open();
   }
 
-    openUpdateModal(magie: Magie) {
+  openUpdateModal(magie: Magie) {
     this.selectedMagie = magie;
     this.updateModal.open();
   }
-    //#EndRegion boite de dialogue
+  //#endRegion boite de dialogue
 
-    ngOnInit() {
+  // #Region MAJ des magies après une action
+  ngOnInit() {
     this.refreshMagies();
   }
 
 
-    // Ajoute une méthode pour rafraîchir la liste
+  // Ajoute une méthode pour rafraîchir la liste
   refreshMagies() {
     // Recharge la liste depuis le service
     this.magie.set([]);
@@ -99,5 +100,6 @@ export class SortsListComponent implements OnInit {
   onMagieUpdated(updatedMagie: Magie) {
     this.refreshMagies();
   }
+  // #EndRegion MAJ des magies après une action
 
 }
