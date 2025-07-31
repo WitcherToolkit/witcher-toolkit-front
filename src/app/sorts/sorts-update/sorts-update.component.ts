@@ -10,7 +10,6 @@ import { RequiredAsteriskDirective } from '../../directives/required-asterisk.di
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormControlErrorComponent, RequiredAsteriskDirective],// Utilisation de ReactiveFormsModule pour les formulaires
   templateUrl: './sorts-update.component.html',
-  styleUrl: './sorts-update.component.css'
 })
 export class SortsUpdateComponent implements AfterViewInit, OnChanges {
   @Input() magie: Magie | null = null;
@@ -50,7 +49,48 @@ export class SortsUpdateComponent implements AfterViewInit, OnChanges {
   }
 
   onSubmit() {
-    console.log('Formulaire soumis :', this.magieForm.value);
+    if (this.magieForm.valid) {
+      console.log('Formulaire soumis :', this.magieForm.value);
+      // Appeler un service pour sauvegarder les données
+      // this.magieService.updateMagie(this.magieForm.value);
+      const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
+      instance.close();
+    } else {
+      this.magieForm.markAllAsTouched();
+      console.error('Le formulaire n\'est pas valide. Veuillez corriger les erreurs.');
+    }
   }
+
+  // Méthode pour réinitialiser le formulaire aux valeurs de l'objet 'magie'
+  resetForm() {
+    if (this.magieForm && this.magie) {
+      this.magieForm.reset({
+        nom: this.magie.nom,
+        cout: this.magie.cout,
+        duree: this.magie.duree,
+        portee: this.magie.portee,
+        nature: this.magie.nature,
+        type: this.magie.type,
+        contre: this.magie.contre,
+        niveau: this.magie.niveau,
+        effet: this.magie.effet
+      });
+      // Marquer le formulaire comme non modifié et non touché
+      // Cela permet de réinitialiser l'état du formulaire
+      this.magieForm.markAsPristine();
+      // Marquer tous les champs comme non touchés
+      this.magieForm.markAsUntouched();
+    }
+  }
+
+  // Méthode pour gérer l'annulation : réinitialise le formulaire et ferme la modale
+  onCancel() {
+    this.resetForm(); // Réinitialise le formulaire aux valeurs d'origine
+    if (this.modalRef) {
+      const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
+      instance.close();
+    }
+  }
+
 
 }
