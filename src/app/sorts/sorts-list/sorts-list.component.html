@@ -90,5 +90,5 @@
 </div>
 
 <app-sorts-detail-modal [magie]="selectedMagie"></app-sorts-detail-modal>
-<app-sorts-update-modal [magie]="selectedMagie"></app-sorts-update-modal>
+<app-sorts-update-modal [magie]="selectedMagie" (magieUpdated)="onMagieUpdated($event)"></app-sorts-update-modal>
 

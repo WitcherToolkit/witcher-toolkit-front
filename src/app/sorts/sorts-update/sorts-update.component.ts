@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Magie } from '../../models/magie';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormControlErrorComponent } from '../../form-validation/form-control-error.component';
@@ -15,6 +15,7 @@ import { MagieService } from '../magie.service';
 export class SortsUpdateComponent implements AfterViewInit, OnChanges {
   @Input() magie: Magie | null = null;
   @ViewChild('modal') modalRef!: ElementRef;
+  @Output() magieUpdated = new EventEmitter<Magie>();
 
   magieForm!: FormGroup;
 
@@ -51,21 +52,22 @@ export class SortsUpdateComponent implements AfterViewInit, OnChanges {
 
   onSubmit() {
     if (this.magieForm.valid) {
-    const magieToUpdate = { ...this.magie, ...this.magieForm.value };
-    this.magieService.updateMagie(magieToUpdate).subscribe({
-      next: (result) => {
-        console.info('Magie mise à jour avec succès', result);
-        const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
-        instance.close();
-      },
-      error: (err) => {
-        console.error('Erreur lors de la mise à jour de la magie', err);
-      }
-    });
-  } else {
-    this.magieForm.markAllAsTouched();
-    console.error('Le formulaire n\'est pas valide. Veuillez corriger les erreurs.');
-  }
+      const magieToUpdate = { ...this.magie, ...this.magieForm.value };
+      this.magieService.updateMagie(magieToUpdate).subscribe({
+        next: (result) => {
+          console.info('Magie mise à jour avec succès', result);
+          this.magieUpdated.emit(result); // <-- Ajouté
+          const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
+          instance.close();
+        },
+        error: (err) => {
+          console.error('Erreur lors de la mise à jour de la magie', err);
+        }
+      });
+    } else {
+      this.magieForm.markAllAsTouched();
+      console.error('Le formulaire n\'est pas valide. Veuillez corriger les erreurs.');
+    }
   }
 
   // Méthode pour réinitialiser le formulaire aux valeurs de l'objet 'magie'

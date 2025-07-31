@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal, ViewChild } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { MAGIE_LIST } from '../../fake-data-set/magie-fake';
 import { CommonModule } from '@angular/common';
 import { NatureBorderDirective } from '../../directives/nature-border.directive';
@@ -15,11 +15,11 @@ import { SortsUpdateComponent } from '../sorts-update/sorts-update.component';
   templateUrl: './sorts-list.component.html',
   styles: ``
 })
-export class SortsListComponent {
+export class SortsListComponent implements OnInit {
   private readonly magieService = inject(MagieService);
 
   readonly MAX_LENGTH = 100; // Nombre max de caractères avant troncature
-  readonly magie = toSignal(this.magieService.getMagiesList(), { initialValue: [] });
+  magie = signal<Magie[]>([]);
   readonly searchTerm = signal('');
   readonly selectedType = signal('Tout les types'); // Par defaut, aucun filtre ur le type
 
@@ -81,5 +81,23 @@ export class SortsListComponent {
     this.updateModal.open();
   }
     //#EndRegion boite de dialogue
+
+    ngOnInit() {
+    this.refreshMagies();
+  }
+
+
+    // Ajoute une méthode pour rafraîchir la liste
+  refreshMagies() {
+    // Recharge la liste depuis le service
+    this.magie.set([]);
+    this.magieService.getMagiesList().subscribe(magies => {
+      this.magie.set(magies);
+    });
+  }
+
+  onMagieUpdated(updatedMagie: Magie) {
+    this.refreshMagies();
+  }
 
 }
