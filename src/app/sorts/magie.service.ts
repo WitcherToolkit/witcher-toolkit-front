@@ -13,9 +13,14 @@ export class MagieService {
   constructor(private http: HttpClient) { }
 
   getMagiesList(): Observable<Magie[]> {
-    console.log('Fetching rituels from API...');
+    console.info('Fetching rituels from API...');
     console.log(`API Base URL: ${EnvironmentConfig.apiBaseUrl}`);
     return this.http.get<Magie[]>(`${EnvironmentConfig.apiBaseUrl}/magies`);
+  }
+
+  updateMagie(magie: Magie): Observable<Magie> {
+    console.log('Updating magie:', magie);
+    return this.http.put<Magie>(`${EnvironmentConfig.apiBaseUrl}/magies/update/${magie.idMagie}`, magie);
   }
 
 }

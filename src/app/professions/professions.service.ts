@@ -15,14 +15,14 @@ export class ProfessionsService {
   constructor(private http: HttpClient) {}
 
   getProfessionsList(): Observable<Profession[]> {
-    console.log('Fetching professions list from API...');
+    console.info('Fetching professions list from API...');
     console.log(`API Base URL: ${EnvironmentConfig.apiBaseUrl}`);
     return this.http.get<Profession[]>(`${EnvironmentConfig.apiBaseUrl}/professions`);
   }
 
   getProfessionCompetences(id: number): Observable<Profession> {
 
-    console.log('Fetching profession detail from API...');
+    console.info('Fetching profession detail from API...');
     console.log(`API Base URL: ${EnvironmentConfig.apiBaseUrl}/professions/${id}/competences`);
     return this.http.get<Profession>(`${EnvironmentConfig.apiBaseUrl}/professions/${id}/competences`);
   }

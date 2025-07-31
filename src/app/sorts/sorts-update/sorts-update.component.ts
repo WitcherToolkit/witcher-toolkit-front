@@ -4,6 +4,7 @@ import { Magie } from '../../models/magie';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormControlErrorComponent } from '../../form-validation/form-control-error.component';
 import { RequiredAsteriskDirective } from '../../directives/required-asterisk.directive';
+import { MagieService } from '../magie.service';
 
 @Component({
   selector: 'app-sorts-update-modal',
@@ -17,7 +18,7 @@ export class SortsUpdateComponent implements AfterViewInit, OnChanges {
 
   magieForm!: FormGroup;
 
-  constructor(private fb: FormBuilder){}
+  constructor(private fb: FormBuilder, private magieService: MagieService){}
 
   ngOnChanges(changes: SimpleChanges) {// SimpleChanges permet de détecter les changements dans les propriétés d'entrée
     if (changes['magie'] && this.magie) {
@@ -50,15 +51,21 @@ export class SortsUpdateComponent implements AfterViewInit, OnChanges {
 
   onSubmit() {
     if (this.magieForm.valid) {
-      console.log('Formulaire soumis :', this.magieForm.value);
-      // Appeler un service pour sauvegarder les données
-      // this.magieService.updateMagie(this.magieForm.value);
-      const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
-      instance.close();
-    } else {
-      this.magieForm.markAllAsTouched();
-      console.error('Le formulaire n\'est pas valide. Veuillez corriger les erreurs.');
-    }
+    const magieToUpdate = { ...this.magie, ...this.magieForm.value };
+    this.magieService.updateMagie(magieToUpdate).subscribe({
+      next: (result) => {
+        console.info('Magie mise à jour avec succès', result);
+        const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
+        instance.close();
+      },
+      error: (err) => {
+        console.error('Erreur lors de la mise à jour de la magie', err);
+      }
+    });
+  } else {
+    this.magieForm.markAllAsTouched();
+    console.error('Le formulaire n\'est pas valide. Veuillez corriger les erreurs.');
+  }
   }
 
   // Méthode pour réinitialiser le formulaire aux valeurs de l'objet 'magie'

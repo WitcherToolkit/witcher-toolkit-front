@@ -19,7 +19,7 @@ export class CaracteristiqueService {
   constructor(private http: HttpClient, private fb: FormBuilder) {}
 
   getCaracteristiquesList(): Observable<Caracteristique[]> {
-    console.log('Fetching rituels from API...');
+    console.info('Fetching rituels from API...');
     console.log(`API Base URL: ${EnvironmentConfig.apiBaseUrl}`);
     return this.http.get<Caracteristique[]>(`${EnvironmentConfig.apiBaseUrl}/caracteristiques`);
   }

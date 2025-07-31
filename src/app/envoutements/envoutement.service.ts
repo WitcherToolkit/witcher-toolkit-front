@@ -15,7 +15,7 @@ export class EnvoutementService {
   constructor(private http: HttpClient) { }
 
   getEnvoutementList(): Observable<Envoutement[]> {
-    console.log('Fetching rituels from API...');
+    console.info('Fetching rituels from API...');
     console.log(`API Base URL: ${EnvironmentConfig.apiBaseUrl}`);
     return this.http.get<Envoutement[]>(`${EnvironmentConfig.apiBaseUrl}/envoutements`);
   }

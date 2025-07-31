@@ -13,7 +13,7 @@ export class RacesService {
     constructor(private http: HttpClient) { }
   
     getRacesList(): Observable<Race[]> {
-      console.log('Fetching rituels from API...');
+      console.info('Fetching rituels from API...');
       console.log(`API Base URL: ${EnvironmentConfig.apiBaseUrl}`);
       return this.http.get<Race[]>(`${EnvironmentConfig.apiBaseUrl}/races`);
     }

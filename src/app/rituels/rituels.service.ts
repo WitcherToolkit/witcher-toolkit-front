@@ -16,7 +16,7 @@ export class RituelsService {
 
   // Méthode pour récupérer la liste des rituels depuis l'API questConnect
   getRituelsList(): Observable<Rituel[]> {
-    console.log('Fetching rituels from API...');
+    console.info('Fetching rituels from API...');
     console.log(`API Base URL: ${EnvironmentConfig.apiBaseUrl}`);
     return this.http.get<Rituel[]>(`${EnvironmentConfig.apiBaseUrl}/rituels`);
   }
