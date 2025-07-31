@@ -1,0 +1,4 @@
+<!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+<div *ngIf="control && control.invalid && (control.dirty || control.touched)" class="red-text">
+    {{ errorMessage }}
+</div>

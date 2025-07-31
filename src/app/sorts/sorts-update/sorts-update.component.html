@@ -8,28 +8,33 @@
             <div class="row">
                 <div class="input-field col s6">
                     <label class="active" for="nom">Nom</label>
-                    <input id="nom" type="text" formControlName="nom">
+                    <input id="nom" type="text" formControlName="nom" required>
+                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                    <app-form-control-error [control]="magieForm.get('nom')"></app-form-control-error>
                 </div>
 
                 <div class="input-field col s6">
                     <label class="active" for="cout">Coût</label>
-                    <input id="cout" type="text" formControlName="cout">
+                    <input id="cout" type="text" formControlName="cout" required>
+                    <app-form-control-error [control]="magieForm.get('cout')"></app-form-control-error>
                 </div>
             </div>
             <!--Ligne-->
             <div class="row">
                 <div class="input-field col s4">
                     <label class="active" for="duree">Durée</label>
-                    <input id="duree" type="text" formControlName="duree">
+                    <input id="duree" type="text" formControlName="duree" required>
+                    <app-form-control-error [control]="magieForm.get('duree')"></app-form-control-error>
                 </div>
 
                 <div class="input-field col s4">
                     <label class="active" for="portee">Portée</label>
                     <input id="portee" type="text" formControlName="portee">
+                    <app-form-control-error [control]="magieForm.get('portee')"></app-form-control-error>
                 </div>
 
                 <div class="input-field col s4">
-                    <select id="nature" formControlName="nature" class="browser-default">
+                    <select id="nature" formControlName="nature" class="browser-default" required>
                         <option value="" disabled selected>Élément</option>
                         <option value="Feu">Feu</option>
                         <option value="Eau">Eau</option>
@@ -38,36 +43,41 @@
                         <option value="Mixte">Mixte</option>
                     </select>
                     <label for="nature" class="active">Élément</label>
+                    <app-form-control-error [control]="magieForm.get('nature')"></app-form-control-error>
                 </div>
             </div>
             <!--Ligne-->
             <div class="row">
                 <div class="input-field col s4">
-                    <select id="type" formControlName="type" class="browser-default">
+                    <select id="type" formControlName="type" class="browser-default" required>
                         <option value="" disabled selected>Type</option>
                         <option value="Sort">Sort</option>
                         <option value="Invocation">Invocation</option>
                         <option value="Signe">Signe</option>
                     </select>
                     <label for="type" class="active">Type</label>
+                    <app-form-control-error [control]="magieForm.get('type')"></app-form-control-error>
                 </div>
 
                 <div class="input-field col s4">
                     <!-- L'attribut [class.active] évite la superposition du label avec le champ de saisie -->
                     <label [class.active]="magieForm.get('contre')?.value" class="active" for="contre">Contre</label>
                     <input id="contre" type="text" formControlName="contre">
+                    <app-form-control-error [control]="magieForm.get('contre')"></app-form-control-error>
                 </div>
 
                 <div class="input-field col s4">
                     <label class="active" for="niveau">Niveau</label>
-                    <input id="niveau" type="text" formControlName="niveau">
+                    <input id="niveau" type="text" formControlName="niveau" required>
+                    <app-form-control-error [control]="magieForm.get('niveau')"></app-form-control-error>
                 </div>
             </div>
             <!--Ligne-->
             <div class="row">
                 <div class="input-field col s12">
-                    <textarea id="effet" class="materialize-textarea" formControlName="effet"></textarea>
+                    <textarea id="effet" class="materialize-textarea" formControlName="effet" required></textarea>
                     <label class="active" for="effet">Effet</label>
+                    <app-form-control-error [control]="magieForm.get('effet')"></app-form-control-error>
                 </div>
             </div>
 
