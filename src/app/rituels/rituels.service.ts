@@ -21,4 +21,9 @@ export class RituelsService {
     return this.http.get<Rituel[]>(`${EnvironmentConfig.apiBaseUrl}/rituels`);
   }
 
+  updateRituel(rituel: Rituel): Observable<Rituel> {
+      console.log('Updating rituel:', rituel);
+      return this.http.put<Rituel>(`${EnvironmentConfig.apiBaseUrl}/rituels/update/${rituel.idRituel}`, rituel);
+    }
+
 }

@@ -5,16 +5,19 @@ import { Rituel } from '../../models/rituel';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RituelsDetailComponent } from '../rituels-detail/rituels-detail.component';
 import { SelectionBorderDirective } from '../../directives/selection-border.directive';
+import { RituelsUpdateComponent } from '../rituels-update/rituels-update.component';
 
 @Component({
   selector: 'app-rituels-list',
   standalone: true,
-  imports: [SelectionBorderDirective, CommonModule, RituelsDetailComponent],
+  imports: [SelectionBorderDirective, CommonModule, RituelsDetailComponent, RituelsUpdateComponent],
   templateUrl: './rituels-list.component.html',
   styleUrl: './rituels-list.component.scss'
 })
 export class RituelsListComponent {
   private readonly rituelsService = inject(RituelsService);
+ 
+  rituel = signal<Rituel[]>([]);
   
   readonly rituels = toSignal(this.rituelsService.getRituelsList(), { initialValue: [] });
   readonly searchTerm = signal('');
@@ -44,6 +47,7 @@ export class RituelsListComponent {
 
   //#Region boite de rialogue
   @ViewChild(RituelsDetailComponent) detailModal!: RituelsDetailComponent;// Référence à la boîte de dialogue
+  @ViewChild(RituelsUpdateComponent) updateModal!: RituelsUpdateComponent;
   // Ajoute une propriété pour le rituel sélectionné
   selectedRituel: Rituel | null = null;
 
@@ -52,5 +56,31 @@ export class RituelsListComponent {
     this.selectedRituel = rituel;
     this.detailModal.open();
   }
-  //#EndRegion boite de dialogue
+
+  openUpdateModal(rituel: Rituel) {
+    this.selectedRituel = rituel;
+    this.updateModal.open();
+  }
+  //#endRegion boite de dialogue
+
+  // #Region MAJ des rituels après une action
+  ngOnInit() {
+    this.refreshRituels();
+  }
+
+
+  // Ajoute une méthode pour rafraîchir la liste
+  refreshRituels() {
+    // Recharge la liste depuis le service
+    this.rituel.set([]);
+    this.rituelsService.getRituelsList().subscribe(rituels => {
+      this.rituel.set(rituels);
+    });
+  }
+
+  onRituelUpdated(updatedRituel: Rituel) {
+    this.refreshRituels();
+  }
+  // #EndRegion MAJ des rituels après une action
+  
 }

@@ -101,5 +101,4 @@ export class SortsUpdateComponent implements AfterViewInit, OnChanges {
     }
   }
 
-
 }
