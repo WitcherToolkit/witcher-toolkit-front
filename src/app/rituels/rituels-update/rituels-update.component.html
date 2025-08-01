@@ -1,1 +1,77 @@
-<p>rituels-update works!</p>
+<div #modal id="updateModal" class="modal">
+    <div class="row">
+        <form *ngIf="rituelForm" [formGroup]="rituelForm" (ngSubmit)="onSubmit()">
+            <!-- ngIf permet de s'assurer que le formulaire est prêt avant de l'afficher -->
+
+            <h4 class="center-align">Modifier le rituel : {{ rituel?.nom}} </h4>
+            <!--Ligne-->
+            <div class="row">
+                <div class="input-field col s4">
+                    <label class="active" for="nom">Nom</label>
+                    <input id="nom" type="text" formControlName="nom" required>
+                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                    <app-form-control-error [control]="rituelForm.get('nom')"></app-form-control-error>
+                </div>
+                <div class="input-field col s4">
+                    <label class="active" for="cout">Coût</label>
+                    <input id="cout" type="text" formControlName="cout" required>
+                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                    <app-form-control-error [control]="rituelForm.get('cout')"></app-form-control-error>
+                </div>
+                <div class="input-field col s4">
+                    <label class="active" for="tempsPreparation">Temps de préparation</label>
+                    <input id="tempsPreparation" type="text" formControlName="tempsPreparation" required>
+                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                    <app-form-control-error [control]="rituelForm.get('tempsPreparation')"></app-form-control-error>
+                </div>
+            </div>
+
+            <!--Ligne-->
+            <div class="row">
+                <div class="input-field col s4">
+                    <label class="active" for="sd">SD</label>
+                    <input id="sd" type="text" formControlName="sd" required>
+                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                    <app-form-control-error [control]="rituelForm.get('sd')"></app-form-control-error>
+                </div>
+                <div class="input-field col s4">
+                    <label class="active" for="duree">Durée</label>
+                    <input id="duree" type="text" formControlName="duree" required>
+                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                    <app-form-control-error [control]="rituelForm.get('duree')"></app-form-control-error>
+                </div>
+                <div class="input-field col s4">
+                    <label class="active" for="niveau">Niveau</label>
+                    <input id="niveau" type="text" formControlName="niveau" required>
+                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                    <app-form-control-error [control]="rituelForm.get('niveau')"></app-form-control-error>
+                </div>
+            </div>
+
+            <!--Ligne-->
+            <div class="row">
+                <div class="input-field col s12">
+                    <textarea id="composant" class="materialize-textarea" formControlName="composant" required></textarea>
+                    <label class="active" for="composant">Composants</label>
+                    <app-form-control-error [control]="rituelForm.get('composant')"></app-form-control-error>
+                </div>
+            </div>
+
+            <!--Ligne-->
+            <div class="row">
+                <div class="input-field col s12">
+                    <textarea id="effet" class="materialize-textarea" formControlName="effet" required></textarea>
+                    <label class="active" for="effet">Effet</label>
+                    <app-form-control-error [control]="rituelForm.get('effet')"></app-form-control-error>
+                </div>
+            </div>
+            
+
+            <div class="modal-footer">
+                <button type="submit" class="modal-close btn-flat" [disabled]="rituelForm.invalid">Valider</button>
+                <button type="button" class="modal-close btn-flat" (click)="onCancel()">Annuler</button>
+            </div>
+        </form>
+    </div>
+</div>
+

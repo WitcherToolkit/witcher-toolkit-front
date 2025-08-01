@@ -3,7 +3,7 @@ export interface Rituel {
     nom: string;
     cout: string;
     effet: string;
-    tempPreparation: string;
+    tempsPreparation: string;
     sd: string;
     duree: string;
     composant: string;

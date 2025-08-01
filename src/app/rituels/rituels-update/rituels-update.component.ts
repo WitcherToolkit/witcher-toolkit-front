@@ -29,10 +29,10 @@ export class RituelsUpdateComponent implements AfterViewInit, OnChanges{
         nom: [this.rituel.nom, [Validators.required, Validators.maxLength(60)]],
         cout: [this.rituel.cout, [Validators.required, Validators.maxLength(10)]],
         effet: [this.rituel.effet, [Validators.required]],
-        tempPreparation: [this.rituel.tempPreparation, [Validators.required, Validators.maxLength(10)]],
+        tempsPreparation: [this.rituel.tempsPreparation, [Validators.required, Validators.maxLength(10)]],
         sd: [this.rituel.sd, [Validators.required, Validators.maxLength(7)]],
         duree: [this.rituel.duree, [Validators.required, Validators.maxLength(15)]],
-        composant: [this.rituel.duree, [Validators.required]],
+        composant: [this.rituel.composant, [Validators.required]],
         niveau: [this.rituel.niveau, [Validators.required, Validators.maxLength(20)]],
       });
     }
@@ -78,7 +78,7 @@ export class RituelsUpdateComponent implements AfterViewInit, OnChanges{
         nom: this.rituel.nom,
         cout: this.rituel.cout,
         effet: this.rituel.effet,
-        tempPreparation: this.rituel.tempPreparation,
+        tempsPreparation: this.rituel.tempsPreparation,
         sd: this.rituel.sd,
         duree: this.rituel.duree,
         composant: this.rituel.composant,
