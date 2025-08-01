@@ -72,8 +72,9 @@ export class RituelsListComponent {
   // Ajoute une méthode pour rafraîchir la liste
   refreshRituels() {
     // Recharge la liste depuis le service
+    this.rituel.set([]);
     this.rituelsService.getRituelsList().subscribe(rituels => {
-    (this.rituels as any).set(rituels);
+      this.rituel.set(rituels);
     });
   }
 
