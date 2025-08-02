@@ -14,13 +14,11 @@
                 </div>
                 <div class="input-field col s6">
                     <label class="active" for="code">Code</label>
-                    <input id="code" type="text" formControlName="code" required>
+                    <input id="code" type="text" formControlName="code" required (input)="onUpperCase($event)">
                     <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
                     <app-form-control-error [control]="caracteristiqueForm.get('code')"></app-form-control-error>
                 </div>
             </div>
-
-
 
             <!--Ligne-->
             <div class="row">

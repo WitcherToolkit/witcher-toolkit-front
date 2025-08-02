@@ -47,6 +47,12 @@ export class CaracteristiquesUpdateComponent implements AfterViewInit, OnChanges
     }
   }
 
+  onUpperCase(event: Event) {
+  const input = event.target as HTMLInputElement;
+  const upperValue = input.value.toUpperCase();
+  this.caracteristiqueForm.get('code')?.setValue(upperValue, { emitEvent: false });
+}
+
   onSubmit() {
     if (this.caracteristiqueForm.valid) {
       const caracteristiqueToUpdate = { ...this.caracteristique, ...this.caracteristiqueForm.value };
