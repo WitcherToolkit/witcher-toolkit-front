@@ -5,11 +5,12 @@ import { CompetencesDetailComponent } from '../competences-detail/competences-de
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Competence } from '../../models/competence';
 import { SelectionBorderDirective } from '../../directives/selection-border.directive';
+import { CompetencesUpdateComponent } from '../competences-update/competences-update.component';
 
 @Component({
   selector: 'app-competences-list',
   standalone: true,
-  imports: [SelectionBorderDirective, CommonModule, CompetencesDetailComponent],
+  imports: [SelectionBorderDirective, CommonModule, CompetencesDetailComponent, CompetencesUpdateComponent],
   templateUrl: './competences-list.component.html',
   styleUrl: './competences-list.component.scss'
 })
@@ -17,7 +18,8 @@ export class CompetencesListComponent {
   private readonly competenceService = inject(CompetenceService);
 
   readonly MAX_LENGTH = 100;
-  readonly competences = toSignal(this.competenceService.getCompetencesList(), { initialValue: [] });
+  readonly competences = signal<Competence[]>([]);
+
   readonly searchTerm = signal('');
   
   readonly competencesListFiltered = computed(() => {
@@ -51,8 +53,10 @@ export class CompetencesListComponent {
   }
   
   //#Region boite de rialogue
-    @ViewChild(CompetencesDetailComponent) detailModal!: CompetencesDetailComponent;// Référence à la boîte de dialogue
-    // Ajoute une propriété pour le Competence sélectionné
+    @ViewChild(CompetencesDetailComponent) detailModal!: CompetencesDetailComponent;
+    @ViewChild(CompetencesUpdateComponent) updateModal!: CompetencesUpdateComponent;
+
+    // Ajoute une propriété pour la Competence sélectionnée
     selectedCompetence: Competence | null = null;
   
     // Modifie openModal pour recevoir le competence
@@ -60,6 +64,29 @@ export class CompetencesListComponent {
       this.selectedCompetence = competence;
       this.detailModal.open();
     }
+
+    openUpdateModal(competence: Competence) {
+      this.selectedCompetence = competence;
+      this.updateModal.open();
+    }
     //#EndRegion boite de dialogue
+
+    // #Region MAJ des competences après une action
+      ngOnInit() {
+        this.refreshCompetences();
+      }
+    
+    // Ajoute une méthode pour rafraîchir la liste
+    refreshCompetences() {
+      // Recharge la liste depuis le service
+      this.competenceService.getCompetencesList().subscribe(competences => {
+        this.competences.set(competences);
+      });
+    }
+  
+    onCompetenceUpdated(updatedCompetence: Competence) {
+      this.refreshCompetences();
+    }
+    // #EndRegion MAJ des competences après une action
 
 }

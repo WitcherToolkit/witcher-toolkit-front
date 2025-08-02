@@ -15,7 +15,7 @@ import { ToolsService } from '../../../tools/tools.service';
 })
 export class Part3Component implements OnInit {
   @Input() form!: FormGroup;
-  competences: Competence[] = COMPETENCE_LIST;
+  //competences: Competence[] = COMPETENCE_LIST;
   filteredCompetences: Competence[] = []; // Liste des compétences filtrées
   pointsRestants = signal<number>(0);
   pointsDispo: number = 0;
@@ -63,10 +63,10 @@ export class Part3Component implements OnInit {
   }
 
   private initCompetences() {
-    if (!this.competences) {
+    /*if (!this.competences) {
       console.error('Competences are not defined');
       return;
-    }
+    }*/
   }
 
   // Filtre des compétences
