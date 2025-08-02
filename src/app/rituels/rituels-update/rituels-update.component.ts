@@ -15,6 +15,7 @@ import { RituelsService } from '../rituels.service';
   styleUrl: './rituels-update.component.css'
 })
 export class RituelsUpdateComponent implements AfterViewInit, OnChanges{
+  
   @Input() rituel: Rituel | null = null
   @ViewChild('modal') modalRef! : ElementRef;
   @Output() rituelUpdated = new EventEmitter<Rituel>();

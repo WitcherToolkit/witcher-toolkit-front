@@ -1,16 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal, ViewChild } from '@angular/core';
-import { CARACTERISTIQUE_LIST } from '../../fake-data-set/caracteristiques-fake';
 import { CaracteristiqueService } from '../caracteristique.service';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { CaracteristiquesDetailComponent } from '../caracteristiques-detail/caracteristiques-detail.component';
 import { Caracteristique } from '../../models/caracteristique';
 import { SelectionBorderDirective } from '../../directives/selection-border.directive';
+import { CaracteristiquesUpdateComponent } from '../caracteristiques-update/caracteristiques-update.component';
 
 @Component({
   selector: 'app-caracteristiques-list',
   standalone: true,
-  imports: [SelectionBorderDirective, CommonModule, CaracteristiquesDetailComponent],
+  imports: [SelectionBorderDirective, CommonModule, CaracteristiquesDetailComponent, CaracteristiquesUpdateComponent],
   templateUrl: './caracteristiques-list.component.html',
   styleUrls: ['caracteristiques-list.component.scss']
 })
@@ -19,7 +18,8 @@ export class CaracteristiquesListComponent {
   private readonly caracteristiqueService = inject(CaracteristiqueService);
 
   readonly MAX_LENGTH = 100;
-  readonly caracteristiques = toSignal(this.caracteristiqueService.getCaracteristiquesList(), { initialValue: [] });
+  readonly caracteristiques = signal<Caracteristique[]>([]);
+
   readonly searchTerm = signal('');
 
   readonly caracteristiquesListFiltered = computed(() => {
@@ -54,14 +54,38 @@ export class CaracteristiquesListComponent {
 
   //#Region boite de rialogue
   @ViewChild(CaracteristiquesDetailComponent) detailModal!: CaracteristiquesDetailComponent;// Référence à la boîte de dialogue
-  // Ajoute une propriété pour le rituel sélectionné
+  @ViewChild(CaracteristiquesUpdateComponent) updateModal!: CaracteristiquesUpdateComponent;
+  
+  // Ajoute une propriété pour la caracteristique sélectionnée
   selectedCaracteristique: Caracteristique | null = null;
 
-  // Modifie openModal pour recevoir le rituel
   openModal(caracteristique: Caracteristique) {
     this.selectedCaracteristique = caracteristique;
     this.detailModal.open();
   }
+
+  openUpdateModal(caracteristique: Caracteristique) {
+      this.selectedCaracteristique = caracteristique;
+      this.updateModal.open();
+    }
   //#EndRegion boite de dialogue
 
+  // #Region MAJ des Caracteristiques après une action
+  ngOnInit() {
+    this.refreshCaracteristiques();
+  }
+
+
+  // Ajoute une méthode pour rafraîchir la liste
+  refreshCaracteristiques() {
+    // Recharge la liste depuis le service
+    this.caracteristiqueService.getCaracteristiquesList().subscribe(caracteristiques => {
+      this.caracteristiques.set(caracteristiques);
+    });
+  }
+
+  onCaracteristiqueUpdated(updatedCaracteristique: Caracteristique) {
+    this.refreshCaracteristiques();
+  }
+  // #EndRegion MAJ des caracteristiques après une action
 }

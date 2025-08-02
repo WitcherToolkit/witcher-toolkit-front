@@ -24,6 +24,6 @@ export class RituelsService {
   updateRituel(rituel: Rituel): Observable<Rituel> {
       console.log('Updating rituel:', rituel);
       return this.http.put<Rituel>(`${EnvironmentConfig.apiBaseUrl}/rituels/update/${rituel.idRituel}`, rituel);
-    }
+  }
 
 }

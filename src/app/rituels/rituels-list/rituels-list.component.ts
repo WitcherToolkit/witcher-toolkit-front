@@ -1,8 +1,7 @@
-import { AfterViewInit, Component, computed, ElementRef, inject, signal, ViewChild } from '@angular/core';
+import { Component, computed, inject, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RituelsService } from '../rituels.service';
 import { Rituel } from '../../models/rituel';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { RituelsDetailComponent } from '../rituels-detail/rituels-detail.component';
 import { SelectionBorderDirective } from '../../directives/selection-border.directive';
 import { RituelsUpdateComponent } from '../rituels-update/rituels-update.component';
@@ -15,6 +14,7 @@ import { RituelsUpdateComponent } from '../rituels-update/rituels-update.compone
   styleUrl: './rituels-list.component.scss'
 })
 export class RituelsListComponent {
+
   private readonly rituelsService = inject(RituelsService);
  
   readonly rituels = signal<Rituel[]>([]);

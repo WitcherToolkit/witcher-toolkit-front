@@ -1,8 +1,7 @@
 import { Injectable, Signal, signal } from '@angular/core';
 import { Caracteristique } from '../models/caracteristique';
-import { CARACTERISTIQUE_LIST } from '../fake-data-set/caracteristiques-fake';
-import { Observable, of } from 'rxjs';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
 import { PROFESSION_MAP } from '../fake-data-set/profession-fake';
@@ -19,10 +18,19 @@ export class CaracteristiqueService {
   constructor(private http: HttpClient, private fb: FormBuilder) {}
 
   getCaracteristiquesList(): Observable<Caracteristique[]> {
-    console.info('Fetching rituels from API...');
+    console.info('Fetching caracteristiques from API...');
     console.log(`API Base URL: ${EnvironmentConfig.apiBaseUrl}`);
     return this.http.get<Caracteristique[]>(`${EnvironmentConfig.apiBaseUrl}/caracteristiques`);
   }
+
+  updateCaracteristique(caracteristique: Caracteristique): Observable<Caracteristique> {
+    console.log('Updating caracteristique:', caracteristique);
+    return this.http.put<Caracteristique>(`${EnvironmentConfig.apiBaseUrl}/caracteristiques/update/${caracteristique.idCaracteristique}`, caracteristique);
+  }
+
+  //----------------------------------------------------------------------------------//
+  //-----------------------------Créer PERSONNGE -------------------------------------//
+  //----------------------------------------------------------------------------------//
 
   // Vérification si une caractéristique est éditable
   isEditable(code: string): boolean {

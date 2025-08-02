@@ -1,0 +1,42 @@
+<div #modal id="updateModal" class="modal">
+    <div class="row">
+        <form *ngIf="caracteristiqueForm" [formGroup]="caracteristiqueForm" (ngSubmit)="onSubmit()">
+            <!-- ngIf permet de s'assurer que le formulaire est prêt avant de l'afficher -->
+
+            <h4 class="center-align">Modifier le caracteristique : {{ caracteristique?.nom}} </h4>
+            <!--Ligne-->
+            <div class="row">
+                <div class="input-field col s6">
+                    <label class="active" for="nom">Nom</label>
+                    <input id="nom" type="text" formControlName="nom" required>
+                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                    <app-form-control-error [control]="caracteristiqueForm.get('nom')"></app-form-control-error>
+                </div>
+                <div class="input-field col s6">
+                    <label class="active" for="code">Code</label>
+                    <input id="code" type="text" formControlName="code" required>
+                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                    <app-form-control-error [control]="caracteristiqueForm.get('code')"></app-form-control-error>
+                </div>
+            </div>
+
+
+
+            <!--Ligne-->
+            <div class="row">
+                <div class="input-field col s12">
+                    <textarea id="description" class="materialize-textarea" formControlName="description" required></textarea>
+                    <label class="active" for="description">Description</label>
+                    <app-form-control-error [control]="caracteristiqueForm.get('description')"></app-form-control-error>
+                </div>
+            </div>
+            
+
+            <div class="modal-footer">
+                <button type="submit" class="modal-close btn-flat" [disabled]="caracteristiqueForm.invalid">Valider</button>
+                <button type="button" class="modal-close btn-flat" (click)="onCancel()">Annuler</button>
+            </div>
+        </form>
+    </div>
+</div>
+
