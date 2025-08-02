@@ -1,5 +1,4 @@
 import { Caracteristique } from "./caracteristique";
-import { Profession } from "./profession";
 
 export interface Competence {
 

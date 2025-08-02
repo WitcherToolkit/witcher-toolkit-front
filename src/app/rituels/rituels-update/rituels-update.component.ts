@@ -54,7 +54,12 @@ export class RituelsUpdateComponent implements AfterViewInit, OnChanges{
 
   onSubmit() {
     if (this.rituelForm.valid) {
-      const rituelToUpdate = { ...this.rituel, ...this.rituelForm.value };
+      const rituelToUpdate = { 
+        ...this.rituel, 
+        ...this.rituelForm.value,
+        idRituel: this.rituel?.idRituel, // empêche la modification de l'ID
+      };
+
       this.rituelService.updateRituel(rituelToUpdate).subscribe({
         next: (result) => {
           console.info('Rituel mise à jour avec succès', result);

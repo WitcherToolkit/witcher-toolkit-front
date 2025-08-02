@@ -52,7 +52,11 @@ export class SortsUpdateComponent implements AfterViewInit, OnChanges {
 
   onSubmit() {
     if (this.magieForm.valid) {
-      const magieToUpdate = { ...this.magie, ...this.magieForm.value };
+      const magieToUpdate = { 
+        ...this.magie, 
+        ...this.magieForm.value ,
+        idMagie: this.magie?.idMagie, // empêche la modification de l'ID
+      };
       this.magieService.updateMagie(magieToUpdate).subscribe({
         next: (result) => {
           console.info('Magie mise à jour avec succès', result);

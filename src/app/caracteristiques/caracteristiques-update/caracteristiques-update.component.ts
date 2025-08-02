@@ -55,7 +55,12 @@ export class CaracteristiquesUpdateComponent implements AfterViewInit, OnChanges
 
   onSubmit() {
     if (this.caracteristiqueForm.valid) {
-      const caracteristiqueToUpdate = { ...this.caracteristique, ...this.caracteristiqueForm.value };
+      const caracteristiqueToUpdate = { 
+        ...this.caracteristique, 
+        ...this.caracteristiqueForm.value,
+        idCaracteristique: this.caracteristique?.idCaracteristique // empêche la modification de l'ID
+     };
+
       this.caracteristiqueService.updateCaracteristique(caracteristiqueToUpdate).subscribe({
         next: (result) => {
           console.info('caracteristique mise à jour avec succès', result);

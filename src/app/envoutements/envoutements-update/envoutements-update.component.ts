@@ -49,7 +49,12 @@ export class EnvoutementsUpdateComponent implements AfterViewInit, OnChanges {
 
   onSubmit() {
     if (this.envoutementForm.valid) {
-      const envoutementToUpdate = { ...this.envoutement, ...this.envoutementForm.value };
+      const envoutementToUpdate = { 
+        ...this.envoutement, 
+        ...this.envoutementForm.value,
+        idEnvoutement: this.envoutement?.idEnvoutement, // empêche la modification de l'ID
+      };
+      
       this.envoutementService.updateEnvoutement(envoutementToUpdate).subscribe({
         next: (result) => {
           console.info('Envoutement mise à jour avec succès', result);

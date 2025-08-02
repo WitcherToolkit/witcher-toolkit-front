@@ -100,8 +100,11 @@ export class CompetencesUpdateComponent implements AfterViewInit, OnChanges{
       const selectedCarac = this.caracteristiques.find(c => c.idCaracteristique === +selectedId) ?? null;
       const competenceToUpdate = {
           ...this.competence,
-          ...this.competenceForm.value
+          ...this.competenceForm.value,
+          idCompetence: this.competence?.idCompetence, // empêche la modification de l'ID
+          caracteristique: selectedCarac
         };
+      
       this.competenceService.updateCompetence(competenceToUpdate).subscribe({
         next: (result) => {
           console.info('competence mise à jour avec succès', result);
