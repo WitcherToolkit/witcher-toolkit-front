@@ -1,5 +1,4 @@
 import { Injectable, signal } from '@angular/core';
-import { ENVOUTEMENT_LIST } from '../fake-data-set/envoutement-fake';
 import { Envoutement } from '../models/envoutement';
 import { HttpClient } from '@angular/common/http';
 import { EnvironmentConfig } from '../environment.config';
@@ -20,7 +19,9 @@ export class EnvoutementService {
     return this.http.get<Envoutement[]>(`${EnvironmentConfig.apiBaseUrl}/envoutements`);
   }
 
-  truncateText(text: string, maxLength: number): string {
-    return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
-  }
+  updateEnvoutement(envoutement: Envoutement): Observable<Envoutement> {
+      console.log('Updating envoutement:', envoutement);
+      return this.http.put<Envoutement>(`${EnvironmentConfig.apiBaseUrl}/envoutements/update/${envoutement.idEnvoutement}`, envoutement);
+    }
+  
 }

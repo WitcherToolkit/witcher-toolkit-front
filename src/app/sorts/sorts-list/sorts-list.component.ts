@@ -1,10 +1,8 @@
 import { Component, computed, inject, OnInit, signal, ViewChild } from '@angular/core';
-import { MAGIE_LIST } from '../../fake-data-set/magie-fake';
 import { CommonModule } from '@angular/common';
 import { NatureBorderDirective } from '../../directives/nature-border.directive';
 import { MagieService } from '../magie.service';
 import { Magie } from '../../models/magie';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { SortsDetailComponent } from '../sorts-detail/sorts-detail.component';
 import { SortsUpdateComponent } from '../sorts-update/sorts-update.component';
 
@@ -20,6 +18,7 @@ export class SortsListComponent implements OnInit {
 
   readonly MAX_LENGTH = 100; // Nombre max de caractères avant troncature
   magie = signal<Magie[]>([]);
+  
   readonly searchTerm = signal('');
   readonly selectedType = signal('Tout les types'); // Par defaut, aucun filtre ur le type
 
@@ -67,6 +66,7 @@ export class SortsListComponent implements OnInit {
   //#region boite de dialogue
   @ViewChild(SortsDetailComponent) detailModal!: SortsDetailComponent;// Référence à la boîte de dialogue
   @ViewChild(SortsUpdateComponent) updateModal!: SortsUpdateComponent;
+  
   // Ajoute une propriété pour le rituel sélectionné
   selectedMagie: Magie | null = null;
 
@@ -91,7 +91,6 @@ export class SortsListComponent implements OnInit {
   // Ajoute une méthode pour rafraîchir la liste
   refreshMagies() {
     // Recharge la liste depuis le service
-    this.magie.set([]);
     this.magieService.getMagiesList().subscribe(magies => {
       this.magie.set(magies);
     });

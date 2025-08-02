@@ -1,28 +1,30 @@
-import { Component, computed, inject, signal, ViewChild } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { EnvoutementService } from '../envoutement.service';
 import { DangerBorderDirective } from '../../directives/danger-border.directive';
 import { CommonModule } from '@angular/common';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { EnvoutementsDetailComponent } from '../envoutements-detail/envoutements-detail.component';
 import { Envoutement } from '../../models/envoutement';
+import { EnvoutementsUpdateComponent } from '../envoutements-update/envoutements-update.component';
 
 @Component({
   selector: 'app-envoutements-list',
   standalone: true,
-  imports: [DangerBorderDirective, CommonModule, EnvoutementsDetailComponent],
+  imports: [DangerBorderDirective, CommonModule, EnvoutementsDetailComponent, EnvoutementsUpdateComponent],
   templateUrl: './envoutements-list.component.html',
   styleUrls: ['envoutements-list.component.scss']
 })
-export class EnvoutementsListComponent {
+export class EnvoutementsListComponent implements OnInit {
   private readonly envoutementService = inject(EnvoutementService);
 
   readonly MAX_LENGTH = 100;
+  envoutements = signal<Envoutement[]>([]);
+
   readonly searchTerm = signal('');
-  readonly rituels = toSignal(this.envoutementService.getEnvoutementList(), { initialValue: [] });
+  //readonly envoutements = toSignal(this.envoutementService.getEnvoutementList(), { initialValue: [] });
 
   readonly envoutementsListFiltered = computed(() => {
     const term = this.searchTerm().trim().toLowerCase();
-    const allEnvoutements = this.rituels(); // Tous les envoutements chargés (c'est un signal !)
+    const allEnvoutements = this.envoutements(); // Tous les envoutements chargés (c'est un signal !)
     if (!term || allEnvoutements === undefined || allEnvoutements.length === 0) { 
     return allEnvoutements || []; // Retourne tous les envoutements si le terme est vide ou si pas de données
     }
@@ -35,19 +37,48 @@ export class EnvoutementsListComponent {
     return envoutement.id;
   }
 
-  truncate(text: string): string {
-    return this.envoutementService.truncateText(text, this.MAX_LENGTH);
+  truncateText(text: string): string {
+    if (text.length > this.MAX_LENGTH) {
+      return text.substring(0, this.MAX_LENGTH) + '...';
+    }
+    return text;
   }
 
   //#Region boite de rialogue
     @ViewChild(EnvoutementsDetailComponent) detailModal!: EnvoutementsDetailComponent;// Référence à la boîte de dialogue
-    // Ajoute une propriété pour le rituel sélectionné
+    @ViewChild(EnvoutementsUpdateComponent) updateModal!: EnvoutementsUpdateComponent;
+    
+    // Ajoute une propriété pour le envoutement sélectionné
     selectedEnvoutement: Envoutement | null = null;
   
-    // Modifie openModal pour recevoir le rituel
+    // Modifie openModal pour recevoir le envoutement
     openModal(envoutement: Envoutement) {
       this.selectedEnvoutement = envoutement;
       this.detailModal.open();
     }
-    //#EndRegion boite de dialogue
+
+    openUpdateModal(envoutement: Envoutement) {
+      this.selectedEnvoutement = envoutement;
+      this.updateModal.open();
+    }
+    //#endRegion boite de dialogue
+  
+    // #Region MAJ des Envoutements après une action
+    ngOnInit() {
+      this.refreshEnvoutements();
+    }
+  
+  
+    // Ajoute une méthode pour rafraîchir la liste
+    refreshEnvoutements() {
+      // Recharge la liste depuis le service
+      this.envoutementService.getEnvoutementList().subscribe(envoutements => {
+        this.envoutements.set(envoutements);
+      });
+    }
+  
+    onEnvoutementUpdated(updatedEnvoutement: Envoutement) {
+      this.refreshEnvoutements();
+    }
+    // #EndRegion MAJ des envoutements après une action
 }

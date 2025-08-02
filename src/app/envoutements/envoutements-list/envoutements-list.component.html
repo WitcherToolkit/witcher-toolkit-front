@@ -33,19 +33,19 @@
     <!-- Afficher les cartes des envoutement filtrées -->
     <div *ngFor="let envoutement of envoutementsListFiltered(); trackBy: trackById">
       <div class="col s12 m4">
-        <div class="card horizontal" appDangerBorder [dangerValue]="envoutement.danger" (click)="openModal(envoutement)" href="javascript:void(0)">
+        <div class="card horizontal" appDangerBorder [dangerValue]="envoutement.danger">
           <div class="card-stacked">
             <span class="card-title center-align">{{ envoutement.nom }}</span>
             <div class="card-content">
               <div class="card-text">
                   <p><b>Type d'envoutement</b> : {{ envoutement.danger }} ({{ envoutement.cout }})</p>
-                  <p><b>Effet</b> : {{ truncate(envoutement.effet) }}</p>
+                  <p><b>Effet</b> : {{ truncateText(envoutement.effet) }}</p>
               </div>
             </div>
 
             <div class="card-action">
               <a (click)="openModal(envoutement)" href="javascript:void(0)">Voir</a>
-              <a href="#">Modifier</a>
+              <a (click)="openUpdateModal(envoutement)" href="javascript:void(0)">Modifier</a>
               <a href="#">Supprimer</a>
             </div>
             
@@ -58,3 +58,5 @@
 
 <!-- Ajoute ceci à la fin de ton fichier HTML -->
 <app-envoutements-detail-modal [envoutement]="selectedEnvoutement"></app-envoutements-detail-modal>
+<app-envoutements-update-modal [envoutement]="selectedEnvoutement" (envoutementUpdated)="onEnvoutementUpdated($event)"></app-envoutements-update-modal>
+

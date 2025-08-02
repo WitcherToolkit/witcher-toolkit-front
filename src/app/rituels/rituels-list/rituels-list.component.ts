@@ -17,9 +17,7 @@ import { RituelsUpdateComponent } from '../rituels-update/rituels-update.compone
 export class RituelsListComponent {
   private readonly rituelsService = inject(RituelsService);
  
-  rituel = signal<Rituel[]>([]);
-  
-  readonly rituels = toSignal(this.rituelsService.getRituelsList(), { initialValue: [] });
+  readonly rituels = signal<Rituel[]>([]);
   readonly searchTerm = signal('');
 
   readonly rituelsListFiltered = computed(() => {
@@ -72,9 +70,8 @@ export class RituelsListComponent {
   // Ajoute une méthode pour rafraîchir la liste
   refreshRituels() {
     // Recharge la liste depuis le service
-    this.rituel.set([]);
     this.rituelsService.getRituelsList().subscribe(rituels => {
-      this.rituel.set(rituels);
+      this.rituels.set(rituels);
     });
   }
 

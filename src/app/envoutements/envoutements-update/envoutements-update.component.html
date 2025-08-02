@@ -1,0 +1,55 @@
+<div #modal id="updateModal" class="modal">
+    <div class="row">
+        <form *ngIf="envoutementForm" [formGroup]="envoutementForm" (ngSubmit)="onSubmit()">
+            <!-- ngIf permet de s'assurer que le formulaire est prêt avant de l'afficher -->
+
+            <h4 class="center-align">Modifier un(e) {{ envoutement?.nom}} </h4>
+            <!--Ligne-->
+            <div class="row">
+                <div class="input-field col s4">
+                    <label class="active" for="nom">Nom</label>
+                    <input id="nom" type="text" formControlName="nom" required>
+                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                    <app-form-control-error [control]="envoutementForm.get('nom')"></app-form-control-error>
+                </div>
+                <div class="input-field col s4">
+                    <label class="active" for="cout">Cout</label>
+                    <input id="cout" type="text" formControlName="cout" required>
+                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                    <app-form-control-error [control]="envoutementForm.get('cout')"></app-form-control-error>
+                </div>
+                <div class="input-field col s4">
+                    <select id="danger" formControlName="danger" class="browser-default" required>
+                        <option value="" disabled selected>Danger</option>
+                        <option value="Élevé">Élevé</option>
+                        <option value="Faible">Faible</option>
+                        <option value="Modéré">Modéré</option>
+                    </select>
+                    <label for="danger" class="active">Danger</label>
+                    <app-form-control-error [control]="envoutementForm.get('danger')"></app-form-control-error>
+                </div>
+            </div>
+            <!--Ligne-->
+            <div class="row">
+                <div class="input-field col s12">
+                    <textarea id="prerequis" class="materialize-textarea" formControlName="prerequis" required></textarea>
+                    <label class="active" for="prerequis">Prerequis</label>
+                    <app-form-control-error [control]="envoutementForm.get('prerequis')"></app-form-control-error>
+                </div>
+            </div>
+            <!--Ligne-->
+            <div class="row">
+                <div class="input-field col s12">
+                    <textarea id="effet" class="materialize-textarea" formControlName="effet" required></textarea>
+                    <label class="active" for="effet">Effet</label>
+                    <app-form-control-error [control]="envoutementForm.get('effet')"></app-form-control-error>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="submit" class="modal-close btn-flat" [disabled]="envoutementForm.invalid">Valider</button>
+                <button type="button" class="modal-close btn-flat" (click)="onCancel()">Annuler</button>
+            </div>
+        </form>
+    </div>
+</div>
