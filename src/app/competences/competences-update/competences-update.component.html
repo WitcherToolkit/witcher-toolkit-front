@@ -13,7 +13,7 @@
                     <app-form-control-error [control]="competenceForm.get('nom')"></app-form-control-error>
                 </div>
                 <div class="input-field col s4">
-                    <select formControlName="caracteristique" #caracSelect>
+                    <select class="select-dropdown" formControlName="caracteristique" #caracSelect>
                         <option value="" disabled selected>Choisissez une caractéristique</option>
                         <option *ngFor="let carac of caracteristiques" [value]="carac.idCaracteristique">{{ carac.nom }}</option>
                     </select>

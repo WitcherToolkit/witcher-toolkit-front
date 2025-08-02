@@ -1,0 +1,5 @@
+// ::nd-deep permet d'appliquer le style aux composants généré dynamiquement par Angular Material'
+::ng-deep .dropdown-content.select-dropdown {
+  max-height: 15em !important; /* environ 5 lignes */
+  overflow-y: auto !important;
+}
