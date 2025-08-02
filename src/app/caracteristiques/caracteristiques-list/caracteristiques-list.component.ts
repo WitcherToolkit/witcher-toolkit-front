@@ -53,7 +53,7 @@ export class CaracteristiquesListComponent {
   }
 
   //#Region boite de rialogue
-  @ViewChild(CaracteristiquesDetailComponent) detailModal!: CaracteristiquesDetailComponent;// Référence à la boîte de dialogue
+  @ViewChild(CaracteristiquesDetailComponent) detailModal!: CaracteristiquesDetailComponent;
   @ViewChild(CaracteristiquesUpdateComponent) updateModal!: CaracteristiquesUpdateComponent;
   
   // Ajoute une propriété pour la caracteristique sélectionnée

@@ -1,8 +1,13 @@
 export interface Caracteristique {
-    idCaracteristique : number; // TODO A voir si necessaire côté front
+
+    idCaracteristique : number; 
+
     code : string;
+
     nom : string;
+
     description : string;
+
 }
 
 export type CaracteristiqueList = Caracteristique[];

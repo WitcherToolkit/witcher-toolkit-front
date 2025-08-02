@@ -1,10 +1,17 @@
 export interface Envoutement {
-    idEnvoutement: number;
-    nom: string;
-    cout: string;
-    effet: string;
-    prerequis: string;
-    danger: string;
+
+  idEnvoutement: number;
+  
+  nom: string;
+  
+  cout: string;
+  
+  effet: string;
+  
+  prerequis: string;
+  
+  danger: string;
+
 }
 
 export type EnvoutementList = Envoutement[];

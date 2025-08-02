@@ -1,14 +1,25 @@
 export interface Magie {
-    idMagie: number;
-    nom: string;
-    cout: string;
-    effet: string;
-    portee: string;
-    duree: string;
-    nature: string;
-    type: string;
-    niveau: string;
-    contre: string;
+
+  idMagie: number;
+  
+  nom: string;
+  
+  cout: string;
+  
+  effet: string;
+  
+  portee: string;
+  
+  duree: string;
+  
+  nature: string;
+  
+  type: string;
+  
+  niveau: string;
+  
+  contre: string;
+
 }
 
 export type MagieList = Magie[];
