@@ -6,14 +6,49 @@
             <h4 class="center-align">Modifier {{ race?.nom}} </h4>
             <!--Ligne-->
             <div class="row">
-                <div class="input-field col s6">
+                <div class="input-field col s12">
                     <label class="active" for="nom">Nom</label>
                     <input id="nom" type="text" formControlName="nom" required>
                     <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
                     <app-form-control-error [control]="raceForm.get('nom')"></app-form-control-error>
                 </div>
-
             </div>
+            <!--Ligne-->
+            <div class="row">
+                <div class="input-field col s12">
+                    <h5>
+                        Particularités :
+                        <button type="button" class="btn-flat red-text">
+                            <i class="material-icons">add</i>
+                        </button>
+                    </h5>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Description</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let partForm of particulariteFormArray.controls; let i = index" [formGroup]="partForm">
+                            <td>
+                                <input type="text" formControlName="nom" required>
+                            </td>
+                            <td>
+                                <input type="text" formControlName="description" required>
+                            </td>
+                            <td>
+                                <button type="button" class="btn-flat red-text">
+                                    <i class="material-icons">delete</i>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
             
 
             <div class="modal-footer">
