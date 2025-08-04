@@ -115,6 +115,10 @@ export class RacesUpdateComponent implements AfterViewInit, OnChanges{
       })
     );
   }
+
+  removeParticularite(index: number) {
+    this.particulariteFormArray.removeAt(index);
+  }
   //#endregion Particularites
 
 }

@@ -18,9 +18,9 @@
                 <div class="input-field col s12">
                     <h5>
                         Particularités :
-                        <button type="button" class="btn-flat red-text" (click)="addParticularite()">
+                        <a class="btn-floating grey darken-3 btn-small" (click)="addParticularite()">
                             <i class="material-icons">add</i>
-                        </button>
+                        </a>
                     </h5>
                     <table>
                         <thead>
@@ -39,7 +39,7 @@
                                 <input type="text" formControlName="description" required>
                             </td>
                             <td>
-                                <button type="button" class="btn-flat red-text">
+                                <button type="button" class="btn-flat red-text" (click)="removeParticularite(i)">
                                     <i class="material-icons">delete</i>
                                 </button>
                             </td>
