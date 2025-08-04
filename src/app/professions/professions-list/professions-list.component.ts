@@ -51,7 +51,7 @@ export class ProfessionsListComponent {
     return text;
   }
 
-  //#Region boite de rialogue
+  //#region boite de rialogue
   @ViewChild(ProfessionsDetailComponent) detailModal!: ProfessionsDetailComponent;
   // Ajoute une propriété pour le race sélectionné
   selectedProfessionId: number | null = null;
@@ -63,6 +63,6 @@ export class ProfessionsListComponent {
 
     this.detailModal.open();
   }
-  //#EndRegion boite de dialogue
+  //#endRegion boite de dialogue
 
 }

@@ -1,7 +1,11 @@
 import { Race } from "./race";
 
 export interface ReputationWiki {
-    id: number;
+
+    idReputationWiki: number;
+
     territoire: string;
+
     valeur: string;
+    
 }

@@ -1,0 +1,25 @@
+<div #modal id="updateModal" class="modal">
+    <div class="row">
+        <form *ngIf="raceForm" [formGroup]="raceForm" (ngSubmit)="onSubmit()">
+            <!-- ngIf permet de s'assurer que le formulaire est prêt avant de l'afficher -->
+
+            <h4 class="center-align">Modifier {{ race?.nom}} </h4>
+            <!--Ligne-->
+            <div class="row">
+                <div class="input-field col s6">
+                    <label class="active" for="nom">Nom</label>
+                    <input id="nom" type="text" formControlName="nom" required>
+                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                    <app-form-control-error [control]="raceForm.get('nom')"></app-form-control-error>
+                </div>
+
+            </div>
+            
+
+            <div class="modal-footer">
+                <button type="submit" class="modal-close btn-flat" [disabled]="raceForm.invalid">Valider</button>
+                <button type="button" class="modal-close btn-flat" (click)="onCancel()">Annuler</button>
+            </div>
+        </form>
+    </div>
+</div>

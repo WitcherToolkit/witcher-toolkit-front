@@ -52,7 +52,7 @@ export class CaracteristiquesListComponent {
     return text;
   }
 
-  //#Region boite de rialogue
+  //#region boite de rialogue
   @ViewChild(CaracteristiquesDetailComponent) detailModal!: CaracteristiquesDetailComponent;
   @ViewChild(CaracteristiquesUpdateComponent) updateModal!: CaracteristiquesUpdateComponent;
   
@@ -68,9 +68,9 @@ export class CaracteristiquesListComponent {
       this.selectedCaracteristique = caracteristique;
       this.updateModal.open();
     }
-  //#EndRegion boite de dialogue
+  //#endRegion boite de dialogue
 
-  // #Region MAJ des Caracteristiques après une action
+  //#region MAJ des Caracteristiques après une action
   ngOnInit() {
     this.refreshCaracteristiques();
   }
@@ -87,5 +87,5 @@ export class CaracteristiquesListComponent {
   onCaracteristiqueUpdated(updatedCaracteristique: Caracteristique) {
     this.refreshCaracteristiques();
   }
-  // #EndRegion MAJ des caracteristiques après une action
+  //#endRegion MAJ des caracteristiques après une action
 }

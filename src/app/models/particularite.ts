@@ -1,9 +1,13 @@
 import { Race } from "./race";
 
 export interface Particularite {
-    id: number;
+
+    idParticularite: number;
+
     nom: string;
+
     description: string;
+    
 }
 
 export type ParticulariteList = Particularite[];

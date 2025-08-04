@@ -52,7 +52,7 @@ export class CompetencesListComponent {
     return text;
   }
   
-  //#Region boite de rialogue
+  //#region boite de rialogue
     @ViewChild(CompetencesDetailComponent) detailModal!: CompetencesDetailComponent;
     @ViewChild(CompetencesUpdateComponent) updateModal!: CompetencesUpdateComponent;
 
@@ -69,9 +69,9 @@ export class CompetencesListComponent {
       this.selectedCompetence = competence;
       this.updateModal.open();
     }
-    //#EndRegion boite de dialogue
+    //#endregion boite de dialogue
 
-    // #Region MAJ des competences après une action
+    // #region MAJ des competences après une action
       ngOnInit() {
         this.refreshCompetences();
       }
@@ -87,6 +87,6 @@ export class CompetencesListComponent {
     onCompetenceUpdated(updatedCompetence: Competence) {
       this.refreshCompetences();
     }
-    // #EndRegion MAJ des competences après une action
+    // #endregion MAJ des competences après une action
 
 }

@@ -82,7 +82,7 @@ export class SortsListComponent implements OnInit {
   }
   //#endRegion boite de dialogue
 
-  // #Region MAJ des magies après une action
+  //#region MAJ des magies après une action
   ngOnInit() {
     this.refreshMagies();
   }
@@ -99,6 +99,6 @@ export class SortsListComponent implements OnInit {
   onMagieUpdated(updatedMagie: Magie) {
     this.refreshMagies();
   }
-  // #EndRegion MAJ des magies après une action
+  //#endRegion MAJ des magies après une action
 
 }

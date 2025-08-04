@@ -43,7 +43,7 @@ export class RituelsListComponent {
     return rituel.idRituel;
   }
 
-  //#Region boite de rialogue
+  //#egion boite de rialogue
   @ViewChild(RituelsDetailComponent) detailModal!: RituelsDetailComponent;// Référence à la boîte de dialogue
   @ViewChild(RituelsUpdateComponent) updateModal!: RituelsUpdateComponent;
   // Ajoute une propriété pour le rituel sélectionné
@@ -61,7 +61,7 @@ export class RituelsListComponent {
   }
   //#endRegion boite de dialogue
 
-  // #Region MAJ des rituels après une action
+  //#region MAJ des rituels après une action
   ngOnInit() {
     this.refreshRituels();
   }
@@ -78,6 +78,6 @@ export class RituelsListComponent {
   onRituelUpdated(updatedRituel: Rituel) {
     this.refreshRituels();
   }
-  // #EndRegion MAJ des rituels après une action
+  //#endRegion MAJ des rituels après une action
   
 }

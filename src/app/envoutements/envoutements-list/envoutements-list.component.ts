@@ -44,7 +44,7 @@ export class EnvoutementsListComponent implements OnInit {
     return text;
   }
 
-  //#Region boite de rialogue
+  //#region boite de rialogue
     @ViewChild(EnvoutementsDetailComponent) detailModal!: EnvoutementsDetailComponent;// Référence à la boîte de dialogue
     @ViewChild(EnvoutementsUpdateComponent) updateModal!: EnvoutementsUpdateComponent;
     
@@ -63,7 +63,7 @@ export class EnvoutementsListComponent implements OnInit {
     }
     //#endRegion boite de dialogue
   
-    // #Region MAJ des Envoutements après une action
+    //#region MAJ des Envoutements après une action
     ngOnInit() {
       this.refreshEnvoutements();
     }
@@ -80,5 +80,5 @@ export class EnvoutementsListComponent implements OnInit {
     onEnvoutementUpdated(updatedEnvoutement: Envoutement) {
       this.refreshEnvoutements();
     }
-    // #EndRegion MAJ des envoutements après une action
+    //#endRegion MAJ des envoutements après une action
 }

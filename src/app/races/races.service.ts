@@ -18,4 +18,9 @@ export class RacesService {
       return this.http.get<Race[]>(`${EnvironmentConfig.apiBaseUrl}/races`);
     }
 
+    updateRace(race: Race): Observable<Race> {
+      console.log('Updating race:', race);
+      return this.http.put<Race>(`${EnvironmentConfig.apiBaseUrl}/races/update/${race.idRace}`, race);
+    }
+
 }

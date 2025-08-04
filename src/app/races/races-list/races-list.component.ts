@@ -5,18 +5,20 @@ import { Race } from '../../models/race';
 import { RacesDetailComponent } from '../races-detail/races-detail.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SelectionBorderDirective } from '../../directives/selection-border.directive';
+import { RacesUpdateComponent } from '../races-update/races-update.component';
 
 @Component({
     selector: 'app-races-list',
     standalone: true,
-    imports: [SelectionBorderDirective, CommonModule, RacesDetailComponent],
+    imports: [SelectionBorderDirective, CommonModule, RacesDetailComponent, RacesUpdateComponent],
     templateUrl: './races-list.component.html',
     styleUrls: ['races-list.component.scss']
 })
 export class RacesListComponent {
   private readonly racesService = inject(RacesService);
     
-  readonly races = toSignal(this.racesService.getRacesList(), { initialValue: [] });
+  readonly races = signal<Race[]>([]);
+
   readonly searchTerm = signal('');
 
   readonly racesListFiltered = computed(() => {
@@ -41,8 +43,10 @@ export class RacesListComponent {
     return race.particulariteList?.map((p: any) => p.nom).join(', ') || '';
   }
   
-  //#Region boite de rialogue
-  @ViewChild(RacesDetailComponent) detailModal!: RacesDetailComponent;// Référence à la boîte de dialogue
+  //#region boite de rialogue
+  @ViewChild(RacesDetailComponent) detailModal!: RacesDetailComponent;
+  @ViewChild(RacesUpdateComponent) updateModal!: RacesUpdateComponent;
+
   // Ajoute une propriété pour le race sélectionné
   selectedRace: Race | null = null;
 
@@ -51,6 +55,29 @@ export class RacesListComponent {
     this.selectedRace = race;
     this.detailModal.open();
   }
-  //#EndRegion boite de dialogue
+
+  openUpdateModal(race: Race) {
+        this.selectedRace = race;
+        this.updateModal.open();
+      }
+  //#endregion boite de dialogue
+
+  //#region MAJ des races après une action
+    ngOnInit() {
+      this.refreshRaces();
+    }
+  
+  // Ajoute une méthode pour rafraîchir la liste
+  refreshRaces() {
+    // Recharge la liste depuis le service
+    this.racesService.getRacesList().subscribe(races => {
+      this.races.set(races);
+    });
+  }
+
+  onRaceUpdated(updatedRace: Race) {
+    this.refreshRaces();
+  }
+  // #endregion MAJ des races après une action
   
 }

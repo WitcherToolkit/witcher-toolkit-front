@@ -54,7 +54,7 @@
 
                     <div class="card-action">
                       <a (click)="openModal(race)" href="javascript:void(0)">Voir</a>
-                      <a href="#">Modifier</a>
+                      <a (click)="openUpdateModal(race)" href="javascript:void(0)">Modifier</a>
                       <a href="#">Supprimer</a>
                     </div>
                   </div>
@@ -65,3 +65,4 @@
 </div>
 
 <app-races-detail-modal [race]="selectedRace"></app-races-detail-modal>
+<app-races-update-modal [race]="selectedRace" (raceUpdated)="onRaceUpdated($event)"></app-races-update-modal>

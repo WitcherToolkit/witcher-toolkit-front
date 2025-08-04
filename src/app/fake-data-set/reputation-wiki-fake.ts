@@ -1,42 +1,42 @@
 
 export const REPUTATION_SORCELEUR = [
-    { id: 1, territoire: "Nord", valeur: "Craint et haïs" },
-    { id: 2, territoire: "Nilfgaard", valeur: "Craint et haïs" },
-    { id: 3, territoire: "Skellige", valeur: "Toléré" },
-    { id: 4, territoire: "Dol Blathana", valeur: "Toléré" },
-    { id: 5, territoire: "Mahakam", valeur: "Toléré" }
+    { idReputationWiki: 1, territoire: "Nord", valeur: "Craint et haïs" },
+    { idReputationWiki: 2, territoire: "Nilfgaard", valeur: "Craint et haïs" },
+    { idReputationWiki: 3, territoire: "Skellige", valeur: "Toléré" },
+    { idReputationWiki: 4, territoire: "Dol Blathana", valeur: "Toléré" },
+    { idReputationWiki: 5, territoire: "Mahakam", valeur: "Toléré" }
 ]
 
 export const REPUTATION_ELFES = [
-    { id: 6, territoire: "Nord", valeur: "Haïs" },
-    { id: 7, territoire: "Nilfgaard", valeur: "Neutre" },
-    { id: 8, territoire: "Skellige", valeur: "Neutre" },
-    { id: 9, territoire: "Dol Blathana", valeur: "Neutre" },
-    { id: 10, territoire: "Mahakam", valeur: "Neutre" }
+    { idReputationWiki: 6, territoire: "Nord", valeur: "Haïs" },
+    { idReputationWiki: 7, territoire: "Nilfgaard", valeur: "Neutre" },
+    { idReputationWiki: 8, territoire: "Skellige", valeur: "Neutre" },
+    { idReputationWiki: 9, territoire: "Dol Blathana", valeur: "Neutre" },
+    { idReputationWiki: 10, territoire: "Mahakam", valeur: "Neutre" }
 ]
 
 export const REPUTATION_NAINS = [
-    { id: 11, territoire: "Nord", valeur: "Toléré" },
-    { id: 12, territoire: "Nilfgaard", valeur: "Neutre" },
-    { id: 13, territoire: "Skellige", valeur: "Neutre" },
-    { id: 14, territoire: "Dol Blathana", valeur: "Neutre" },
-    { id: 15, territoire: "Mahakam", valeur: "Neutre" }
+    { idReputationWiki: 11, territoire: "Nord", valeur: "Toléré" },
+    { idReputationWiki: 12, territoire: "Nilfgaard", valeur: "Neutre" },
+    { idReputationWiki: 13, territoire: "Skellige", valeur: "Neutre" },
+    { idReputationWiki: 14, territoire: "Dol Blathana", valeur: "Neutre" },
+    { idReputationWiki: 15, territoire: "Mahakam", valeur: "Neutre" }
 ]
 
 export const REPUTATION_HUMAINS = [
-    { id: 16, territoire: "Nord", valeur: "Neutre" },
-    { id: 17, territoire: "Nilfgaard", valeur: "Neutre" },
-    { id: 18, territoire: "Skellige", valeur: "Neutre" },
-    { id: 19, territoire: "Dol Blathana", valeur: "Haïs" },
-    { id: 20, territoire: "Mahakam", valeur: "Tolérés" }
+    { idReputationWiki: 16, territoire: "Nord", valeur: "Neutre" },
+    { idReputationWiki: 17, territoire: "Nilfgaard", valeur: "Neutre" },
+    { idReputationWiki: 18, territoire: "Skellige", valeur: "Neutre" },
+    { idReputationWiki: 19, territoire: "Dol Blathana", valeur: "Haïs" },
+    { idReputationWiki: 20, territoire: "Mahakam", valeur: "Tolérés" }
 ]
 
 export const REPUTATION_HALFELINS = [
-    { id: 21, territoire: "Nord", valeur: "Toléré" },
-    { id: 22, territoire: "Nilfgaard", valeur: "Neutre" },
-    { id: 23, territoire: "Skellige", valeur: "Neutre" },
-    { id: 24, territoire: "Dol Blathana", valeur: "Neutre" },
-    { id: 25, territoire: "Mahakam", valeur: "Neutre" }
+    { idReputationWiki: 21, territoire: "Nord", valeur: "Toléré" },
+    { idReputationWiki: 22, territoire: "Nilfgaard", valeur: "Neutre" },
+    { idReputationWiki: 23, territoire: "Skellige", valeur: "Neutre" },
+    { idReputationWiki: 24, territoire: "Dol Blathana", valeur: "Neutre" },
+    { idReputationWiki: 25, territoire: "Mahakam", valeur: "Neutre" }
 ]
 
 export const REPUTATION_LIST = [
