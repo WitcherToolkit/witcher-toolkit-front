@@ -36,6 +36,15 @@ export class RacesUpdateComponent implements AfterViewInit, OnChanges{
             })
         )
         ),
+        reputationWikiList: this.fb.array(
+          this.race.reputationWikiList.map(r =>
+            this.fb.group({
+              idReputationWiki: [r.idReputationWiki],
+              territoire: [r.territoire, [Validators.required, Validators.maxLength(50)]],
+              valeur: [r.valeur, [Validators.required]]
+            })
+        )
+        ),
 
       });
     }
@@ -81,14 +90,33 @@ export class RacesUpdateComponent implements AfterViewInit, OnChanges{
   
   // Méthode pour réinitialiser le formulaire aux valeurs de l'objet 'race'
   resetForm() {
-    if (this.raceForm && this.race) {
-      this.raceForm.reset({
-        nom: this.race.nom
+     if (this.raceForm && this.race) {
+      // Réinitialise le champ nom
+      this.raceForm.get('nom')?.setValue(this.race.nom);
+
+      // Réinitialise les particularités
+      const partArray = this.particulariteFormArray;
+      partArray.clear();
+      this.race.particulariteList.forEach(p => {
+        partArray.push(this.fb.group({
+          idParticularite: [p.idParticularite],
+          nom: [p.nom, [Validators.required, Validators.maxLength(50)]],
+          description: [p.description, [Validators.required]]
+        }));
       });
-      // Marquer le formulaire comme non modifié et non touché
-      // Cela permet de réinitialiser l'état du formulaire
+
+      // Réinitialise les réputations
+      const repArray = this.reputationWikiFormArray;
+      repArray.clear();
+      this.race.reputationWikiList.forEach(r => {
+        repArray.push(this.fb.group({
+          idReputationWiki: [r.idReputationWiki],
+          territoire: [r.territoire, [Validators.required, Validators.maxLength(50)]],
+          valeur: [r.valeur, [Validators.required]]
+        }));
+      });
+
       this.raceForm.markAsPristine();
-      // Marquer tous les champs comme non touchés
       this.raceForm.markAsUntouched();
     }
   }
@@ -101,6 +129,7 @@ export class RacesUpdateComponent implements AfterViewInit, OnChanges{
       instance.close();
     }
   }
+
   //#region Particularites
   // Getter pour le FormArray
   get particulariteFormArray(): FormArray<FormGroup> {
@@ -121,4 +150,23 @@ export class RacesUpdateComponent implements AfterViewInit, OnChanges{
   }
   //#endregion Particularites
 
+  //#region ReputationWiki
+  // Getter pour le FormArray
+  get reputationWikiFormArray(): FormArray<FormGroup> {
+    return this.raceForm.get('reputationWikiList') as FormArray<FormGroup>;
+  }
+  addReputationWiki() {
+    this.reputationWikiFormArray.push(
+      this.fb.group({
+        idParticularite: [null],
+        territoire: ['', [Validators.required, Validators.maxLength(20)]],
+        valeur: ['', [Validators.required, Validators.maxLength(20)]],
+      })
+    );
+  }
+
+  removeReputationWiki(index: number) {
+    this.reputationWikiFormArray.removeAt(index);
+  }
+  //#endregion Particularites
 }
