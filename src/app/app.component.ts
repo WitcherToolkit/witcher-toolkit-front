@@ -7,8 +7,7 @@ import { CARACTERISTIQUE_BASE_PATH, COMPTETENCE_BASE_PATH, ENVOUTEMENT_BASE_PATH
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, RouterLink ],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  templateUrl: './app.component.html'
 })
 export class AppComponent implements AfterViewInit {
 

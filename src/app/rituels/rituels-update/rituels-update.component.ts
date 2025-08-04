@@ -11,8 +11,7 @@ import { RituelsService } from '../rituels.service';
   selector: 'app-rituels-update-modal',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormControlErrorComponent, RequiredAsteriskDirective],
-  templateUrl: './rituels-update.component.html',
-  styleUrl: './rituels-update.component.css'
+  templateUrl: './rituels-update.component.html'
 })
 export class RituelsUpdateComponent implements AfterViewInit, OnChanges{
   

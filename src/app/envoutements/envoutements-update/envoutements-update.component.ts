@@ -10,8 +10,7 @@ import { EnvoutementService } from '../envoutement.service';
   selector: 'app-envoutements-update-modal',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormControlErrorComponent, RequiredAsteriskDirective],
-  templateUrl: './envoutements-update.component.html',
-  styleUrl: './envoutements-update.component.css'
+  templateUrl: './envoutements-update.component.html'
 })
 export class EnvoutementsUpdateComponent implements AfterViewInit, OnChanges {
   @Input() envoutement: Envoutement | null = null;

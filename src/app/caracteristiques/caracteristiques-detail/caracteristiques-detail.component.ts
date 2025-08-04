@@ -4,8 +4,7 @@ import { Caracteristique } from '../../models/caracteristique';
 @Component({
   selector: 'app-caracteristiques-detail-modal',
   standalone: true,
-  templateUrl: './caracteristiques-detail.component.html',
-  styleUrl: './caracteristiques-detail.component.css'
+  templateUrl: './caracteristiques-detail.component.html'
 })
 export class CaracteristiquesDetailComponent implements AfterViewInit {
   @Input() caracteristique: Caracteristique | null = null;

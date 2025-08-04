@@ -6,8 +6,7 @@ import { FormValidationService } from './form-validation.service';
 @Component({
   selector: 'app-form-control-error',
   imports: [CommonModule],
-  templateUrl: './form-control-error.component.html',
-  styleUrl: './form-control-error.component.scss'
+  templateUrl: './form-control-error.component.html'
 })
 export class FormControlErrorComponent implements OnChanges {
 

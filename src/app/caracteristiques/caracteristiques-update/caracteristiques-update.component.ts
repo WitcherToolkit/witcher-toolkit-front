@@ -10,8 +10,7 @@ import { CaracteristiqueService } from '../caracteristique.service';
   selector: 'app-caracteristiques-update-modal',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormControlErrorComponent, RequiredAsteriskDirective],
-  templateUrl: './caracteristiques-update.component.html',
-  styleUrl: './caracteristiques-update.component.scss'
+  templateUrl: './caracteristiques-update.component.html'
 })
 export class CaracteristiquesUpdateComponent implements AfterViewInit, OnChanges{
 
