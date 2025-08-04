@@ -101,9 +101,20 @@ export class RacesUpdateComponent implements AfterViewInit, OnChanges{
       instance.close();
     }
   }
+  //#region Particularites
   // Getter pour le FormArray
   get particulariteFormArray(): FormArray<FormGroup> {
     return this.raceForm.get('particulariteList') as FormArray<FormGroup>;
   }
+  addParticularite() {
+    this.particulariteFormArray.push(
+      this.fb.group({
+        idParticularite: [null],
+        nom: ['', [Validators.required, Validators.maxLength(50)]],
+        description: ['', [Validators.required]]
+      })
+    );
+  }
+  //#endregion Particularites
 
 }
