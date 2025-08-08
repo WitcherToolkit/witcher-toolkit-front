@@ -11,6 +11,8 @@ export interface Profession {
 
     vigueur : number;
 
+    nbObjet: number;
+
 	maxSort : number;
 
 	maxRituel : number;
