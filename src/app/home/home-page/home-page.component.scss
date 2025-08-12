@@ -1,34 +1,33 @@
-.card-image-square {
-    position: relative;
-    width: 100%;
-    padding-bottom: 100%;
-    overflow: hidden;
+$card-min-height: 215px;
 
-    img {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+// Card horizontale : hauteur minimale
+.card.horizontal {
+  min-height: $card-min-height;
+  height: 100%;
 }
 
-.card-content-wrapper {
-    position: relative;
-    display: flex;
-    flex-direction: column;
+// Wrapper pour centrer l'image dans la card
+.card-img-circle-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: $card-min-height;
+
+  .card-img-circle {
+    width: 140px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+    margin: 0 auto;
+  }
 }
 
-.card-content {
-    flex-grow: 1;
-}
-
-.card .card-action { /* Sélecteur spécifique pour card-action */
-    position: static; /* Rétablit le comportement normal */
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid #eee;
-}
-
-.card.medium { 
-    margin-bottom: 100px; 
+// Actions de la card
+.card .card-action {
+  position: static;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
 }
