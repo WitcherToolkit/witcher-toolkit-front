@@ -1,0 +1,22 @@
+<div #modal  id="updateModal" class="modal">
+    <div class="row">
+         <form *ngIf="professionForm" [formGroup]="professionForm" (ngSubmit)="onSubmit()">
+            <div class="input-field col s12">
+                    <label class="active" for="nom">Nom</label>
+                    <input id="nom" type="text" formControlName="nom" required>
+                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                    <app-form-control-error [control]="professionForm.get('nom')"></app-form-control-error>
+                </div>
+            <div class="input-field col s12">
+                <label class="active" for="description">Description</label>
+                <textarea id="description" formControlName="description" class="materialize-textarea"></textarea>
+                <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                <app-form-control-error [control]="professionForm.get('description')"></app-form-control-error>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="modal-close btn-flat" [disabled]="professionForm.invalid">Valider</button>
+                <button type="button" class="modal-close btn-flat" (click)="onCancel()">Annuler</button>
+            </div>
+         </form>
+    </div>
+</div>

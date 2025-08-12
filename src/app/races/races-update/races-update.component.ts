@@ -11,7 +11,7 @@ import { RacesService } from '../races.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormControlErrorComponent, RequiredAsteriskDirective],
   templateUrl: './races-update.component.html',
-  styleUrl: './races-update.component.css'
+  styleUrl: './races-update.component.scss'
 })
 export class RacesUpdateComponent implements AfterViewInit, OnChanges{
 

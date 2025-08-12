@@ -39,7 +39,7 @@
 
                   <div class="card-action">
                     <a (click)="openModal(profession)" href="javascript:void(0)">Voir</a>
-                    <a href="#">Modifier</a>
+                    <a (click)="onProfessionUpdated(profession)" href="javascript:void(0)">Modifier</a>
                     <a href="#">Supprimer</a>
                   </div>
                 </div>
@@ -50,4 +50,5 @@
   </div>
 </div>
 
-<app-professions-detail-modal [professionId]="selectedProfessionId"></app-professions-detail-modal>
+<app-professions-detail-modal [profession]="selectedProfession"></app-professions-detail-modal>
+<app-professions-update-modal [profession]="selectedProfession" (professionUpdated)="onProfessionUpdated($event)"></app-professions-update-modal>

@@ -1,26 +1,28 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal, ViewChild } from '@angular/core';
-import { PROFESSION_LIST } from '../../fake-data-set/profession-fake';
 import { ProfessionsService } from '../professions.service';
 import { Profession } from '../../models/profession';
 import { SelectionBorderDirective } from '../../directives/selection-border.directive';
 import { ProfessionsDetailComponent } from '../professions-detail/professions-detail.component';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ProfessionsUpdateComponent } from '../professions-update/professions-update.component';
 
 @Component({
   selector: 'app-professions-list',
   standalone: true,
-  imports: [SelectionBorderDirective, CommonModule, ProfessionsDetailComponent],
+  imports: [SelectionBorderDirective, CommonModule, ProfessionsDetailComponent, ProfessionsUpdateComponent],
   templateUrl: './professions-list.component.html',
   styleUrl: './professions-list.component.scss'
 })
 export class ProfessionsListComponent {
-  private readonly professionsService = inject(ProfessionsService);
+  // Constantes
   readonly MAX_LENGTH = 150;
 
-  readonly professions = toSignal(this.professionsService.getProfessionsList(), { initialValue: [] });
+  // Service et signaux
+  private readonly professionsService = inject(ProfessionsService);
+  readonly professions = signal<Profession[]>([]);
   readonly searchTerm = signal('');
 
+  // Filtrage de la liste selon le terme de recherche
   readonly professionsListFiltered = computed(() => {
     const term = this.searchTerm().trim().toLowerCase(); // Terme de recherche actuel
     const allProfessions = this.professions(); // Tous les professions chargés (c'est un signal !)
@@ -40,10 +42,12 @@ export class ProfessionsListComponent {
     this.searchTerm.set(inputElement.value);
   }
 
+  // Pour l'affichage optimisé dans *ngFor
   trackById(index: number, profession: Profession): number {
-    return profession.idProfession || index; // Utilisez idProfession si disponible, sinon indexez
+    return profession.idProfession || index; // Utilise idProfession si disponible, sinon index
   }
 
+  // Tronque le texte si trop long
   truncateText(text: string): string {
     if (text.length > this.MAX_LENGTH) {
       return text.substring(0, this.MAX_LENGTH) + '...';
@@ -51,18 +55,40 @@ export class ProfessionsListComponent {
     return text;
   }
 
-  //#region boite de rialogue
+  //#region Gestion des modales (détail et édition)
   @ViewChild(ProfessionsDetailComponent) detailModal!: ProfessionsDetailComponent;
-  // Ajoute une propriété pour le race sélectionné
-  selectedProfessionId: number | null = null;
+  @ViewChild(ProfessionsUpdateComponent) updateModal!: ProfessionsUpdateComponent;
+  selectedProfession: Profession | null = null;
 
-  // Modifie openModal pour recevoir le race
+  // Ouvre la modale de détail
   openModal(profession: Profession) {
-    // Assigner l'ID de la profession sélectionnée à selectedProfessionId
-    this.selectedProfessionId = profession.idProfession || null;
-
+    // Assigner l'ID de la profession sélectionnée à selectedProfession
+    this.selectedProfession = profession;
     this.detailModal.open();
   }
-  //#endRegion boite de dialogue
 
+  openUpdateModal(profession: Profession) {
+  this.selectedProfession = profession;
+  this.updateModal.open();
+}
+  //#endregion
+
+  //#region Cycle de vie et gestion de la liste
+  // Initialisation du composant
+  ngOnInit() {
+    this.refreshProfessions();
+  }
+
+  // Rafraîchit la liste des professions depuis le service
+  refreshProfessions() {
+    this.professionsService.getProfessionsList().subscribe(professions => {
+      this.professions.set(professions);
+    });
+  }
+
+  // Callback après modification d'une profession
+  onProfessionUpdated(updatedProfession: Profession) {
+    this.refreshProfessions();
+  }
+  //#endregion
 }

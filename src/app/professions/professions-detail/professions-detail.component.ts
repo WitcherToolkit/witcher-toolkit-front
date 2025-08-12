@@ -14,13 +14,7 @@ import { ProfessionsService } from '../professions.service';
 export class ProfessionsDetailComponent implements AfterViewInit {
 
  // Use a setter for the input to react to changes and fetch data
-  @Input() set professionId(id: number | null) {
-    if (id !== null) {
-      this.fetchProfessionDetails(id);
-    } else {
-      this.detailedProfession.set(null); // Clear previous details if no ID is provided
-    }
-  }
+  @Input() profession: Profession | null = null;
 
   @ViewChild('modal') modalRef!: ElementRef;
 
@@ -59,13 +53,16 @@ export class ProfessionsDetailComponent implements AfterViewInit {
 
   // Méthode pour ouvrir la fenêtre modale Materialize
   open() {
-    if (this.modalRef && M && M.Modal) {
-      const instance = M.Modal.getInstance(this.modalRef.nativeElement);
-      if (instance) {
-        instance.open();
-      }
+  if (this.profession?.idProfession) {
+    this.fetchProfessionDetails(this.profession.idProfession);
+  }
+  if (this.modalRef && M && M.Modal) {
+    const instance = M.Modal.getInstance(this.modalRef.nativeElement);
+    if (instance) {
+      instance.open();
     }
   }
+}
 
   // Aide à l'accès aux compétences du modèle en toute sécurité
   get competences(): CompetenceProfession[] {

@@ -22,7 +22,7 @@
       </div>
 
       <div class="col s4">
-        <h6><b>X équipements parmi :</b></h6>
+        <h6><b>{{ detailedProfession()?.nbObjet }} équipements parmi :</b></h6>
         <ul>
           <li *ngFor="let item of inventaireNormaux">
             {{ item.quantite }} {{ item.nom }}

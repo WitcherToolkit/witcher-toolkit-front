@@ -3,7 +3,6 @@ import { Component, computed, inject, signal, ViewChild } from '@angular/core';
 import { RacesService } from '../races.service';
 import { Race } from '../../models/race';
 import { RacesDetailComponent } from '../races-detail/races-detail.component';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { SelectionBorderDirective } from '../../directives/selection-border.directive';
 import { RacesUpdateComponent } from '../races-update/races-update.component';
 
@@ -15,69 +14,67 @@ import { RacesUpdateComponent } from '../races-update/races-update.component';
     styleUrls: ['races-list.component.scss']
 })
 export class RacesListComponent {
+  // Service et signaux
   private readonly racesService = inject(RacesService);
-    
   readonly races = signal<Race[]>([]);
-
   readonly searchTerm = signal('');
 
+  // Filtrage de la liste selon le terme de recherche
   readonly racesListFiltered = computed(() => {
-    const term = this.searchTerm().trim().toLowerCase(); // Terme de recherche actuel
-    const allRaces = this.races(); // Tous les races chargés (c'est un signal !)
-
+    const term = this.searchTerm().trim().toLowerCase();
+    const allRaces = this.races();
     if (!term || allRaces === undefined || allRaces.length === 0) {
-      return allRaces || []; // Retourne tous les races si le terme est vide ou si pas de données
+      return allRaces || [];
     }
-
     return allRaces.filter(race =>
       race.nom.toLowerCase().includes(term)
     );
   });
-  
+
+  // Pour l'affichage optimisé dans *ngFor
   trackById(index: number, race: Race): number {
     return race.idRace;
   }
 
+  // Affiche les particularités sous forme de ligne
   getParticularitesAsLine(race: Race): string {
-    // Si race.particularites est un tableau d'objets avec un champ 'nom'
     return race.particulariteList?.map((p: any) => p.nom).join(', ') || '';
   }
-  
-  //#region boite de rialogue
+
+  //#region Gestion des modales (détail et édition)
   @ViewChild(RacesDetailComponent) detailModal!: RacesDetailComponent;
   @ViewChild(RacesUpdateComponent) updateModal!: RacesUpdateComponent;
-
-  // Ajoute une propriété pour le race sélectionné
   selectedRace: Race | null = null;
 
-  // Modifie openModal pour recevoir le race
+  // Ouvre la modale de détail
   openModal(race: Race) {
     this.selectedRace = race;
     this.detailModal.open();
   }
 
+  // Ouvre la modale d'édition
   openUpdateModal(race: Race) {
-        this.selectedRace = race;
-        this.updateModal.open();
-      }
-  //#endregion boite de dialogue
+    this.selectedRace = race;
+    this.updateModal.open();
+  }
+  //#endregion
 
-  //#region MAJ des races après une action
-    ngOnInit() {
-      this.refreshRaces();
-    }
-  
-  // Ajoute une méthode pour rafraîchir la liste
+  //#region Cycle de vie et gestion de la liste
+  // Initialisation du composant
+  ngOnInit() {
+    this.refreshRaces();
+  }
+
+  // Rafraîchit la liste des races depuis le service
   refreshRaces() {
-    // Recharge la liste depuis le service
     this.racesService.getRacesList().subscribe(races => {
       this.races.set(races);
     });
   }
 
+  // Callback après modification d'une race
   onRaceUpdated(updatedRace: Race) {
     this.refreshRaces();
   }
-  // #endregion MAJ des races après une action
-  
+  //#endregion
 }
