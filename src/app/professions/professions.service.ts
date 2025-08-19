@@ -32,6 +32,8 @@ export class ProfessionsService {
     return this.http.put<Profession>(`${EnvironmentConfig.apiBaseUrl}/professions/update/${profession.idProfession}`, profession);
   }
   
+  //------------------------------------------------------------------------------------------------------------------------------------//
+  //------------------------------------------------------------------------------------------------------------------------------------//
   // Création personnage
   filterProfessions(raceId: number): Observable<Profession[]> {
     // Récupération des IDs des professions Sorceleur et Mage

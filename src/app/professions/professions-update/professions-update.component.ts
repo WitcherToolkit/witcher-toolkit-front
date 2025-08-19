@@ -1,3 +1,4 @@
+
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -19,7 +20,7 @@ export class ProfessionsUpdateComponent implements AfterViewInit, OnChanges {
   // Propriétés d'entrée et de sortie
   @Input() profession: Profession | null = null;
   @ViewChild('modal') modalRef!: ElementRef;
-  @ViewChild('competenceSelect') competenceSelectRef!: ElementRef;
+  @ViewChild('competenceAutocomplete') competenceAutocompleteRef!: ElementRef;
   @Output() professionUpdated = new EventEmitter<Profession>();
 
   allCompetences: Competence[] = [];
@@ -34,7 +35,7 @@ export class ProfessionsUpdateComponent implements AfterViewInit, OnChanges {
   });
 }
   ngOnChanges(changes: SimpleChanges) {
-    setTimeout(() => this.initMaterializeSelect(), 0);
+    setTimeout(() => this.initMaterializeAutocomplete(), 0);
 
     if (changes['profession'] && this.profession) {
       this.professionForm = this.fb.group({
@@ -65,7 +66,7 @@ export class ProfessionsUpdateComponent implements AfterViewInit, OnChanges {
     if (this.modalRef) {
       M.Modal.init(this.modalRef.nativeElement);
     }
-    this.initMaterializeSelect();
+    this.initMaterializeAutocomplete();
   }
 
   open() {
@@ -122,7 +123,6 @@ export class ProfessionsUpdateComponent implements AfterViewInit, OnChanges {
           special: [!!item.special]
         }));
       });
-
       // Réinitialiser les compétences
       const competenceArray = this.competenceListFormArray;
       competenceArray.clear();
@@ -134,7 +134,7 @@ export class ProfessionsUpdateComponent implements AfterViewInit, OnChanges {
 
       this.professionForm.markAsPristine();
       this.professionForm.markAsUntouched();
-      setTimeout(() => this.initMaterializeSelect(), 0);
+      setTimeout(() => this.initMaterializeAutocomplete(), 0);
     }
   }
 
@@ -167,6 +167,17 @@ export class ProfessionsUpdateComponent implements AfterViewInit, OnChanges {
     const inventaireWikiArray = this.inventaireWikiFormArray;
   inventaireWikiArray.removeAt(index);
   }
+
+  
+  // Méthode pour modifier la quantité d'un item d'inventaire
+  updateQuantite(index: number, delta: number, min: number = 0): void {
+    const array = this.inventaireWikiFormArray;
+    const ctrl = array.at(index).get('quantite');
+    if (ctrl) {
+      const value = +ctrl.value || 0;
+      ctrl.setValue(Math.max(value + delta, min));
+    }
+  }
   //#endregion pour l'inventaire
 
   //#region pour les compétences
@@ -177,7 +188,7 @@ export class ProfessionsUpdateComponent implements AfterViewInit, OnChanges {
   addCompetence(id: number) {
     if (!this.competenceListFormArray.value.includes(id)) {
       this.competenceListFormArray.push(this.fb.control(id));
-      setTimeout(() => this.initMaterializeSelect(), 0);
+      setTimeout(() => this.initMaterializeAutocomplete(), 0);
     }
   }
 
@@ -185,7 +196,7 @@ export class ProfessionsUpdateComponent implements AfterViewInit, OnChanges {
     const idx = this.competenceListFormArray.value.indexOf(id);
     if (idx > -1) {
       this.competenceListFormArray.removeAt(idx);
-      setTimeout(() => this.initMaterializeSelect(), 0);
+      setTimeout(() => this.initMaterializeAutocomplete(), 0);
     }
   }
 
@@ -220,11 +231,22 @@ export class ProfessionsUpdateComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  initMaterializeSelect() {
-  if (this.competenceSelectRef) {
-    M.FormSelect.init(this.competenceSelectRef.nativeElement);
+  initMaterializeAutocomplete() {
+    if (this.competenceAutocompleteRef) {
+      const data: { [key: string]: null } = {};
+      this.availableCompetences.forEach(c => data[c.nom] = null);
+
+      const instance = M.Autocomplete.init(this.competenceAutocompleteRef.nativeElement, {
+        data,
+        onAutocomplete: (selected: string) => {
+          const comp = this.allCompetences.find(c => c.nom === selected);
+          if (comp) {
+            this.addCompetence(comp.idCompetence);
+            this.competenceAutocompleteRef.nativeElement.value = '';
+            setTimeout(() => this.initMaterializeAutocomplete(), 0);
+          }
+        }
+      });
+    }
   }
-}
-
-
 }

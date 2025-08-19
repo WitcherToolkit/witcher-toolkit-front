@@ -114,13 +114,8 @@
             <!--Ligne-->
             <div class="row">
                 <div class="input-field col s4">
-                    <label for="competence-select" class="active">Ajouter une compétence</label>
-                    <select #competenceSelect id="competence-select" (change)="onCompetenceSelect($event)">
-                        <option value="" disabled selected>Choisir une compétence</option>
-                        <option *ngFor="let comp of availableCompetences" [value]="comp.idCompetence">
-                        {{ comp.nom }}
-                        </option>
-                    </select>
+                    <label for="competence-autocomplete" class="active">Ajouter une compétence</label>
+                    <input #competenceAutocomplete id="competence-autocomplete" type="text" class="autocomplete" autocomplete="off" />
                 </div>
 
                 <div class="input-field col s8">
@@ -161,11 +156,11 @@
 
                                     <label class="active" for="quantite">Quantité</label>
                                     <div class="vigueur-input-group">
-                                        <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('quantite', -1)">
+                                        <a class="btn-floating yellow darken-3 btn-small" (click)="updateQuantite(i, -1)">
                                             <i class="material-icons">remove</i>
                                         </a>
                                         <input id="quantite" type="text" formControlName="quantite" required>
-                                        <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('quantite', 1)">
+                                        <a class="btn-floating yellow darken-3 btn-small" (click)="updateQuantite(i, 1)">
                                             <i class="material-icons">add</i>
                                         </a>
                                     </div>
