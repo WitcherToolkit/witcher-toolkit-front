@@ -20,7 +20,6 @@ export class EnvoutementsListComponent implements OnInit {
   envoutements = signal<Envoutement[]>([]);
 
   readonly searchTerm = signal('');
-  //readonly envoutements = toSignal(this.envoutementService.getEnvoutementList(), { initialValue: [] });
 
   readonly envoutementsListFiltered = computed(() => {
     const term = this.searchTerm().trim().toLowerCase();
