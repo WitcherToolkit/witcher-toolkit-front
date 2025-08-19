@@ -113,6 +113,28 @@
 
             <!--Ligne-->
             <div class="row">
+                <div class="input-field col s4">
+                    <label for="competence-select" class="active">Ajouter une compétence</label>
+                    <select #competenceSelect id="competence-select" (change)="onCompetenceSelect($event)">
+                        <option value="" disabled selected>Choisir une compétence</option>
+                        <option *ngFor="let comp of availableCompetences" [value]="comp.idCompetence">
+                        {{ comp.nom }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="input-field col s8">
+                    <div class="chips-container">
+                        <div class="chip" *ngFor="let comp of selectedCompetences">
+                            {{ comp.nom }}
+                            <i class="close material-icons" (click)="removeCompetence(comp.idCompetence)">close</i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Ligne-->
+            <div class="row">
                 <div class="input-field col s12">
                     <div class="row">
                         <div class="col s2"></div>

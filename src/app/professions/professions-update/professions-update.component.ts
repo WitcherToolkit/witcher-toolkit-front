@@ -5,6 +5,8 @@ import { FormControlErrorComponent } from '../../form-validation/form-control-er
 import { RequiredAsteriskDirective } from '../../directives/required-asterisk.directive';
 import { Profession } from '../../models/profession';
 import { ProfessionsService } from '../professions.service';
+import { Competence } from '../../models/competence';
+import { CompetenceService } from '../../competences/competence.service';
 
 @Component({
   selector: 'app-professions-update-modal',
@@ -17,13 +19,23 @@ export class ProfessionsUpdateComponent implements AfterViewInit, OnChanges {
   // Propriétés d'entrée et de sortie
   @Input() profession: Profession | null = null;
   @ViewChild('modal') modalRef!: ElementRef;
+  @ViewChild('competenceSelect') competenceSelectRef!: ElementRef;
   @Output() professionUpdated = new EventEmitter<Profession>();
+
+  allCompetences: Competence[] = [];
 
   professionForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private professionsService: ProfessionsService) {}
+  constructor(private fb: FormBuilder, private professionsService: ProfessionsService, private competenceService: CompetenceService) {}
 
+  ngOnInit() {
+  this.competenceService.getCompetencesList().subscribe(list => {
+    this.allCompetences = list;
+  });
+}
   ngOnChanges(changes: SimpleChanges) {
+    setTimeout(() => this.initMaterializeSelect(), 0);
+
     if (changes['profession'] && this.profession) {
       this.professionForm = this.fb.group({
         nom: [this.profession.nom, [Validators.required, Validators.maxLength(50)]],
@@ -40,8 +52,11 @@ export class ProfessionsUpdateComponent implements AfterViewInit, OnChanges {
           type: [item.type, [Validators.maxLength(10)]],
           effet: [item.effet],
           special: [!!item.special]
-        })))
-        // Autres champs selon le modèle Profession
+        }))
+        ),
+        competenceList: this.fb.array(
+          this.profession.competenceList?.map(cp => cp.competence.idCompetence) || []
+        )
       });
     }
   }
@@ -50,6 +65,7 @@ export class ProfessionsUpdateComponent implements AfterViewInit, OnChanges {
     if (this.modalRef) {
       M.Modal.init(this.modalRef.nativeElement);
     }
+    this.initMaterializeSelect();
   }
 
   open() {
@@ -93,8 +109,8 @@ export class ProfessionsUpdateComponent implements AfterViewInit, OnChanges {
       this.professionForm.get('maxRituel')?.setValue(this.profession.maxRituel);
       this.professionForm.get('maxEnvoutement')?.setValue(this.profession.maxEnvoutement);
       this.professionForm.get('maxInvocation')?.setValue(this.profession.maxInvocation);
-      
-      // Réinitialisez de l'inventaire
+
+      // Réinitialiser l'inventaire
       const inventaireWikiArray = this.inventaireWikiFormArray;
       inventaireWikiArray.clear();
       this.profession.inventaireWikiList.forEach(item => {
@@ -107,8 +123,18 @@ export class ProfessionsUpdateComponent implements AfterViewInit, OnChanges {
         }));
       });
 
+      // Réinitialiser les compétences
+      const competenceArray = this.competenceListFormArray;
+      competenceArray.clear();
+      if (this.profession.competenceList) {
+        this.profession.competenceList.forEach(cp => {
+          competenceArray.push(this.fb.control(cp.competence.idCompetence));
+        });
+      }
+
       this.professionForm.markAsPristine();
       this.professionForm.markAsUntouched();
+      setTimeout(() => this.initMaterializeSelect(), 0);
     }
   }
 
@@ -143,6 +169,48 @@ export class ProfessionsUpdateComponent implements AfterViewInit, OnChanges {
   }
   //#endregion pour l'inventaire
 
+  //#region pour les compétences
+  get competenceListFormArray(): FormArray {
+    return this.professionForm.get('competenceList') as FormArray;
+  }
+
+  addCompetence(id: number) {
+    if (!this.competenceListFormArray.value.includes(id)) {
+      this.competenceListFormArray.push(this.fb.control(id));
+      setTimeout(() => this.initMaterializeSelect(), 0);
+    }
+  }
+
+  removeCompetence(id: number) {
+    const idx = this.competenceListFormArray.value.indexOf(id);
+    if (idx > -1) {
+      this.competenceListFormArray.removeAt(idx);
+      setTimeout(() => this.initMaterializeSelect(), 0);
+    }
+  }
+
+  onCompetenceSelect(event: Event) {
+    const select = event.target as HTMLSelectElement;
+    const value = select.value;
+    if (value) {
+      this.addCompetence(Number(value));
+      select.value = ""; // pour réinitialiser la sélection
+    }
+  }
+
+  get selectedCompetences() {
+    return this.competenceListFormArray.value
+      .map((id: number) => this.allCompetences.find(c => c.idCompetence === id))
+      .filter((c: Competence | undefined): c is Competence => !!c);
+  }
+
+  get availableCompetences() {
+    return this.allCompetences.filter(
+      c => !this.competenceListFormArray.value.includes(c.idCompetence)
+    );
+  }
+  //#endregion pour les compétences
+
   //-----------------------------------------------------//
   updateField(field: string, delta: number, min: number = 0) {
     const ctrl = this.professionForm.get(field);
@@ -151,6 +219,12 @@ export class ProfessionsUpdateComponent implements AfterViewInit, OnChanges {
       ctrl.setValue(Math.max(value + delta, min));
     }
   }
+
+  initMaterializeSelect() {
+  if (this.competenceSelectRef) {
+    M.FormSelect.init(this.competenceSelectRef.nativeElement);
+  }
+}
 
 
 }
