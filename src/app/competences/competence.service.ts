@@ -24,4 +24,9 @@ export class CompetenceService {
     return this.http.put<Competence>(`${EnvironmentConfig.apiBaseUrl}/competences/update/${competence.idCompetence}`, competence);
   }
 
+  createCompetence(competence: Competence): Observable<Competence> {
+    console.log('Creating competence:', competence);
+    return this.http.post<Competence>(`${EnvironmentConfig.apiBaseUrl}/competences/create`, competence);
+  }
+
 }

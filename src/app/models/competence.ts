@@ -12,7 +12,7 @@ export interface Competence {
 
     specialisation?: string;
 
-    isExclusive: boolean;
+    exclusive: boolean;
 
     caracteristique?: Caracteristique
 

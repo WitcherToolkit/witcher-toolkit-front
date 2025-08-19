@@ -69,6 +69,11 @@ export class CompetencesListComponent {
       this.selectedCompetence = competence;
       this.updateModal.open();
     }
+
+    openCreateModal() {
+      this.selectedCompetence = null;
+      this.updateModal.open();
+    }
     //#endregion boite de dialogue
 
     // #region MAJ des competences après une action

@@ -22,14 +22,14 @@
                 </div>
                 <div class="input-field col s4">
                     <label>
-                        <input type="checkbox" formControlName="isExclusive" />
+                        <input type="checkbox" formControlName="exclusive" />
                         <span>Compétence exclusive</span>
                     </label>
-                    <app-form-control-error [control]="competenceForm.get('isExclusive')"></app-form-control-error>
+                    <app-form-control-error [control]="competenceForm.get('exclusive')"></app-form-control-error>
                 </div>
             </div>
             <!--Ligne-->
-            <div class="row" *ngIf="competenceForm.get('isExclusive')?.value">
+            <div class="row" *ngIf="competenceForm.get('exclusive')?.value">
                 <div class="input-field col s6">
                     <label class="active" for="prerequis">Prerequis</label>
                     <input id="prerequis" type="text" formControlName="prerequis" (input)="onUpperCase($event)">

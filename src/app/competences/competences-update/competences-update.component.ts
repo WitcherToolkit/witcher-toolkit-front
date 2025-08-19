@@ -32,43 +32,45 @@ export class CompetencesUpdateComponent implements AfterViewInit, OnChanges{
     this.caracteristiqueService.getCaracteristiquesList().subscribe(caracs => {
       this.caracteristiques = caracs;
       this.caracteristiquesLoaded = true;
+      this.competenceForm = this.createCompetenceForm(this.competence);
+      // Abonnement pour gérer l'affichage dynamique des champs
+      this.competenceForm.get('exclusive')?.valueChanges.subscribe((value: boolean) => {
+        if (!value) {
+          this.competenceForm.get('prerequis')?.setValue('');
+          this.competenceForm.get('specialisation')?.setValue('');
+        }
+      });
       setTimeout(() => {
         const elems = document.querySelectorAll('select');
         M.FormSelect.init(elems);
       });
-      // Si la compétence est déjà présente, initialise le formulaire
-      if (this.competence) {
-        this.initForm();
-      }
     });
   }
   
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['competence'] && this.competence && this.caracteristiquesLoaded) {
-      this.initForm();
+    if (changes['competence'] && this.caracteristiquesLoaded) {
+      this.competenceForm = this.createCompetenceForm(this.competence);
+      this.competenceForm.get('exclusive')?.valueChanges.subscribe((value: boolean) => {
+        if (!value) {
+          this.competenceForm.get('prerequis')?.setValue('');
+          this.competenceForm.get('specialisation')?.setValue('');
+        }
+      });
+      setTimeout(() => {
+        const elems = document.querySelectorAll('select');
+        M.FormSelect.init(elems);
+      });
     }
   }
 
-  initForm() {
-    this.competenceForm = this.fb.group({
-      nom: [this.competence?.nom ?? '', [Validators.required, Validators.maxLength(50)]],
-      description: [this.competence?.description ?? '', [Validators.required]],
-      specialisation: [this.competence?.specialisation ?? '', [Validators.maxLength(20)]],
-      prerequis: [this.competence?.prerequis ?? '', [Validators.maxLength(20)]],
-      isExclusive: [!!this.competence?.isExclusive],
-      caracteristique: [this.competence?.caracteristique?.idCaracteristique ?? '', Validators.required],
-    });
-
-    this.competenceForm.get('isExclusive')?.valueChanges.subscribe((value: boolean) => {
-      if (!value) {
-        this.competenceForm.get('prerequis')?.setValue('');
-        this.competenceForm.get('specialisation')?.setValue('');
-      }
-    });
-
-    setTimeout(() => {
-      const elems = document.querySelectorAll('select');
-      M.FormSelect.init(elems);
+  createCompetenceForm(competence: Competence | null): FormGroup {
+    return this.fb.group({
+      nom: [competence?.nom ?? '', [Validators.required, Validators.maxLength(50)]],
+      description: [competence?.description ?? '', [Validators.required]],
+      specialisation: [competence?.specialisation ?? '', [Validators.maxLength(20)]],
+      prerequis: [competence?.prerequis ?? '', [Validators.maxLength(20)]],
+      exclusive: [!!this.competence?.exclusive],
+      caracteristique: [competence?.caracteristique?.idCaracteristique ?? '', Validators.required],
     });
   }
 
@@ -130,7 +132,7 @@ export class CompetencesUpdateComponent implements AfterViewInit, OnChanges{
         description: this.competence.description,
         specialisation: this.competence.specialisation,
         prerequis: this.competence.prerequis,
-        isExclusive: this.competence.isExclusive,
+        exclusive: this.competence.exclusive,
       });
       // Marquer le formulaire comme non modifié et non touché
       // Cela permet de réinitialiser l'état du formulaire
