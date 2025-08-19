@@ -78,10 +78,50 @@ export class ProfessionsUpdateComponent implements AfterViewInit, OnChanges {
 
   onSubmit() {
     if (this.professionForm.valid) {
+
+
+
+      // --- NOUVEAU MAPPING POUR LE DTO DU BACKEND ---
+      // Le backend attend une propriété competenceList :
+      // [
+      //   {
+      //     idProfession: ...
+      //     idCompetence: ...
+      //     competence: { ... }
+      //   }, ...
+      // ]
+
+      const competenceIds = this.professionForm.value.competenceList;
+      const idProfession = this.profession?.idProfession;
+      const competenceList = competenceIds.map((id: number) => {
+        const competenceObj = this.allCompetences.find(c => c.idCompetence === id);
+        return {
+          idProfession: idProfession,
+          idCompetence: id,
+          competence: competenceObj
+        };
+      });
+
+      // Mapping pour inventaireWikiList : on conserve les champs du formulaire
+      // et on ajoute la référence à la profession (clé étrangère attendue par le back)
+      const inventaireWikiList = this.professionForm.value.inventaireWikiList.map((item: any, idx: number) => {
+        // Si l'objet d'origine existe, on garde son idInventaireWiki
+        const original = this.profession?.inventaireWikiList[idx];
+        return {
+          ...item,
+          idInventaireWiki: original?.idInventaireWiki ?? null,
+          profession: { idProfession } // clé étrangère explicite pour le backend
+        };
+      });
+
+      // On envoie la propriété competenceList au backend, au format DTO attendu
       const updatedProfession = {
         ...this.profession,
-        ...this.professionForm.value
+        ...this.professionForm.value,
+        competenceList,
+        inventaireWikiList
       };
+      console.log('JSON envoyé au back:', JSON.stringify(updatedProfession, null, 2));
       this.professionsService.updateProfession(updatedProfession).subscribe({
         next: (result) => {
           console.info('Profession mise à jour avec succès:', result);
