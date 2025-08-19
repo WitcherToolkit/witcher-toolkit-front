@@ -23,6 +23,7 @@ export class MagieService {
     return this.http.put<Magie>(`${EnvironmentConfig.apiBaseUrl}/magies/update/${magie.idMagie}`, magie);
   }
 
+  // Omit<Magie, 'idMagie'> : Crée une nouvelle magie sans spécifier l'ID qui est gérée côté API
   createMagie(magie: Omit<Magie, 'idMagie'> | Partial<Magie>): Observable<Magie> {
     console.log('Creating magie:', magie);
     return this.http.post<Magie>(`${EnvironmentConfig.apiBaseUrl}/magies/create`, magie);
