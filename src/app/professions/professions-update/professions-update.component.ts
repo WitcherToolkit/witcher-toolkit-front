@@ -5,7 +5,6 @@ import { FormControlErrorComponent } from '../../form-validation/form-control-er
 import { RequiredAsteriskDirective } from '../../directives/required-asterisk.directive';
 import { Profession } from '../../models/profession';
 import { ProfessionsService } from '../professions.service';
-import { error } from 'jquery';
 
 @Component({
   selector: 'app-professions-update-modal',
@@ -29,6 +28,12 @@ export class ProfessionsUpdateComponent implements AfterViewInit, OnChanges {
       this.professionForm = this.fb.group({
         nom: [this.profession.nom, [Validators.required, Validators.maxLength(50)]],
         description: [this.profession.description, [Validators.required]],
+        vigueur: [this.profession.vigueur],
+        nbObjet: [this.profession.nbObjet, [Validators.required, Validators.min(0)]],
+        maxSort: [this.profession.maxSort, [Validators.required, Validators.min(0)]],
+        maxRituel: [this.profession.maxRituel, [Validators.required, Validators.min(0)]],
+        maxEnvoutement: [this.profession.maxEnvoutement, [Validators.required, Validators.min(0)]],
+        maxInvocation: [this.profession.maxInvocation, [Validators.required, Validators.min(0)]],
         // Autres champs selon le modèle Profession
       });
     }
@@ -75,6 +80,12 @@ export class ProfessionsUpdateComponent implements AfterViewInit, OnChanges {
     if (this.professionForm && this.profession) {
       this.professionForm.get('nom')?.setValue(this.profession.nom);
       this.professionForm.get('description')?.setValue(this.profession.description);
+      this.professionForm.get('vigueur')?.setValue(this.profession.vigueur);
+      this.professionForm.get('nbObjet')?.setValue(this.profession.nbObjet);
+      this.professionForm.get('maxSort')?.setValue(this.profession.maxSort);
+      this.professionForm.get('maxRituel')?.setValue(this.profession.maxRituel);
+      this.professionForm.get('maxEnvoutement')?.setValue(this.profession.maxEnvoutement);
+      this.professionForm.get('maxInvocation')?.setValue(this.profession.maxInvocation);
       // Réinitialisez d'autres champs si nécessaire
       
       this.professionForm.markAsPristine();
@@ -91,5 +102,14 @@ export class ProfessionsUpdateComponent implements AfterViewInit, OnChanges {
     }
   }
 
-}
+  //-----------------------------------------------------//
+  updateField(field: string, delta: number, min: number = 0) {
+    const ctrl = this.professionForm.get(field);
+    if (ctrl) {
+      const value = +ctrl.value || 0;
+      ctrl.setValue(Math.max(value + delta, min));
+    }
+  }
 
+
+}

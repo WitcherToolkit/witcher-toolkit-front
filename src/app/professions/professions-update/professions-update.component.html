@@ -1,22 +1,120 @@
 <div #modal  id="updateModal" class="modal">
     <div class="row">
-         <form *ngIf="professionForm" [formGroup]="professionForm" (ngSubmit)="onSubmit()">
-            <div class="input-field col s12">
+        <form *ngIf="professionForm" [formGroup]="professionForm" (ngSubmit)="onSubmit()">
+
+            <h4 class="center-align">Modifier la profession </h4>
+            
+            <!--Ligne-->
+            <div class="row">
+                <div class="input-field col s6">
                     <label class="active" for="nom">Nom</label>
                     <input id="nom" type="text" formControlName="nom" required>
-                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
                     <app-form-control-error [control]="professionForm.get('nom')"></app-form-control-error>
                 </div>
-            <div class="input-field col s12">
-                <label class="active" for="description">Description</label>
-                <textarea id="description" formControlName="description" class="materialize-textarea"></textarea>
-                <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
-                <app-form-control-error [control]="professionForm.get('description')"></app-form-control-error>
+
+                <div class="input-field col s3">
+                    <label class="active" for="vigueur">Vigueur</label>
+                    <div class="vigueur-input-group">
+                        <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('vigueur', -1)">
+                            <i class="material-icons">remove</i>
+                        </a>
+                        <input id="vigueur" type="text" formControlName="vigueur" required>
+                        <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('vigueur', 1)">
+                            <i class="material-icons">add</i>
+                        </a>
+                    </div>
+                    <app-form-control-error [control]="professionForm.get('vigueur')"></app-form-control-error>
+                </div>
+
+                <div class="input-field col s3">
+                    <label class="active" for="nombreObjets">Nombre d'objets</label>
+                    <div class="vigueur-input-group">
+                        <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('nbObjet', -1)">
+                            <i class="material-icons">remove</i>
+                        </a>
+                        <input id="nombreObjets" type="text" formControlName="nbObjet" required>
+                        <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('nbObjet', 1)">
+                            <i class="material-icons">add</i>
+                        </a>
+                    </div>
+                    <app-form-control-error [control]="professionForm.get('nbObjet')"></app-form-control-error>
+                </div>
+                                
             </div>
+
+            <!--Ligne-->
+            <div class="row">
+                <div class="input-field col s3">
+                    <label class="active" for="maxSort">Nombre sorts max</label>
+                    <div class="vigueur-input-group">
+                        <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('maxSort', -1)">
+                            <i class="material-icons">remove</i>
+                        </a>
+                        <input id="maxSort" type="text" formControlName="maxSort" required>
+                        <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('maxSort', 1)">
+                            <i class="material-icons">add</i>
+                        </a>
+                    </div>
+                    <app-form-control-error [control]="professionForm.get('maxSort')"></app-form-control-error>
+                </div>
+
+                <div class="input-field col s3">
+                    <label class="active" for="maxRituel">Nombre rituels max</label>
+                    <div class="vigueur-input-group">
+                        <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('maxRituel', -1)">
+                            <i class="material-icons">remove</i>
+                        </a>
+                        <input id="maxRituel" type="text" formControlName="maxRituel" required>
+                        <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('maxRituel', 1)">
+                            <i class="material-icons">add</i>
+                        </a>
+                    </div>
+                    <app-form-control-error [control]="professionForm.get('maxRituel')"></app-form-control-error>
+                </div>
+
+                <div class="input-field col s3">
+                    <label class="active" for="maxEnvoutement">Nombre envoûtement max</label>
+                    <div class="vigueur-input-group">
+                        <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('maxEnvoutement', -1)">
+                            <i class="material-icons">remove</i>
+                        </a>
+                        <input id="maxEnvoutement" type="text" formControlName="maxEnvoutement" required>
+                        <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('maxEnvoutement', 1)">
+                            <i class="material-icons">add</i>
+                        </a>
+                    </div>
+                    <app-form-control-error [control]="professionForm.get('maxEnvoutement')"></app-form-control-error>
+                </div>
+
+                <div class="input-field col s3">
+                    <label class="active" for="maxInvocation">Nombre invocation max</label>
+                    <div class="vigueur-input-group">
+                        <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('maxInvocation', -1)">
+                            <i class="material-icons">remove</i>
+                        </a>
+                        <input id="maxInvocation" type="text" formControlName="maxInvocation" required>
+                        <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('maxInvocation', 1)">
+                            <i class="material-icons">add</i>
+                        </a>
+                    </div>
+                    <app-form-control-error [control]="professionForm.get('maxInvocation')"></app-form-control-error>
+                </div>
+                                
+            </div>
+
+            <!--Ligne-->
+            <div class="row">
+                <div class="input-field col s12">
+                    <label class="active" for="description">Description</label>
+                    <textarea id="description" formControlName="description" class="materialize-textarea"></textarea>
+                    <app-form-control-error [control]="professionForm.get('description')"></app-form-control-error>
+                </div>
+            </div>
+
             <div class="modal-footer">
                 <button type="submit" class="modal-close btn-flat" [disabled]="professionForm.invalid">Valider</button>
                 <button type="button" class="modal-close btn-flat" (click)="onCancel()">Annuler</button>
             </div>
-         </form>
+        </form>
     </div>
 </div>
