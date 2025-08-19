@@ -21,19 +21,35 @@ export class SortsUpdateComponent implements AfterViewInit, OnChanges {
 
   constructor(private fb: FormBuilder, private magieService: MagieService){}
 
-  ngOnChanges(changes: SimpleChanges) {// SimpleChanges permet de détecter les changements dans les propriétés d'entrée
-    if (changes['magie'] && this.magie) {
-      this.magieForm = this.fb.group({
-        nom: [this.magie.nom, [Validators.required, Validators.maxLength(60)]],
-        cout: [this.magie.cout, [Validators.required, Validators.maxLength(10)]],
-        duree: [this.magie.duree, [Validators.required, Validators.maxLength(35)]],
-        portee: [this.magie.portee, [Validators.maxLength(15)]],
-        nature: [this.magie.nature, [Validators.required, Validators.maxLength(5)]],
-        type: [this.magie.type, [Validators.required, Validators.maxLength(10)]],
-        contre: [this.magie.contre, [Validators.maxLength(25)]],
-        niveau: [this.magie.niveau, [Validators.required, Validators.maxLength(35)]],
-        effet: [this.magie.effet, [Validators.required]]
-      });
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['magie']) {
+      if (this.magie) {
+        // Mode édition : préremplir le formulaire
+        this.magieForm = this.fb.group({
+          nom: [this.magie.nom, [Validators.required, Validators.maxLength(60)]],
+          cout: [this.magie.cout, [Validators.required, Validators.maxLength(10)]],
+          duree: [this.magie.duree, [Validators.required, Validators.maxLength(35)]],
+          portee: [this.magie.portee, [Validators.maxLength(15)]],
+          nature: [this.magie.nature, [Validators.required, Validators.maxLength(5)]],
+          type: [this.magie.type, [Validators.required, Validators.maxLength(10)]],
+          contre: [this.magie.contre, [Validators.maxLength(25)]],
+          niveau: [this.magie.niveau, [Validators.required, Validators.maxLength(35)]],
+          effet: [this.magie.effet, [Validators.required]]
+        });
+      } else {
+        // Mode création : formulaire vide
+        this.magieForm = this.fb.group({
+          nom: ['', [Validators.required, Validators.maxLength(60)]],
+          cout: ['', [Validators.required, Validators.maxLength(10)]],
+          duree: ['', [Validators.required, Validators.maxLength(35)]],
+          portee: ['', [Validators.maxLength(15)]],
+          nature: ['', [Validators.required, Validators.maxLength(5)]],
+          type: ['', [Validators.required, Validators.maxLength(10)]],
+          contre: ['', [Validators.maxLength(25)]],
+          niveau: ['', [Validators.required, Validators.maxLength(35)]],
+          effet: ['', [Validators.required]]
+        });
+      }
     }
   }
 
@@ -52,22 +68,39 @@ export class SortsUpdateComponent implements AfterViewInit, OnChanges {
 
   onSubmit() {
     if (this.magieForm.valid) {
-      const magieToUpdate = { 
-        ...this.magie, 
-        ...this.magieForm.value ,
-        idMagie: this.magie?.idMagie, // empêche la modification de l'ID
-      };
-      this.magieService.updateMagie(magieToUpdate).subscribe({
-        next: (result) => {
-          console.info('Magie mise à jour avec succès', result);
-          this.magieUpdated.emit(result); // <-- Ajouté
-          const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
-          instance.close();
-        },
-        error: (err) => {
-          console.error('Erreur lors de la mise à jour de la magie', err);
-        }
-      });
+      if (this.magie) {
+        // Edition
+        const magieToUpdate = { 
+          ...this.magie, 
+          ...this.magieForm.value ,
+          idMagie: this.magie?.idMagie, // empêche la modification de l'ID
+        };
+        this.magieService.updateMagie(magieToUpdate).subscribe({
+          next: (result) => {
+            console.info('Magie mise à jour avec succès', result);
+            this.magieUpdated.emit(result);
+            const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
+            instance.close();
+          },
+          error: (err) => {
+            console.error('Erreur lors de la mise à jour de la magie', err);
+          }
+        });
+      } else {
+        // Création
+        const magieToCreate = { ...this.magieForm.value };
+        this.magieService.createMagie(magieToCreate).subscribe({
+          next: (result) => {
+            console.info('Magie créée avec succès', result);
+            this.magieUpdated.emit(result);
+            const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
+            instance.close();
+          },
+          error: (err) => {
+            console.error('Erreur lors de la création de la magie', err);
+          }
+        });
+      }
     } else {
       this.magieForm.markAllAsTouched();
       console.error('Le formulaire n\'est pas valide. Veuillez corriger les erreurs.');

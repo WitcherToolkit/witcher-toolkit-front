@@ -80,6 +80,11 @@ export class SortsListComponent implements OnInit {
     this.selectedMagie = magie;
     this.updateModal.open();
   }
+
+  openCreateModal() {
+    this.selectedMagie = null;
+    this.updateModal.open();
+  }
   //#endRegion boite de dialogue
 
   //#region MAJ des magies après une action

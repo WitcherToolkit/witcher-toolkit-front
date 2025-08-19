@@ -23,4 +23,9 @@ export class MagieService {
     return this.http.put<Magie>(`${EnvironmentConfig.apiBaseUrl}/magies/update/${magie.idMagie}`, magie);
   }
 
+  createMagie(magie: Omit<Magie, 'idMagie'> | Partial<Magie>): Observable<Magie> {
+    console.log('Creating magie:', magie);
+    return this.http.post<Magie>(`${EnvironmentConfig.apiBaseUrl}/magies/create`, magie);
+  }
+
 }
