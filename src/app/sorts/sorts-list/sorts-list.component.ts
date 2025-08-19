@@ -11,7 +11,7 @@ import { SortsUpdateComponent } from '../sorts-update/sorts-update.component';
   standalone: true,
   imports: [NatureBorderDirective, CommonModule, SortsDetailComponent, SortsUpdateComponent],
   templateUrl: './sorts-list.component.html',
-  styles: ``
+  styleUrls: ['./sorts-list.component.scss']
 })
 export class SortsListComponent implements OnInit {
   private readonly magieService = inject(MagieService);
