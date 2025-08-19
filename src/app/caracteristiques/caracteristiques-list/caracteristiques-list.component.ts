@@ -68,6 +68,11 @@ export class CaracteristiquesListComponent {
       this.selectedCaracteristique = caracteristique;
       this.updateModal.open();
     }
+
+    openCreateModal() {
+      this.selectedCaracteristique = null;
+      this.updateModal.open();
+    }
   //#endRegion boite de dialogue
 
   //#region MAJ des Caracteristiques après une action

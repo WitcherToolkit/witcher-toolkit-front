@@ -22,16 +22,22 @@ export class CaracteristiquesUpdateComponent implements AfterViewInit, OnChanges
 
   constructor(private fb: FormBuilder, private caracteristiqueService: CaracteristiqueService) {}
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['caracteristique'] && this.caracteristique) {
-      this.caracteristiqueForm = this.fb.group({
-        nom: [this.caracteristique.nom, [Validators.required, Validators.maxLength(16)]],
-        code: [this.caracteristique.code, [Validators.required, Validators.maxLength(6)]],
-        description: [this.caracteristique.description, [Validators.required]],
-  
-      });
+  ngOnChanges(changes: SimpleChanges) {// SimpleChanges permet de détecter les changements dans les propriétés d'entrée
+      if (changes['caracteristique']) {
+        this.caracteristiqueForm = this.createCaracteristiqueForm(this.caracteristique);
+      }
     }
-  }
+  
+      /**
+       * Crée un FormGroup pour le rituel, prérempli si un objet est fourni, vide sinon.
+       */
+      private createCaracteristiqueForm(caracteristique: Caracteristique | null): FormGroup {
+        return this.fb.group({
+          nom: [caracteristique?.nom ?? '', [Validators.required, Validators.maxLength(16)]],
+          code: [caracteristique?.code ?? '', [Validators.required, Validators.maxLength(6)]],
+          description: [caracteristique?.description ?? '', [Validators.required]],
+        });
+      }
 
   ngAfterViewInit() {
     if (this.modalRef) {
@@ -53,27 +59,48 @@ export class CaracteristiquesUpdateComponent implements AfterViewInit, OnChanges
 }
 
   onSubmit() {
-    if (this.caracteristiqueForm.valid) {
+    if (!this.caracteristiqueForm.valid) {
+      this.caracteristiqueForm.markAllAsTouched();
+      console.error('Le formulaire n\'est pas valide. Veuillez corriger les erreurs.');
+      return;
+    }
+
+    const closeModal = () => {
+      const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
+      instance.close();
+    };
+
+    if (this.caracteristique) {
+      // Edition
       const caracteristiqueToUpdate = { 
         ...this.caracteristique, 
         ...this.caracteristiqueForm.value,
-        idCaracteristique: this.caracteristique?.idCaracteristique // empêche la modification de l'ID
-     };
+        idCaracteristique: this.caracteristique?.idCaracteristique,
+      };
 
       this.caracteristiqueService.updateCaracteristique(caracteristiqueToUpdate).subscribe({
         next: (result) => {
           console.info('caracteristique mise à jour avec succès', result);
-          this.caracteristiqueUpdated.emit(result); // <-- Ajouté
-          const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
-          instance.close();
+          this.caracteristiqueUpdated.emit(result);
+          closeModal();
         },
         error: (err) => {
           console.error('Erreur lors de la mise à jour de la caracteristique', err);
         }
       });
     } else {
-      this.caracteristiqueForm.markAllAsTouched();
-      console.error('Le formulaire n\'est pas valide. Veuillez corriger les erreurs.');
+      // Création
+      const caracteristiqueToCreate = { ...this.caracteristiqueForm.value };
+      this.caracteristiqueService.createCaracteristique(caracteristiqueToCreate).subscribe({
+        next: (result) => {
+          console.info('caracteristique créé avec succès', result);
+          this.caracteristiqueUpdated.emit(result);
+          closeModal();
+        },
+        error: (err) => {
+          console.error('Erreur lors de la création de la caracteristique', err);
+        }
+      });
     }
   }
 

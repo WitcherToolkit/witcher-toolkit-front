@@ -28,6 +28,11 @@ export class CaracteristiqueService {
     return this.http.put<Caracteristique>(`${EnvironmentConfig.apiBaseUrl}/caracteristiques/update/${caracteristique.idCaracteristique}`, caracteristique);
   }
 
+  createCaracteristique(caracteristique: Omit<Caracteristique, 'idCaracteristique'> | Partial<Caracteristique>): Observable<Caracteristique> {
+    console.log('Creating caracteristique:', caracteristique);
+    return this.http.post<Caracteristique>(`${EnvironmentConfig.apiBaseUrl}/caracteristiques/create`, caracteristique);
+  }
+
   //----------------------------------------------------------------------------------//
   //-----------------------------Créer PERSONNGE -------------------------------------//
   //----------------------------------------------------------------------------------//
