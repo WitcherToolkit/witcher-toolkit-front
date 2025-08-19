@@ -24,7 +24,8 @@ export class RituelsUpdateComponent implements AfterViewInit, OnChanges{
   constructor(private fb: FormBuilder, private rituelService: RituelsService) {}
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['rituel'] && this.rituel) {
+    if (changes['rituel']) {
+      if (this.rituel) {
       this.rituelForm = this.fb.group({
         nom: [this.rituel.nom, [Validators.required, Validators.maxLength(60)]],
         cout: [this.rituel.cout, [Validators.required, Validators.maxLength(10)]],
@@ -35,6 +36,18 @@ export class RituelsUpdateComponent implements AfterViewInit, OnChanges{
         composant: [this.rituel.composant, [Validators.required]],
         niveau: [this.rituel.niveau, [Validators.required, Validators.maxLength(20)]],
       });
+    }else{
+        this.rituelForm = this.fb.group({
+          nom: ['', [Validators.required, Validators.maxLength(60)]],
+          cout: ['', [Validators.required, Validators.maxLength(10)]],
+          effet: ['', [Validators.required]],
+          tempsPreparation: ['', [Validators.required, Validators.maxLength(10)]],
+          sd: ['', [Validators.required, Validators.maxLength(7)]],
+          duree: ['', [Validators.required, Validators.maxLength(15)]],
+          composant: ['', [Validators.required]],
+          niveau: ['', [Validators.required, Validators.maxLength(20)]],
+        });
+      }
     }
   }
 
@@ -53,23 +66,40 @@ export class RituelsUpdateComponent implements AfterViewInit, OnChanges{
 
   onSubmit() {
     if (this.rituelForm.valid) {
-      const rituelToUpdate = { 
-        ...this.rituel, 
-        ...this.rituelForm.value,
-        idRituel: this.rituel?.idRituel, // empêche la modification de l'ID
-      };
+      if(this.rituel) {
+        //Edition
+        const rituelToUpdate = { 
+          ...this.rituel, 
+          ...this.rituelForm.value,
+          idRituel: this.rituel?.idRituel, // empêche la modification de l'ID
+        };
 
-      this.rituelService.updateRituel(rituelToUpdate).subscribe({
-        next: (result) => {
-          console.info('Rituel mise à jour avec succès', result);
-          this.rituelUpdated.emit(result); // <-- Ajouté
-          const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
-          instance.close();
-        },
-        error: (err) => {
-          console.error('Erreur lors de la mise à jour de la rituel', err);
-        }
-      });
+        this.rituelService.updateRituel(rituelToUpdate).subscribe({
+          next: (result) => {
+            console.info('Rituel mise à jour avec succès', result);
+            this.rituelUpdated.emit(result); // <-- Ajouté
+            const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
+            instance.close();
+          },
+          error: (err) => {
+            console.error('Erreur lors de la mise à jour de la rituel', err);
+          }
+        });
+    } else {
+        // Création
+        const rituelToCreate = { ...this.rituelForm.value };
+        this.rituelService.createRituel(rituelToCreate).subscribe({
+          next: (result) => {
+            console.info('Rituel créé avec succès', result);
+            this.rituelUpdated.emit(result);
+            const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
+            instance.close();
+          },
+          error: (err) => {
+            console.error('Erreur lors de la création de la rituel', err);
+          }
+        });
+      }
     } else {
       this.rituelForm.markAllAsTouched();
       console.error('Le formulaire n\'est pas valide. Veuillez corriger les erreurs.');

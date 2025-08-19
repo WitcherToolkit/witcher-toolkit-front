@@ -26,4 +26,9 @@ export class RituelsService {
       return this.http.put<Rituel>(`${EnvironmentConfig.apiBaseUrl}/rituels/update/${rituel.idRituel}`, rituel);
   }
 
+  createRituel(rituel: Omit<Rituel, 'idRituel'> | Partial<Rituel>): Observable<Rituel> {
+    console.log('Creating rituel:', rituel);
+    return this.http.post<Rituel>(`${EnvironmentConfig.apiBaseUrl}/rituels/create`, rituel);
+  }
+
 }

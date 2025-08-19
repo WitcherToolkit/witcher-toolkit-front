@@ -59,6 +59,11 @@ export class RituelsListComponent {
     this.selectedRituel = rituel;
     this.updateModal.open();
   }
+
+  openCreateModal() {
+    this.selectedRituel = null;
+    this.updateModal.open();
+  }
   //#endRegion boite de dialogue
 
   //#region MAJ des rituels après une action
