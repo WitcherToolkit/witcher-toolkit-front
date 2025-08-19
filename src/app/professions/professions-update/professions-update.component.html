@@ -111,6 +111,80 @@
                 </div>
             </div>
 
+            <!--Ligne-->
+            <div class="row">
+                <div class="input-field col s12">
+                    <div class="row">
+                        <div class="col s2"></div>
+                        <div class="col s8 center-align card-panel teal grey darken-3 grey-text text-lighten-3">
+                            <h5>Équipement disponible : <a class="btn-floating yellow darken-3 btn-small" (click)="addInventaireWiki()"><i class="material-icons">add</i></a></h5>
+                            
+                        </div>
+                        <div class="col s2"></div>
+                    </div>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Quantité</th>
+                            <th>Nom</th>
+                            <th>Type</th>
+                            <th>Effet</th>
+                            <th>Spécifique</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let invForm of inventaireWikiFormArray.controls; let i = index" [formGroup]="invForm">
+                                <td>
+
+                                    <label class="active" for="quantite">Quantité</label>
+                                    <div class="vigueur-input-group">
+                                        <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('quantite', -1)">
+                                            <i class="material-icons">remove</i>
+                                        </a>
+                                        <input id="quantite" type="text" formControlName="quantite" required>
+                                        <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('quantite', 1)">
+                                            <i class="material-icons">add</i>
+                                        </a>
+                                    </div>
+                                    <app-form-control-error [control]="professionForm.get('quantite')"></app-form-control-error>
+
+                                </td>
+                                <td>
+                                    <label class="active" [for]="'nom-' + i">Nom</label>
+                                    <input [id]="'nom-' + i" type="text" formControlName="nom" required>
+                                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                                    <app-form-control-error [control]="professionForm.get('nom')"></app-form-control-error>
+                                </td>
+                                <td>
+                                    <label class="active" [for]="'type-' + i">Type</label>
+                                    <input [id]="'type-' + i" type="text" formControlName="type">
+                                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                                    <app-form-control-error [control]="professionForm.get('type')"></app-form-control-error>
+                                </td>
+                                <td>
+                                    <label class="active" [for]="'effet-' + i">Effet</label>
+                                    <input [id]="'effet-' + i" type="text" formControlName="effet">
+                                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                                    <app-form-control-error [control]="professionForm.get('effet')"></app-form-control-error>
+                                </td>
+                                <td>
+                                    <label>
+                                        <input type="checkbox" formControlName="special" [id]="'special-' + i" />
+                                        <span>Présent dans l'inventaire</span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <a type="button" class="btn-floating deep-orange darken-3 btn-small" (click)="removeInventaireWiki(i)">
+                                    <i class="material-icons">delete_forever</i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <div class="modal-footer">
                 <button type="submit" class="modal-close btn-flat" [disabled]="professionForm.invalid">Valider</button>
                 <button type="button" class="modal-close btn-flat" (click)="onCancel()">Annuler</button>

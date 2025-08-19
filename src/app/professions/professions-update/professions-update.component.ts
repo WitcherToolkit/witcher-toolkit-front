@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormControlErrorComponent } from '../../form-validation/form-control-error.component';
 import { RequiredAsteriskDirective } from '../../directives/required-asterisk.directive';
 import { Profession } from '../../models/profession';
@@ -34,6 +34,13 @@ export class ProfessionsUpdateComponent implements AfterViewInit, OnChanges {
         maxRituel: [this.profession.maxRituel, [Validators.required, Validators.min(0)]],
         maxEnvoutement: [this.profession.maxEnvoutement, [Validators.required, Validators.min(0)]],
         maxInvocation: [this.profession.maxInvocation, [Validators.required, Validators.min(0)]],
+        inventaireWikiList: this.fb.array(this.profession.inventaireWikiList.map(item => this.fb.group({
+          quantite: [item.quantite, [Validators.required, Validators.min(0)]],
+          nom: [item.nom, [Validators.required, Validators.maxLength(50)]],
+          type: [item.type, [Validators.maxLength(10)]],
+          effet: [item.effet],
+          special: [!!item.special]
+        })))
         // Autres champs selon le modèle Profession
       });
     }
@@ -86,8 +93,20 @@ export class ProfessionsUpdateComponent implements AfterViewInit, OnChanges {
       this.professionForm.get('maxRituel')?.setValue(this.profession.maxRituel);
       this.professionForm.get('maxEnvoutement')?.setValue(this.profession.maxEnvoutement);
       this.professionForm.get('maxInvocation')?.setValue(this.profession.maxInvocation);
-      // Réinitialisez d'autres champs si nécessaire
       
+      // Réinitialisez de l'inventaire
+      const inventaireWikiArray = this.inventaireWikiFormArray;
+      inventaireWikiArray.clear();
+      this.profession.inventaireWikiList.forEach(item => {
+        inventaireWikiArray.push(this.fb.group({
+          quantite: [item.quantite, [Validators.required, Validators.min(0)]],
+          nom: [item.nom, [Validators.required, Validators.maxLength(50)]],
+          type: [item.type, [Validators.maxLength(10)]],
+          effet: [item.effet],
+          special: [!!item.special]
+        }));
+      });
+
       this.professionForm.markAsPristine();
       this.professionForm.markAsUntouched();
     }
@@ -101,6 +120,28 @@ export class ProfessionsUpdateComponent implements AfterViewInit, OnChanges {
       instance.close();
     }
   }
+
+  //#region pour l'inventaire
+  get inventaireWikiFormArray(): FormArray<FormGroup> {
+    return this.professionForm.get('inventaireWikiList') as FormArray;
+  }
+
+  addInventaireWiki() {
+    const inventaireWikiArray = this.inventaireWikiFormArray;
+    inventaireWikiArray.push(this.fb.group({
+      quantite: ['', [Validators.required, Validators.min(0)]],
+      nom: ['', [Validators.required, Validators.maxLength(50)]],
+      type: ['', [Validators.maxLength(10)]],
+      effet: [''],
+      special: [false]
+    }));
+  }
+
+  removeInventaireWiki(index: number) {
+    const inventaireWikiArray = this.inventaireWikiFormArray;
+  inventaireWikiArray.removeAt(index);
+  }
+  //#endregion pour l'inventaire
 
   //-----------------------------------------------------//
   updateField(field: string, delta: number, min: number = 0) {

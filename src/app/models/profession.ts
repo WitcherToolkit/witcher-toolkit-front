@@ -21,7 +21,7 @@ export interface Profession {
 
 	maxInvocation : number;
 
-    inventaireWikiList?: InventaireWiki[];
+    inventaireWikiList: InventaireWiki[];
 
     competenceList?: CompetenceProfession[]; // Correspond à la liste du backend<CompetenceProfessionVolatile>
 }
