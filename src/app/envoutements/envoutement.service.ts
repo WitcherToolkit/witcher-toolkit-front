@@ -20,8 +20,12 @@ export class EnvoutementService {
   }
 
   updateEnvoutement(envoutement: Envoutement): Observable<Envoutement> {
-      console.log('Updating envoutement:', envoutement);
-      return this.http.put<Envoutement>(`${EnvironmentConfig.apiBaseUrl}/envoutements/update/${envoutement.idEnvoutement}`, envoutement);
-    }
-  
+    console.log('Updating envoutement:', envoutement);
+    return this.http.put<Envoutement>(`${EnvironmentConfig.apiBaseUrl}/envoutements/update/${envoutement.idEnvoutement}`, envoutement);
+  }
+
+  createEnvoutement(envoutement: Omit<Envoutement, 'idEnvoutement'> | Partial<Envoutement>): Observable<Envoutement> {
+    console.log('Creating envoutement:', envoutement);
+    return this.http.post<Envoutement>(`${EnvironmentConfig.apiBaseUrl}/envoutements/create`, envoutement);
+  }
 }

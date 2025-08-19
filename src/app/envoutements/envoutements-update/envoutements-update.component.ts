@@ -22,14 +22,24 @@ export class EnvoutementsUpdateComponent implements AfterViewInit, OnChanges {
   constructor(private fb: FormBuilder, private envoutementService: EnvoutementService){}
 
   ngOnChanges(changes: SimpleChanges) {// SimpleChanges permet de détecter les changements dans les propriétés d'entrée
-    if (changes['envoutement'] && this.envoutement) {
-      this.envoutementForm = this.fb.group({
-        nom: [this.envoutement.nom, [Validators.required, Validators.maxLength(60)]],
-        cout: [this.envoutement.cout, [Validators.required, Validators.maxLength(10)]],
-        effet: [this.envoutement.effet, [Validators.required]],
-        prerequis: [this.envoutement.prerequis, [Validators.required]],
-        danger: [this.envoutement.danger, [Validators.required, Validators.maxLength(6)]]
-      });
+    if (changes['envoutement']) {
+      if(this.envoutement){
+        this.envoutementForm = this.fb.group({
+          nom: [this.envoutement.nom, [Validators.required, Validators.maxLength(60)]],
+          cout: [this.envoutement.cout, [Validators.required, Validators.maxLength(10)]],
+          effet: [this.envoutement.effet, [Validators.required]],
+          prerequis: [this.envoutement.prerequis, [Validators.required]],
+          danger: [this.envoutement.danger, [Validators.required, Validators.maxLength(6)]]
+        });
+      }else{
+        this.envoutementForm = this.fb.group({
+          nom: ['', [Validators.required, Validators.maxLength(60)]],
+          cout: ['', [Validators.required, Validators.maxLength(10)]],
+          effet: ['', [Validators.required]],
+          prerequis: ['', [Validators.required]],
+          danger: ['', [Validators.required, Validators.maxLength(6)]]
+        });
+      }
     }
   }
 
@@ -48,6 +58,7 @@ export class EnvoutementsUpdateComponent implements AfterViewInit, OnChanges {
 
   onSubmit() {
     if (this.envoutementForm.valid) {
+      if(this.envoutement){
       const envoutementToUpdate = { 
         ...this.envoutement, 
         ...this.envoutementForm.value,
@@ -65,6 +76,21 @@ export class EnvoutementsUpdateComponent implements AfterViewInit, OnChanges {
           console.error('Erreur lors de la mise à jour de la envoutement', err);
         }
       });
+    } else {
+        // Création
+        const envoutementToCreate = { ...this.envoutementForm.value };
+        this.envoutementService.createEnvoutement(envoutementToCreate).subscribe({
+          next: (result) => {
+            console.info('Envoutement créé avec succès', result);
+            this.envoutementUpdated.emit(result);
+            const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
+            instance.close();
+          },
+          error: (err) => {
+            console.error('Erreur lors de la création de l\'envoutement', err);
+          }
+        });
+      }
     } else {
       this.envoutementForm.markAllAsTouched();
       console.error('Le formulaire n\'est pas valide. Veuillez corriger les erreurs.');

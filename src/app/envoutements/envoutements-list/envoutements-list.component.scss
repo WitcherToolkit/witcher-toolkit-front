@@ -8,3 +8,12 @@
     }
 
 }
+
+/* Centrage vertical et horizontal du bouton d'ajout dans la colonne avec Materialize */
+.add-btn-col {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	min-height: 100px; /* Ajuster si besoin selon la hauteur de la card */
+}

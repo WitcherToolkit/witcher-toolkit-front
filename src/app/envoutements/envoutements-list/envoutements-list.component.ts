@@ -61,6 +61,11 @@ export class EnvoutementsListComponent implements OnInit {
       this.selectedEnvoutement = envoutement;
       this.updateModal.open();
     }
+
+    openCreateModal() {
+      this.selectedEnvoutement = null;
+      this.updateModal.open();
+    }
     //#endRegion boite de dialogue
   
     //#region MAJ des Envoutements après une action
