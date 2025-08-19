@@ -23,25 +23,23 @@ export class EnvoutementsUpdateComponent implements AfterViewInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {// SimpleChanges permet de détecter les changements dans les propriétés d'entrée
     if (changes['envoutement']) {
-      if(this.envoutement){
-        this.envoutementForm = this.fb.group({
-          nom: [this.envoutement.nom, [Validators.required, Validators.maxLength(60)]],
-          cout: [this.envoutement.cout, [Validators.required, Validators.maxLength(10)]],
-          effet: [this.envoutement.effet, [Validators.required]],
-          prerequis: [this.envoutement.prerequis, [Validators.required]],
-          danger: [this.envoutement.danger, [Validators.required, Validators.maxLength(6)]]
-        });
-      }else{
-        this.envoutementForm = this.fb.group({
-          nom: ['', [Validators.required, Validators.maxLength(60)]],
-          cout: ['', [Validators.required, Validators.maxLength(10)]],
-          effet: ['', [Validators.required]],
-          prerequis: ['', [Validators.required]],
-          danger: ['', [Validators.required, Validators.maxLength(6)]]
-        });
-      }
+      this.envoutementForm = this.createEnvoutementForm(this.envoutement);
     }
   }
+
+    /**
+     * Crée un FormGroup pour le rituel, prérempli si un objet est fourni, vide sinon.
+     */
+    private createEnvoutementForm(envoutement: Envoutement | null): FormGroup {
+      return this.fb.group({
+        nom: [envoutement?.nom ?? '', [Validators.required, Validators.maxLength(60)]],
+        cout: [envoutement?.cout ?? '', [Validators.required, Validators.maxLength(10)]],
+        effet: [envoutement?.effet ?? '', [Validators.required]],
+        prerequis: [envoutement?.prerequis ?? '', [Validators.required]],
+        danger: [envoutement?.danger ?? '', [Validators.required, Validators.maxLength(6)]]
+      });
+    }
+  
 
   ngAfterViewInit() {
     if (this.modalRef) {
@@ -57,43 +55,48 @@ export class EnvoutementsUpdateComponent implements AfterViewInit, OnChanges {
   }
 
   onSubmit() {
-    if (this.envoutementForm.valid) {
-      if(this.envoutement){
+    if (!this.envoutementForm.valid) {
+      this.envoutementForm.markAllAsTouched();
+      console.error('Le formulaire n\'est pas valide. Veuillez corriger les erreurs.');
+      return;
+    }
+
+    const closeModal = () => {
+      const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
+      instance.close();
+    };
+
+    if (this.envoutement) {
+      // Edition
       const envoutementToUpdate = { 
         ...this.envoutement, 
         ...this.envoutementForm.value,
-        idEnvoutement: this.envoutement?.idEnvoutement, // empêche la modification de l'ID
+        idEnvoutement: this.envoutement?.idEnvoutement,
       };
-      
+
       this.envoutementService.updateEnvoutement(envoutementToUpdate).subscribe({
         next: (result) => {
           console.info('Envoutement mise à jour avec succès', result);
-          this.envoutementUpdated.emit(result); // <-- Ajouté
-          const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
-          instance.close();
+          this.envoutementUpdated.emit(result);
+          closeModal();
         },
         error: (err) => {
-          console.error('Erreur lors de la mise à jour de la envoutement', err);
+          console.error('Erreur lors de la mise à jour de l\'envoutement', err);
         }
       });
     } else {
-        // Création
-        const envoutementToCreate = { ...this.envoutementForm.value };
-        this.envoutementService.createEnvoutement(envoutementToCreate).subscribe({
-          next: (result) => {
-            console.info('Envoutement créé avec succès', result);
-            this.envoutementUpdated.emit(result);
-            const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
-            instance.close();
-          },
-          error: (err) => {
-            console.error('Erreur lors de la création de l\'envoutement', err);
-          }
-        });
-      }
-    } else {
-      this.envoutementForm.markAllAsTouched();
-      console.error('Le formulaire n\'est pas valide. Veuillez corriger les erreurs.');
+      // Création
+      const envoutementToCreate = { ...this.envoutementForm.value };
+      this.envoutementService.createEnvoutement(envoutementToCreate).subscribe({
+        next: (result) => {
+          console.info('Envoutement créé avec succès', result);
+          this.envoutementUpdated.emit(result);
+          closeModal();
+        },
+        error: (err) => {
+          console.error('Erreur lors de la création de l\'envoutement', err);
+        }
+      });
     }
   }
 

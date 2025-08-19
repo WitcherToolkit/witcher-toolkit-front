@@ -17,6 +17,7 @@ export class RituelsListComponent {
 
   private readonly rituelsService = inject(RituelsService);
  
+  readonly MAX_LENGTH = 100;
   readonly rituels = signal<Rituel[]>([]);
   readonly searchTerm = signal('');
 
@@ -43,7 +44,14 @@ export class RituelsListComponent {
     return rituel.idRituel;
   }
 
-  //#egion boite de rialogue
+  truncateText(text: string): string {
+    if (text.length > this.MAX_LENGTH) {
+      return text.substring(0, this.MAX_LENGTH) + '...';
+    }
+    return text;
+  }
+
+  //#region boite de dialogue
   @ViewChild(RituelsDetailComponent) detailModal!: RituelsDetailComponent;// Référence à la boîte de dialogue
   @ViewChild(RituelsUpdateComponent) updateModal!: RituelsUpdateComponent;
   // Ajoute une propriété pour le rituel sélectionné

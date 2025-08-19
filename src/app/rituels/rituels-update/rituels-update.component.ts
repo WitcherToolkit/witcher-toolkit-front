@@ -25,30 +25,24 @@ export class RituelsUpdateComponent implements AfterViewInit, OnChanges{
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['rituel']) {
-      if (this.rituel) {
-      this.rituelForm = this.fb.group({
-        nom: [this.rituel.nom, [Validators.required, Validators.maxLength(60)]],
-        cout: [this.rituel.cout, [Validators.required, Validators.maxLength(10)]],
-        effet: [this.rituel.effet, [Validators.required]],
-        tempsPreparation: [this.rituel.tempsPreparation, [Validators.required, Validators.maxLength(10)]],
-        sd: [this.rituel.sd, [Validators.required, Validators.maxLength(7)]],
-        duree: [this.rituel.duree, [Validators.required, Validators.maxLength(15)]],
-        composant: [this.rituel.composant, [Validators.required]],
-        niveau: [this.rituel.niveau, [Validators.required, Validators.maxLength(20)]],
-      });
-    }else{
-        this.rituelForm = this.fb.group({
-          nom: ['', [Validators.required, Validators.maxLength(60)]],
-          cout: ['', [Validators.required, Validators.maxLength(10)]],
-          effet: ['', [Validators.required]],
-          tempsPreparation: ['', [Validators.required, Validators.maxLength(10)]],
-          sd: ['', [Validators.required, Validators.maxLength(7)]],
-          duree: ['', [Validators.required, Validators.maxLength(15)]],
-          composant: ['', [Validators.required]],
-          niveau: ['', [Validators.required, Validators.maxLength(20)]],
-        });
-      }
+      this.rituelForm = this.createRituelForm(this.rituel);
     }
+  }
+
+  /**
+   * Crée un FormGroup pour le rituel, prérempli si un objet est fourni, vide sinon.
+   */
+  private createRituelForm(rituel: Rituel | null): FormGroup {
+    return this.fb.group({
+      nom: [rituel?.nom ?? '', [Validators.required, Validators.maxLength(60)]],
+      cout: [rituel?.cout ?? '', [Validators.required, Validators.maxLength(10)]],
+      effet: [rituel?.effet ?? '', [Validators.required]],
+      tempsPreparation: [rituel?.tempsPreparation ?? '', [Validators.required, Validators.maxLength(10)]],
+      sd: [rituel?.sd ?? '', [Validators.required, Validators.maxLength(7)]],
+      duree: [rituel?.duree ?? '', [Validators.required, Validators.maxLength(15)]],
+      composant: [rituel?.composant ?? '', [Validators.required]],
+      niveau: [rituel?.niveau ?? '', [Validators.required, Validators.maxLength(20)]],
+    });
   }
 
   ngAfterViewInit() {
@@ -65,44 +59,48 @@ export class RituelsUpdateComponent implements AfterViewInit, OnChanges{
   }
 
   onSubmit() {
-    if (this.rituelForm.valid) {
-      if(this.rituel) {
-        //Edition
-        const rituelToUpdate = { 
-          ...this.rituel, 
-          ...this.rituelForm.value,
-          idRituel: this.rituel?.idRituel, // empêche la modification de l'ID
-        };
-
-        this.rituelService.updateRituel(rituelToUpdate).subscribe({
-          next: (result) => {
-            console.info('Rituel mise à jour avec succès', result);
-            this.rituelUpdated.emit(result); // <-- Ajouté
-            const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
-            instance.close();
-          },
-          error: (err) => {
-            console.error('Erreur lors de la mise à jour de la rituel', err);
-          }
-        });
-    } else {
-        // Création
-        const rituelToCreate = { ...this.rituelForm.value };
-        this.rituelService.createRituel(rituelToCreate).subscribe({
-          next: (result) => {
-            console.info('Rituel créé avec succès', result);
-            this.rituelUpdated.emit(result);
-            const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
-            instance.close();
-          },
-          error: (err) => {
-            console.error('Erreur lors de la création de la rituel', err);
-          }
-        });
-      }
-    } else {
+    if (!this.rituelForm.valid) {
       this.rituelForm.markAllAsTouched();
       console.error('Le formulaire n\'est pas valide. Veuillez corriger les erreurs.');
+      return;
+    }
+
+    const closeModal = () => {
+      const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
+      instance.close();
+    };
+
+    if (this.rituel) {
+      // Edition
+      const rituelToUpdate = { 
+        ...this.rituel, 
+        ...this.rituelForm.value,
+        idRituel: this.rituel?.idRituel,
+      };
+      
+      this.rituelService.updateRituel(rituelToUpdate).subscribe({
+        next: (result) => {
+          console.info('Rituel mise à jour avec succès', result);
+          this.rituelUpdated.emit(result);
+          closeModal();
+        },
+        error: (err) => {
+          console.error('Erreur lors de la mise à jour de la rituel', err);
+        }
+      });
+    } else {
+      // Création
+      const rituelToCreate = { ...this.rituelForm.value };
+      this.rituelService.createRituel(rituelToCreate).subscribe({
+        next: (result) => {
+          console.info('Rituel créé avec succès', result);
+          this.rituelUpdated.emit(result);
+          closeModal();
+        },
+        error: (err) => {
+          console.error('Erreur lors de la création de la rituel', err);
+        }
+      });
     }
   }
 

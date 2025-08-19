@@ -48,7 +48,7 @@
             <span class="card-title center-align">{{ rituel.nom }}</span>
             <div class="card-content">
               <p>Niveau {{ rituel.niveau }} - SD : {{ rituel.sd }} </p>
-              <p><b>Effet</b> : {{ rituel.effet }}</p>
+              <p><b>Effet</b> : {{ truncateText(rituel.effet) }}</p>
             </div>
 
             <div class="card-action">
