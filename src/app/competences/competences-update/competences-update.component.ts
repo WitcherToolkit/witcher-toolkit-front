@@ -97,30 +97,65 @@ export class CompetencesUpdateComponent implements AfterViewInit, OnChanges{
 }
 
   onSubmit() {
-    if (this.competenceForm.valid) {
-      const selectedId = this.competenceForm.value.caracteristique;
-      const selectedCarac = this.caracteristiques.find(c => c.idCaracteristique === +selectedId) ?? null;
-      const competenceToUpdate = {
-          ...this.competence,
-          ...this.competenceForm.value,
-          idCompetence: this.competence?.idCompetence, // empêche la modification de l'ID
-          caracteristique: selectedCarac
-        };
-      
+    // Vérifie si le formulaire est valide. Si non, marque tous les champs comme "touchés" pour afficher les erreurs et arrête la soumission.
+    if (!this.competenceForm.valid) {
+      this.competenceForm.markAllAsTouched();
+      console.error('Le formulaire n\'est pas valide. Veuillez corriger les erreurs.');
+      return;
+    }
+
+    // Fonction utilitaire pour fermer la modale Materialize après succès
+    const closeModal = () => {
+      const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
+      instance.close();
+    };
+
+    // Récupère l'ID de la caractéristique sélectionnée dans le formulaire
+    const selectedId = this.competenceForm.value.caracteristique;
+    // Recherche l'objet caractéristique correspondant à l'ID sélectionné
+    const selectedCarac = this.caracteristiques.find(c => c.idCaracteristique === +selectedId) ?? null;
+
+    if (this.competence) {
+      // Cas édition : on prépare un objet avec les valeurs du formulaire et l'objet existant
+      const competenceToUpdate = { 
+        ...this.competence, // garde les propriétés existantes (ex : id)
+        ...this.competenceForm.value, // écrase par les valeurs du formulaire
+        idCompetence: this.competence?.idCompetence, // s'assure que l'ID n'est pas modifié
+        caracteristique: selectedCarac // injecte l'objet caractéristique complet
+      };
+
+      // Appel du service pour mettre à jour la compétence côté backend
       this.competenceService.updateCompetence(competenceToUpdate).subscribe({
         next: (result) => {
+          // Succès : log, émet l'événement, ferme la modale
           console.info('competence mise à jour avec succès', result);
-          this.competenceUpdated.emit(result); // <-- Ajouté
-          const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
-          instance.close();
+          this.competenceUpdated.emit(result);
+          closeModal();
         },
         error: (err) => {
+          // Erreur : log
           console.error('Erreur lors de la mise à jour de la competence', err);
         }
       });
     } else {
-      this.competenceForm.markAllAsTouched();
-      console.error('Le formulaire n\'est pas valide. Veuillez corriger les erreurs.');
+      // Cas création : on prépare un objet avec les valeurs du formulaire et la caractéristique sélectionnée
+      const competenceToCreate = { 
+        ...this.competenceForm.value,
+        caracteristique: selectedCarac
+      };
+      // Appel du service pour créer la compétence côté backend
+      this.competenceService.createCompetence(competenceToCreate).subscribe({
+        next: (result) => {
+          // Succès : log, émet l'événement, ferme la modale
+          console.info('competence créé avec succès', result);
+          this.competenceUpdated.emit(result);
+          closeModal();
+        },
+        error: (err) => {
+          // Erreur : log
+          console.error('Erreur lors de la création de la competence', err);
+        }
+      });
     }
   }
 

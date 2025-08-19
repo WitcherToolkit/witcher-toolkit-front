@@ -7,22 +7,3 @@ export const EMPATHIE =       { idCaracteristique: 6, code:"EMP", nom: "Empathie
 export const TECHNIQUE =      { idCaracteristique: 7, code:"TECH", nom: "Technique", description: "Capacité à utiliser des outils" };
 export const VOLONTE =        { idCaracteristique: 8, code:"VOL", nom: "Volonté", description: "Capacité à résister à la douleur" };
 export const CHANCE =         { idCaracteristique: 9, code:"CHA", nom: "Chance", description: "Capacité à avoir de la chance" };
-
-export const CARACTERISTIQUE_LIST = [
-    INTELLIGENCE,
-    REFLEXES,
-    DEXTERITE,
-    CORPS,
-    VITESSE,
-    EMPATHIE,
-    TECHNIQUE,
-    VOLONTE,
-    CHANCE,
-    { idCaracteristique: 10, code:"ÉTOU", nom: "Étourdissement", description: "Capacité à désorienter les autres" },
-    { idCaracteristique: 11, code:"COU", nom: "Course", description: "Capacité à courir" },
-    { idCaracteristique: 12, code:"SAUT", nom: "Saut", description: "Capacité à sauter" },
-    { idCaracteristique: 13, code:"PS", nom: "Points de santé", description: "Points de vie" },
-    { idCaracteristique: 14, code:"END", nom: "Endurance", description: "Capacité à tenir le coup" },
-    { idCaracteristique: 15, code:"ENC", nom: "Encombrement", description: "Capacité à porter des objets" },
-    { idCaracteristique: 16, code:"RÉC", nom: "Récupération", description: "Capacité à récupérer" }
-]
