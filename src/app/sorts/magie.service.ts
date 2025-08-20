@@ -9,29 +9,31 @@ import { EnvironmentConfig } from '../environment.config';
 })
 export class MagieService {
   private readonly magies = signal<Magie[]>([]);
+  // URL de base pour les requêtes magies
+  private readonly apiUrl = `${EnvironmentConfig.apiBaseUrl}/magies`;
 
   constructor(private http: HttpClient) { }
 
   getMagiesList(): Observable<Magie[]> {
     console.info('Fetching rituels from API...');
-    console.log(`API Base URL: ${EnvironmentConfig.apiBaseUrl}`);
-    return this.http.get<Magie[]>(`${EnvironmentConfig.apiBaseUrl}/magies`);
+    console.log(`API Base URL: ${this.apiUrl}`);
+    return this.http.get<Magie[]>(this.apiUrl);
   }
 
   updateMagie(magie: Magie): Observable<Magie> {
     console.log('Updating magie:', magie);
-    return this.http.put<Magie>(`${EnvironmentConfig.apiBaseUrl}/magies/update/${magie.idMagie}`, magie);
+    return this.http.put<Magie>(`${this.apiUrl}/update/${magie.idMagie}`, magie);
   }
 
   // Omit<Magie, 'idMagie'> : Crée une nouvelle magie sans spécifier l'ID qui est gérée côté API
   createMagie(magie: Omit<Magie, 'idMagie'> | Partial<Magie>): Observable<Magie> {
     console.log('Creating magie:', magie);
-    return this.http.post<Magie>(`${EnvironmentConfig.apiBaseUrl}/magies/create`, magie);
+    return this.http.post<Magie>(`${this.apiUrl}/create`, magie);
   }
 
   deleteMagie(id: number): Observable<void> {
     console.log('Deleting magie with id:', id);
-    return this.http.delete<void>(`${EnvironmentConfig.apiBaseUrl}/magies/delete/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
   }
 
 }

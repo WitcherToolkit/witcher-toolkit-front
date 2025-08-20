@@ -1,3 +1,4 @@
+// Composant listant les sorts/magies
 import { Component, computed, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NatureBorderDirective } from '../../directives/nature-border.directive';
@@ -21,64 +22,51 @@ import { ConfirmDeleteModalComponentComponent } from '../../shared-components/co
   styleUrls: ['./sorts-list.component.scss']
 })
 export class SortsListComponent implements OnInit {
+  // --- Services et constantes ---
   private readonly magieService = inject(MagieService);
-
   readonly MAX_LENGTH = 100; // Nombre max de caractères avant troncature
-  magie = signal<Magie[]>([]);
-  
-  readonly searchTerm = signal('');
-  readonly selectedType = signal('Tout les types'); // Par defaut, aucun filtre ur le type
 
-   readonly magiesListFiltered = computed(() => {
+  // --- Signaux et propriétés réactives ---
+  magie = signal<Magie[]>([]); // Liste des magies
+  readonly searchTerm = signal(''); // Terme de recherche
+  readonly selectedType = signal('Tout les types'); // Filtre par type
+
+  // --- Propriétés pour la gestion des modales ---
+  @ViewChild(SortsDetailComponent) detailModal!: SortsDetailComponent;
+  @ViewChild(SortsUpdateComponent) updateModal!: SortsUpdateComponent;
+  @ViewChild('deleteModal') deleteModal!: ConfirmDeleteModalComponentComponent;
+  selectedMagie: Magie | null = null; // Magie sélectionnée pour détail/édition
+  magieToDelete: Magie | null = null; // Magie sélectionnée pour suppression
+
+  // --- Filtres et computed ---
+  readonly magiesListFiltered = computed(() => {
     const term = this.searchTerm().trim().toLowerCase();
     const selectedType = this.selectedType();
     let allMagies = this.magie();
-
-    if (allMagies === undefined) {
-      return [];
-    }
-
-    // Filtrer par type si un type spécifique est sélectionné
+    if (!allMagies) return [];
     if (selectedType !== 'Tout les types') {
       allMagies = allMagies.filter(magie => magie.type === selectedType);
     }
-
-    // Filtrer par terme de recherche
     if (term) {
       allMagies = allMagies.filter(magie =>
         magie.nom.toLowerCase().includes(term)
       );
     }
-
     return allMagies;
   });
 
-  // Méthode pour mettre à jour le searchTerm (peut être liée à un événement input)
+  // --- Cycle de vie ---
+  ngOnInit() {
+    this.refreshMagies();
+  }
+
+  // --- Gestion de la recherche et des filtres ---
   onSearchChange(event: Event) {
     const inputElement = event.target as HTMLInputElement;
     this.searchTerm.set(inputElement.value);
   }
 
-  trackById(index: number, magie: Magie): number {
-    return magie.idMagie;
-  }
-
-  truncateText(text: string): string {
-    if (text.length > this.MAX_LENGTH) {
-      return text.substring(0, this.MAX_LENGTH) + '...';
-    }
-    return text;
-  }
-
-  //#region boite de dialogue
-  @ViewChild(SortsDetailComponent) detailModal!: SortsDetailComponent;// Référence à la boîte de dialogue
-  @ViewChild(SortsUpdateComponent) updateModal!: SortsUpdateComponent;
-  @ViewChild('deleteModal') deleteModal!: ConfirmDeleteModalComponentComponent;
-  
-  // Ajoute une propriété pour le rituel sélectionné
-  selectedMagie: Magie | null = null;
-
-  // Modifie openModal pour recevoir le rituel
+  // --- Gestion des modales ---
   openModal(magie: Magie) {
     this.selectedMagie = magie;
     this.detailModal.open();
@@ -95,26 +83,16 @@ export class SortsListComponent implements OnInit {
   }
 
   openDeleteModal(magie: Magie) {
-    console.log('openDeleteModal called with:', magie);
     this.magieToDelete = magie;
     setTimeout(() => {
       if (this.deleteModal) {
         this.deleteModal.open();
       }
     });
-    console.log('magieToDelete set to:', this.magieToDelete);
-  }
-  //#endRegion boite de dialogue
-
-  //#region MAJ des magies après une action
-  ngOnInit() {
-    this.refreshMagies();
   }
 
-
-  // Ajoute une méthode pour rafraîchir la liste
+  // --- Gestion CRUD ---
   refreshMagies() {
-    // Recharge la liste depuis le service
     this.magieService.getMagiesList().subscribe(magies => {
       this.magie.set(magies);
     });
@@ -123,9 +101,6 @@ export class SortsListComponent implements OnInit {
   onMagieUpdated(updatedMagie: Magie) {
     this.refreshMagies();
   }
-  //#endRegion MAJ des magies après une action
-
-  magieToDelete: Magie | null = null;
 
   deleteMagie() {
     if (!this.magieToDelete) return;
@@ -135,4 +110,15 @@ export class SortsListComponent implements OnInit {
     });
   }
 
+  // --- Utilitaires ---
+  trackById(index: number, magie: Magie): number {
+    return magie.idMagie;
+  }
+
+  truncateText(text: string): string {
+    if (text.length > this.MAX_LENGTH) {
+      return text.substring(0, this.MAX_LENGTH) + '...';
+    }
+    return text;
+  }
 }
