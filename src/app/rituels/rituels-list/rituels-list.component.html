@@ -54,7 +54,7 @@
             <div class="card-action">
               <a (click)="openModal(rituel)" href="javascript:void(0)">Voir</a>
               <a (click)="openUpdateModal(rituel)" href="javascript:void(0)">Modifier</a>
-              <a href="#">Supprimer</a>
+              <a (click)="openDeleteModal(rituel)" href="javascript:void(0)">Supprimer</a>
             </div>
 
           </div>
@@ -66,4 +66,5 @@
 
 <app-rituels-detail-modal [rituel]="selectedRituel"></app-rituels-detail-modal>
 <app-rituels-update-modal [rituel]="selectedRituel" (rituelUpdated)="onRituelUpdated($event)"></app-rituels-update-modal>
+<app-confirm-delete-modal-component #deleteModal *ngIf="selectedRituel" [itemName]="selectedRituel.nom" (confirm)="deleteRituel()" (cancel)="selectedRituel = null"></app-confirm-delete-modal-component>
 

@@ -12,10 +12,10 @@ import { ConfirmDeleteModalComponentComponent } from '../../shared-components/co
   selector: 'app-sorts-list',
   standalone: true,
   imports: [
-    NatureBorderDirective, 
-    CommonModule, 
-    SortsDetailComponent, 
-    SortsUpdateComponent, 
+    NatureBorderDirective,
+    CommonModule,
+    SortsDetailComponent,
+    SortsUpdateComponent,
     ConfirmDeleteModalComponentComponent
   ],
   templateUrl: './sorts-list.component.html',
@@ -34,9 +34,8 @@ export class SortsListComponent implements OnInit {
   // --- Propriétés pour la gestion des modales ---
   @ViewChild(SortsDetailComponent) detailModal!: SortsDetailComponent;
   @ViewChild(SortsUpdateComponent) updateModal!: SortsUpdateComponent;
-  @ViewChild('deleteModal') deleteModal!: ConfirmDeleteModalComponentComponent;
-  selectedMagie: Magie | null = null; // Magie sélectionnée pour détail/édition
-  magieToDelete: Magie | null = null; // Magie sélectionnée pour suppression
+  @ViewChild('deleteModal') deleteModal!: ConfirmDeleteModalComponentComponent; //Autre méthode pour faire appel à la modal
+  selectedMagie: Magie | null = null; // Magie sélectionnée pour détail/édition/suppression
 
   // --- Filtres et computed ---
   readonly magiesListFiltered = computed(() => {
@@ -83,7 +82,7 @@ export class SortsListComponent implements OnInit {
   }
 
   openDeleteModal(magie: Magie) {
-    this.magieToDelete = magie;
+    this.selectedMagie = magie;
     setTimeout(() => {
       if (this.deleteModal) {
         this.deleteModal.open();
@@ -103,10 +102,10 @@ export class SortsListComponent implements OnInit {
   }
 
   deleteMagie() {
-    if (!this.magieToDelete) return;
-    this.magieService.deleteMagie(this.magieToDelete.idMagie).subscribe(() => {
+    if (!this.selectedMagie) return;
+    this.magieService.deleteMagie(this.selectedMagie.idMagie).subscribe(() => {
       this.refreshMagies();
-      this.magieToDelete = null;
+      this.selectedMagie = null;
     });
   }
 
