@@ -4,17 +4,27 @@
   <div class="row">
     <div class="col-4 offset-4">
       <div class="card">
+
         <form class="card-body">
           <div class="form-group">
+            
             <div class="row">
-              <div class="col s3"></div>
-              <div class="input-field col s6">
-                <i class="material-icons prefix">search</i>
-                <input id="icon_prefix" type="text" name="searchTerm" class="validate"  #searchField [value]="searchTerm()" (input)="searchTerm.set(searchField.value)">
-                <label for="icon_prefix">Rechercher une profession</label>
+              <div class="col s10">
+                <div class="row">
+                  <div class="col s3"></div>
+                  <div class="input-field col s6">
+                    <i class="material-icons prefix">search</i>
+                    <input id="icon_prefix" type="text" name="searchTerm" class="validate"  #searchField [value]="searchTerm()" (input)="searchTerm.set(searchField.value)">
+                    <label for="icon_prefix">Rechercher une profession</label>
+                  </div>
+                </div>
+                
               </div>
-              <div class="col s3"></div>
+              <div class="col s2 add-btn-col">
+                <a class="btn-floating btn-large waves-light teal lighten-2" (click)="openCreatePage()"><i class="material-icons">add</i></a>
+              </div>
             </div>
+            
           </div>
         </form>
       </div>
@@ -39,7 +49,7 @@
 
                   <div class="card-action">
                     <a (click)="openModal(profession)" href="javascript:void(0)">Voir</a>
-                    <a (click)="openUpdateModal(profession)" href="javascript:void(0)">Modifier</a>
+                    <a (click)="goToUpdatePage(profession)">Modifier</a>
                     <a href="#">Supprimer</a>
                   </div>
                 </div>
@@ -51,4 +61,3 @@
 </div>
 
 <app-professions-detail-modal [profession]="selectedProfession"></app-professions-detail-modal>
-<app-professions-update-modal [profession]="selectedProfession" (professionUpdated)="onProfessionUpdated($event)"></app-professions-update-modal>

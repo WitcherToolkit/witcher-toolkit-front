@@ -6,6 +6,7 @@ import { RacesDetailComponent } from '../races-detail/races-detail.component';
 import { SelectionBorderDirective } from '../../directives/selection-border.directive';
 import { RacesUpdateComponent } from '../races-update/races-update.component';
 import { Router } from '@angular/router';
+import { RACE_UPDATE_PATH } from '../../app-routing/app-routing-constants';
 
 @Component({
     selector: 'app-races-list',
@@ -17,10 +18,12 @@ import { Router } from '@angular/router';
 export class RacesListComponent {
   // Service et signaux
   private readonly racesService = inject(RacesService);
+  private router = inject(Router);
+
+  readonly raceUpdatePath = RACE_UPDATE_PATH
   readonly races = signal<Race[]>([]);
   readonly searchTerm = signal('');
 
-  private router = inject(Router);
 
   // Filtrage de la liste selon le terme de recherche
   readonly racesListFiltered = computed(() => {
@@ -55,13 +58,13 @@ export class RacesListComponent {
     this.detailModal.open();
   }
 
-  // Ouvre la modale d'édition
+  // Ouvre la page d'édition
   goToUpdatePage(race: Race) {
-    this.router.navigate(['/classe/race/update', race.idRace]);
+    this.router.navigate([this.raceUpdatePath, race.idRace]);
   }
 
   openCreatePage() {
-    this.router.navigate(['/classe/race/create']);
+    this.router.navigate([this.raceUpdatePath]);
   }
   //#endregion
 

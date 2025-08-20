@@ -16,3 +16,11 @@
     padding: 0;
   }
 }
+.fixed-action-buttons {
+  position: fixed;
+  right: 32px;
+  bottom: 32px;
+  z-index: 1000;
+  display: flex;
+  gap: 16px;
+}

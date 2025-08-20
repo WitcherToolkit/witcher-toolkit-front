@@ -5,11 +5,13 @@ import { Profession } from '../../models/profession';
 import { SelectionBorderDirective } from '../../directives/selection-border.directive';
 import { ProfessionsDetailComponent } from '../professions-detail/professions-detail.component';
 import { ProfessionsUpdateComponent } from '../professions-update/professions-update.component';
+import { PROFESSION_UPDATE_PATH } from '../../app-routing/app-routing-constants';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-professions-list',
   standalone: true,
-  imports: [SelectionBorderDirective, CommonModule, ProfessionsDetailComponent, ProfessionsUpdateComponent],
+  imports: [SelectionBorderDirective, CommonModule, ProfessionsDetailComponent],
   templateUrl: './professions-list.component.html',
   styleUrl: './professions-list.component.scss'
 })
@@ -19,6 +21,9 @@ export class ProfessionsListComponent {
 
   // Service et signaux
   private readonly professionsService = inject(ProfessionsService);
+  private router = inject(Router);
+
+  readonly professionsUpdatePath = PROFESSION_UPDATE_PATH
   readonly professions = signal<Profession[]>([]);
   readonly searchTerm = signal('');
 
@@ -67,10 +72,15 @@ export class ProfessionsListComponent {
     this.detailModal.open();
   }
 
-  openUpdateModal(profession: Profession) {
-  this.selectedProfession = profession;
-  this.updateModal.open();
-}
+
+  // Ouvre la page d'édition
+  goToUpdatePage(profession: Profession) {
+    this.router.navigate([this.professionsUpdatePath, profession.idProfession]);
+  }
+
+  openCreatePage() {
+    this.router.navigate([this.professionsUpdatePath]);
+  }
   //#endregion
 
   //#region Cycle de vie et gestion de la liste
@@ -84,11 +94,6 @@ export class ProfessionsListComponent {
     this.professionsService.getProfessionsList().subscribe(professions => {
       this.professions.set(professions);
     });
-  }
-
-  // Callback après modification d'une profession
-  onProfessionUpdated(updatedProfession: Profession) {
-    this.refreshProfessions();
   }
   //#endregion
 }

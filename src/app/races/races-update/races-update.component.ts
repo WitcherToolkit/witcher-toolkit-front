@@ -83,7 +83,10 @@ initForm() {
     let raceObservable: Observable<Race>;
     if (this.race) {
       // Edition
-      const raceToUpdate = { ...this.race, ...this.raceForm.value, idRace: this.race.idRace };
+      const raceToUpdate = { 
+        ...this.race, 
+        ...this.raceForm.value, 
+        idRace: this.race.idRace };
       raceObservable = this.raceService.updateRace(raceToUpdate);
     } else {
       // Création
@@ -92,7 +95,7 @@ initForm() {
     }
 
     raceObservable.subscribe({
-      next: () => this.router.navigate(['/', this.raceListPath, 'race']),
+      next: () => this.router.navigate(['/', ...this.raceListPath.split('/')]),
       error: (err) => console.error('Erreur lors de la sauvegarde de la race', err)
     });
   }
@@ -133,7 +136,7 @@ initForm() {
   
   // Méthode pour gérer l'annulation : réinitialise le formulaire et ferme la modale
   onCancel() {
-    this.router.navigate(['/', this.raceListPath, 'race']);
+    this.router.navigate(['/', ...this.raceListPath.split('/')]);
   }
 
   //#region Particularites
