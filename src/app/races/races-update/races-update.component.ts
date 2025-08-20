@@ -6,8 +6,8 @@ import { RequiredAsteriskDirective } from '../../directives/required-asterisk.di
 import { Race } from '../../models/race';
 import { RacesService } from '../races.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RACE_BASE_PATH } from '../../app-routing/app.routes';
 import { Observable } from 'rxjs';
+import { RACE_LIST_PATH } from '../../app-routing/app-routing-constants';
 
 @Component({
   selector: 'app-races-update',
@@ -18,7 +18,7 @@ import { Observable } from 'rxjs';
 })
 export class RacesUpdateComponent implements OnInit {
 
-  readonly raceBasePath = RACE_BASE_PATH; // importé depuis tes constantes de routing
+  readonly raceListPath = RACE_LIST_PATH; // importé depuis tes constantes de routing
   raceForm!: FormGroup;
   race: Race | null = null;
 
@@ -92,7 +92,7 @@ initForm() {
     }
 
     raceObservable.subscribe({
-      next: () => this.router.navigate(['/', this.raceBasePath, 'race']),
+      next: () => this.router.navigate(['/', this.raceListPath, 'race']),
       error: (err) => console.error('Erreur lors de la sauvegarde de la race', err)
     });
   }
@@ -133,7 +133,7 @@ initForm() {
   
   // Méthode pour gérer l'annulation : réinitialise le formulaire et ferme la modale
   onCancel() {
-    this.router.navigate(['/', this.raceBasePath, 'race']);
+    this.router.navigate(['/', this.raceListPath, 'race']);
   }
 
   //#region Particularites

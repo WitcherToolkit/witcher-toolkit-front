@@ -1,7 +1,15 @@
 import { AfterViewInit, Component, Renderer2 } from '@angular/core';
 import * as M from 'materialize-css';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { CARACTERISTIQUE_BASE_PATH, COMPTETENCE_BASE_PATH, ENVOUTEMENT_BASE_PATH, MAGIE_BASE_PATH, PERSONNAGE_BASE_PATH, PROFESSION_BASE_PATH, RACE_BASE_PATH, RITUEL_BASE_PATH } from './app-routing/app.routes';
+import { 
+  CARACTERISTIQUE_LIST_PATH,
+  COMPTETENCE_LIST_PATH, 
+  ENVOUTEMENT_LIST_PATH, 
+  MAGIE_LIST_PATH, 
+  PERSONNAGE_BASE_PATH, 
+  PROFESSION_LIST_PATH, 
+  RACE_LIST_PATH, 
+  RITUEL_LIST_PATH } from './app-routing/app-routing-constants';
 
 @Component({
   selector: 'app-root',
@@ -10,13 +18,16 @@ import { CARACTERISTIQUE_BASE_PATH, COMPTETENCE_BASE_PATH, ENVOUTEMENT_BASE_PATH
 })
 export class AppComponent implements AfterViewInit {
 
-  readonly magieBasePath = MAGIE_BASE_PATH;
-  readonly rituelBasePath = RITUEL_BASE_PATH;
-  readonly envoutementBasePath = ENVOUTEMENT_BASE_PATH;
-  readonly caracteristiqueBasePath = CARACTERISTIQUE_BASE_PATH;
-  readonly competenceBasePath = COMPTETENCE_BASE_PATH;
-  readonly raceBasePath = RACE_BASE_PATH;
-  readonly professionBasePath = PROFESSION_BASE_PATH;
+  readonly magieListPath = MAGIE_LIST_PATH;
+  readonly rituelListPath = RITUEL_LIST_PATH;
+
+  readonly envoutementListPath = ENVOUTEMENT_LIST_PATH;
+  readonly caracteristiqueListPath = CARACTERISTIQUE_LIST_PATH;
+  readonly competenceListPath = COMPTETENCE_LIST_PATH;
+
+  readonly raceListPath = RACE_LIST_PATH;
+  readonly professionListPath = PROFESSION_LIST_PATH;
+
   readonly personnageBasePath = PERSONNAGE_BASE_PATH;
 
   constructor(private renderer: Renderer2) {}

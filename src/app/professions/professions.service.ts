@@ -27,6 +27,11 @@ export class ProfessionsService {
     return this.http.get<Profession>(`${EnvironmentConfig.apiBaseUrl}/professions/${id}/competences`);
   }
 
+  createProfession(profession: Profession): Observable<Profession> {
+    console.log('Creating profession:', profession);
+    return this.http.post<Profession>(`${EnvironmentConfig.apiBaseUrl}/professions/create`, profession);
+  }
+
   updateProfession(profession: Profession): Observable<Profession> {
     console.log('Updating profession:', profession);
     return this.http.put<Profession>(`${EnvironmentConfig.apiBaseUrl}/professions/update/${profession.idProfession}`, profession);
