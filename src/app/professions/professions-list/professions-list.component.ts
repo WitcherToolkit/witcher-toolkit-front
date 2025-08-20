@@ -5,7 +5,7 @@ import { Profession } from '../../models/profession';
 import { SelectionBorderDirective } from '../../directives/selection-border.directive';
 import { ProfessionsDetailComponent } from '../professions-detail/professions-detail.component';
 import { ProfessionsUpdateComponent } from '../professions-update/professions-update.component';
-import { PROFESSION_UPDATE_PATH } from '../../app-routing/app-routing-constants';
+import { PROFESSION_CREATE_PATH, PROFESSION_UPDATE_PATH } from '../../app-routing/app-routing-constants';
 import { Router } from '@angular/router';
 
 @Component({
@@ -23,7 +23,8 @@ export class ProfessionsListComponent {
   private readonly professionsService = inject(ProfessionsService);
   private router = inject(Router);
 
-  readonly professionsUpdatePath = PROFESSION_UPDATE_PATH
+  readonly professionsUpdatePath = PROFESSION_UPDATE_PATH;
+  readonly professionsCreatePath = PROFESSION_CREATE_PATH;
   readonly professions = signal<Profession[]>([]);
   readonly searchTerm = signal('');
 
@@ -79,7 +80,7 @@ export class ProfessionsListComponent {
   }
 
   openCreatePage() {
-    this.router.navigate([this.professionsUpdatePath]);
+    this.router.navigate([this.professionsCreatePath]);
   }
   //#endregion
 
