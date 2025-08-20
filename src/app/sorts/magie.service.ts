@@ -29,4 +29,9 @@ export class MagieService {
     return this.http.post<Magie>(`${EnvironmentConfig.apiBaseUrl}/magies/create`, magie);
   }
 
+  deleteMagie(id: number): Observable<void> {
+    console.log('Deleting magie with id:', id);
+    return this.http.delete<void>(`${EnvironmentConfig.apiBaseUrl}/magies/delete/${id}`);
+  }
+
 }

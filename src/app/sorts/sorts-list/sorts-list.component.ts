@@ -5,11 +5,18 @@ import { MagieService } from '../magie.service';
 import { Magie } from '../../models/magie';
 import { SortsDetailComponent } from '../sorts-detail/sorts-detail.component';
 import { SortsUpdateComponent } from '../sorts-update/sorts-update.component';
+import { ConfirmDeleteModalComponentComponent } from '../../shared-components/confirm-delete-modal-component/confirm-delete-modal-component.component';
 
 @Component({
   selector: 'app-sorts-list',
   standalone: true,
-  imports: [NatureBorderDirective, CommonModule, SortsDetailComponent, SortsUpdateComponent],
+  imports: [
+    NatureBorderDirective, 
+    CommonModule, 
+    SortsDetailComponent, 
+    SortsUpdateComponent, 
+    ConfirmDeleteModalComponentComponent
+  ],
   templateUrl: './sorts-list.component.html',
   styleUrls: ['./sorts-list.component.scss']
 })
@@ -66,6 +73,7 @@ export class SortsListComponent implements OnInit {
   //#region boite de dialogue
   @ViewChild(SortsDetailComponent) detailModal!: SortsDetailComponent;// Référence à la boîte de dialogue
   @ViewChild(SortsUpdateComponent) updateModal!: SortsUpdateComponent;
+  @ViewChild('deleteModal') deleteModal!: ConfirmDeleteModalComponentComponent;
   
   // Ajoute une propriété pour le rituel sélectionné
   selectedMagie: Magie | null = null;
@@ -84,6 +92,17 @@ export class SortsListComponent implements OnInit {
   openCreateModal() {
     this.selectedMagie = null;
     this.updateModal.open();
+  }
+
+  openDeleteModal(magie: Magie) {
+    console.log('openDeleteModal called with:', magie);
+    this.magieToDelete = magie;
+    setTimeout(() => {
+      if (this.deleteModal) {
+        this.deleteModal.open();
+      }
+    });
+    console.log('magieToDelete set to:', this.magieToDelete);
   }
   //#endRegion boite de dialogue
 
@@ -105,5 +124,15 @@ export class SortsListComponent implements OnInit {
     this.refreshMagies();
   }
   //#endRegion MAJ des magies après une action
+
+  magieToDelete: Magie | null = null;
+
+  deleteMagie() {
+    if (!this.magieToDelete) return;
+    this.magieService.deleteMagie(this.magieToDelete.idMagie).subscribe(() => {
+      this.refreshMagies();
+      this.magieToDelete = null;
+    });
+  }
 
 }

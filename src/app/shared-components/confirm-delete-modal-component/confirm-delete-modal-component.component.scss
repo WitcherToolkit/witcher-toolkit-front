@@ -1,0 +1,9 @@
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.btn + .btn {
+  margin-left: 8px;
+}

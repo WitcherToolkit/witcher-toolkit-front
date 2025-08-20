@@ -89,7 +89,7 @@
             <div class="card-action">
               <a (click)="openModal(magie)" href="javascript:void(0)">Voir</a>
               <a (click)="openUpdateModal(magie)" href="javascript:void(0)">Modifier</a>
-              <a href="#">Supprimer</a>
+              <a (click)="openDeleteModal(magie)" href="javascript:void(0)">Supprimer</a>
             </div>
 
           </div>
@@ -101,4 +101,12 @@
 
 <app-sorts-detail-modal [magie]="selectedMagie"></app-sorts-detail-modal>
 <app-sorts-update-modal [magie]="selectedMagie" (magieUpdated)="onMagieUpdated($event)"></app-sorts-update-modal>
+
+<app-confirm-delete-modal-component
+  #deleteModal
+  *ngIf="magieToDelete"
+  [itemName]="magieToDelete.nom"
+  (confirm)="deleteMagie()"
+  (cancel)="magieToDelete = null">
+</app-confirm-delete-modal-component>
 
