@@ -44,6 +44,7 @@ export const routes: Routes = [
     //Partie Classe
     { path: `${RACE_BASE_PATH}/race`, component: RacesListComponent },
     { path: `${RACE_BASE_PATH}/race/update/:id`, component: RacesUpdateComponent },
+    { path: `${RACE_BASE_PATH}/race/create`, component: RacesUpdateComponent },
     
     { path: `${PROFESSION_BASE_PATH}/profession`, component: ProfessionsListComponent },
     //Partie fiche personnage

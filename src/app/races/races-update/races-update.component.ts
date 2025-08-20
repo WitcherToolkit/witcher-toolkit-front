@@ -6,6 +6,8 @@ import { RequiredAsteriskDirective } from '../../directives/required-asterisk.di
 import { Race } from '../../models/race';
 import { RacesService } from '../races.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { RACE_BASE_PATH } from '../../app-routing/app.routes';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-races-update',
@@ -16,6 +18,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class RacesUpdateComponent implements OnInit {
 
+  readonly raceBasePath = RACE_BASE_PATH; // importé depuis tes constantes de routing
   raceForm!: FormGroup;
   race: Race | null = null;
 
@@ -27,59 +30,71 @@ export class RacesUpdateComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.raceService.getRaceById(id).subscribe(race => {
-      this.race = race;
-      this.initForm();
-    });
-  }
-
-  initForm() {
-    if (this.race) {
-      this.raceForm = this.fb.group({
-        nom: [this.race.nom, [Validators.required, Validators.maxLength(50)]],
-        particulariteList: this.fb.array(
-          this.race.particulariteList.map(p =>
-            this.fb.group({
-              idParticularite: [p.idParticularite],
-              nom: [p.nom, [Validators.required, Validators.maxLength(50)]],
-              description: [p.description, [Validators.required]]
-            })
-          )
-        ),
-        reputationWikiList: this.fb.array(
-          this.race.reputationWikiList.map(r =>
-            this.fb.group({
-              idReputationWiki: [r.idReputationWiki],
-              territoire: [r.territoire, [Validators.required, Validators.maxLength(50)]],
-              valeur: [r.valeur, [Validators.required]]
-            })
-          )
-        ),
-      });
-    }
-  }
-
-  onSubmit() {
-    if (this.raceForm.valid && this.race) {
-      const raceToUpdate = {
-        ...this.race,
-        ...this.raceForm.value,
-        idRace: this.race.idRace,
-        particulariteList: this.raceForm.value.particulariteList
-      };
-      this.raceService.updateRace(raceToUpdate).subscribe({
-        next: () => {
-          this.router.navigate(['/classe/race']); // Redirige vers la liste après succès
-        },
-        error: (err) => {
-          console.error('Erreur lors de la mise à jour de la race', err);
-        }
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      // Mode édition
+      const id = Number(idParam);
+      this.raceService.getRaceById(id).subscribe(race => {
+        this.race = race;
+        this.initForm();
       });
     } else {
+      // Mode création
+      this.race = null;
+      this.initForm();
+    }
+  }
+
+  private createParticulariteGroup(p?: any): FormGroup {
+  return this.fb.group({
+    idParticularite: [p?.idParticularite ?? null],
+    nom: [p?.nom ?? '', [Validators.maxLength(50)]],
+    description: [p?.description ?? '']
+  });
+}
+
+private createReputationWikiGroup(r?: any): FormGroup {
+  return this.fb.group({
+    idReputationWiki: [r?.idReputationWiki ?? null],
+    territoire: [r?.territoire ?? '', Validators.maxLength(50)],
+    valeur: [r?.valeur ?? '']
+  });
+}
+
+initForm() {
+  this.raceForm = this.fb.group({
+    nom: [this.race?.nom ?? '', [Validators.required, Validators.maxLength(50)]],
+    particulariteList: this.fb.array(
+      (this.race?.particulariteList ?? []).map(p => this.createParticulariteGroup(p))
+    ),
+    reputationWikiList: this.fb.array(
+      (this.race?.reputationWikiList ?? []).map(r => this.createReputationWikiGroup(r))
+    ),
+  });
+}
+
+  onSubmit() {
+    if (!this.raceForm.valid) {
       this.raceForm.markAllAsTouched();
       console.error('Le formulaire n\'est pas valide. Veuillez corriger les erreurs.');
+      return;
     }
+
+    let raceObservable: Observable<Race>;
+    if (this.race) {
+      // Edition
+      const raceToUpdate = { ...this.race, ...this.raceForm.value, idRace: this.race.idRace };
+      raceObservable = this.raceService.updateRace(raceToUpdate);
+    } else {
+      // Création
+      const raceToCreate = this.raceForm.value;
+      raceObservable = this.raceService.createRace(raceToCreate);
+    }
+
+    raceObservable.subscribe({
+      next: () => this.router.navigate(['/', this.raceBasePath, 'race']),
+      error: (err) => console.error('Erreur lors de la sauvegarde de la race', err)
+    });
   }
 
   
@@ -118,7 +133,7 @@ export class RacesUpdateComponent implements OnInit {
   
   // Méthode pour gérer l'annulation : réinitialise le formulaire et ferme la modale
   onCancel() {
-    this.router.navigate(['/classe/race']);
+    this.router.navigate(['/', this.raceBasePath, 'race']);
   }
 
   //#region Particularites
@@ -126,7 +141,7 @@ export class RacesUpdateComponent implements OnInit {
   get particulariteFormArray(): FormArray<FormGroup> {
     return this.raceForm.get('particulariteList') as FormArray<FormGroup>;
   }
-  
+
   addParticularite() {
     this.particulariteFormArray.push(
       this.fb.group({
@@ -147,6 +162,7 @@ export class RacesUpdateComponent implements OnInit {
   get reputationWikiFormArray(): FormArray<FormGroup> {
     return this.raceForm.get('reputationWikiList') as FormArray<FormGroup>;
   }
+
   addReputationWiki() {
     this.reputationWikiFormArray.push(
       this.fb.group({

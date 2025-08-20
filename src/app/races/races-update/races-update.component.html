@@ -50,13 +50,13 @@
                                             <tr *ngFor="let partForm of particulariteFormArray.controls; let i = index" [formGroup]="partForm">
                                                 <td>
                                                     <label class="active" [for]="'nom-' + i">Nom</label>
-                                                    <input [id]="'nom-' + i" type="text" formControlName="nom" required>
+                                                    <input [id]="'nom-' + i" type="text" formControlName="nom">
                                                     <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
                                                     <app-form-control-error [control]="raceForm.get('nom')"></app-form-control-error>
                                                 </td>
                                                 <td>
                                                     <label class="active" [for]="'description-' + i">Description</label>
-                                                    <input [id]="'description-' + i" type="text" formControlName="description" required>
+                                                    <input [id]="'description-' + i" type="text" formControlName="description">
                                                     <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
                                                     <app-form-control-error [control]="raceForm.get('description')"></app-form-control-error>
                                                 </td>
@@ -100,13 +100,13 @@
                                             <tr *ngFor="let repForm of reputationWikiFormArray.controls; let i = index" [formGroup]="repForm">
                                                 <td>
                                                     <label class="active" [for]="'territoire-' + i">Territoire</label>
-                                                    <input [id]="'territoire-' + i" type="text" formControlName="territoire" required>
+                                                    <input [id]="'territoire-' + i" type="text" formControlName="territoire">
                                                     <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
                                                     <app-form-control-error [control]="raceForm.get('territoire')"></app-form-control-error>
                                                 </td>
                                                 <td>
                                                     <label class="active" [for]="'valeur-' + i">Réputation</label>
-                                                    <input [id]="'valeur-' + i" type="text" formControlName="valeur" required>
+                                                    <input [id]="'valeur-' + i" type="text" formControlName="valeur">
                                                     <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
                                                     <app-form-control-error [control]="raceForm.get('valeur')"></app-form-control-error>
                                                 </td>
@@ -124,7 +124,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="col s2"></div>
         </div>
         

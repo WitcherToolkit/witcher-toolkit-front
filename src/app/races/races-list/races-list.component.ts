@@ -59,6 +59,10 @@ export class RacesListComponent {
   goToUpdatePage(race: Race) {
     this.router.navigate(['/classe/race/update', race.idRace]);
   }
+
+  openCreatePage() {
+    this.router.navigate(['/classe/race/create']);
+  }
   //#endregion
 
   //#region Cycle de vie et gestion de la liste

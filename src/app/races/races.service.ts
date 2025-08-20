@@ -16,10 +16,15 @@ export class RacesService {
       console.info('Fetching rituels from API...');
       console.log(`API Base URL: ${EnvironmentConfig.apiBaseUrl}`);
       return this.http.get<Race[]>(`${EnvironmentConfig.apiBaseUrl}/races`);
-    }
+    } 
 
     getRaceById(id: number): Observable<Race> {
       return this.http.get<Race>(`${EnvironmentConfig.apiBaseUrl}/races/${id}`);
+    }
+
+    createRace(race: Race): Observable<Race> {
+      console.log('Creating race:', race);
+      return this.http.post<Race>(`${EnvironmentConfig.apiBaseUrl}/races/create`, race);
     }
 
     updateRace(race: Race): Observable<Race> {
