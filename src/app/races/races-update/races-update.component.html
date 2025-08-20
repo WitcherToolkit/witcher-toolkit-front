@@ -1,109 +1,136 @@
-<div #modal id="updateModal" class="modal">
-    <div class="row">
-        <form *ngIf="raceForm" [formGroup]="raceForm" (ngSubmit)="onSubmit()">
-            <!-- ngIf permet de s'assurer que le formulaire est prêt avant de l'afficher -->
+<div class="row">
+    <form *ngIf="raceForm" [formGroup]="raceForm" (ngSubmit)="onSubmit()">
+    <!-- ngIf permet de s'assurer que le formulaire est prêt avant de l'afficher -->
 
-            <h4 class="center-align">Modifier {{ race?.nom}} </h4>
-            <!--Ligne-->
-            <div class="row">
-                <div class="input-field col s12">
-                    <label class="active" for="nom">Nom</label>
-                    <input id="nom" type="text" formControlName="nom" required>
-                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
-                    <app-form-control-error [control]="raceForm.get('nom')"></app-form-control-error>
-                </div>
-            </div>
-            <!--Ligne-->
-            <div class="row">
-                <div class="input-field col s12">
-                    <div class="row">
-                        <div class="col s2"></div>
-                        <div class="col s8 center-align card-panel teal grey darken-3 grey-text text-lighten-3">
-                            <h5>Particularités <a class="btn-floating yellow darken-3 btn-small" (click)="addParticularite()"><i class="material-icons">add</i></a></h5>
-                            
-                        </div>
-                        <div class="col s2"></div>
+        <div class="row">
+            <div class="col s2"></div>
+            <div class="col s8">
+                <div class="row">
+                    <div class="col s12">
+                        <!-------Card------->
+                        <div class="card">
+                            <div class="card-content">
+                                <h4 class="center-align">Modifier la race : {{ race?.nom}} </h4>
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <label class="active" for="nom">Nom</label>
+                                        <input id="nom" type="text" formControlName="nom" required>
+                                        <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                                        <app-form-control-error [control]="raceForm.get('nom')"></app-form-control-error>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>   
                     </div>
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>Nom</th>
-                            <th>Description</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr *ngFor="let partForm of particulariteFormArray.controls; let i = index" [formGroup]="partForm">
-                            <td>
-                                <label class="active" [for]="'nom-' + i">Nom</label>
-                                <input [id]="'nom-' + i" type="text" formControlName="nom" required>
-                                <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
-                                <app-form-control-error [control]="raceForm.get('nom')"></app-form-control-error>
-                            </td>
-                            <td>
-                                <label class="active" [for]="'description-' + i">Description</label>
-                                <input [id]="'description-' + i" type="text" formControlName="description" required>
-                                <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
-                                <app-form-control-error [control]="raceForm.get('description')"></app-form-control-error>
-                            </td>
-                            <td>
-                                <a type="button" class="btn-floating deep-orange darken-3 btn-small" (click)="removeParticularite(i)">
-                                    <i class="material-icons">delete_forever</i>
-                                </a>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <!--Ligne-->
-            <div class="row">
-                <div class="input-field col s12">
-                    <div class="row">
-                        <div class="col s2"></div>
-                        <div class="col s8 center-align card-panel teal grey darken-3 grey-text text-lighten-3">
-                            <h5>Réputation de base <a class="btn-floating yellow darken-3 btn-small" (click)="addReputationWiki()"><i class="material-icons">add</i></a></h5>
-                            
-                        </div>
-                        <div class="col s2"></div>
+
+                    <div class="col s12">
+                        <!-------Card------->
+                        <div class="card">
+                            <div class="card-content">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th><h5 class="center-align">Particularités</h5></th>
+                                            <th><a class="btn-floating yellow darken-3 btn-small" (click)="addParticularite()"><i class="material-icons">add</i></a></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+
+                                <div class="row">
+                                    <table>
+                                        <thead>
+                                        <tr>
+                                            <th>Nom</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        
+                                        <tbody>
+                                            <tr *ngFor="let partForm of particulariteFormArray.controls; let i = index" [formGroup]="partForm">
+                                                <td>
+                                                    <label class="active" [for]="'nom-' + i">Nom</label>
+                                                    <input [id]="'nom-' + i" type="text" formControlName="nom" required>
+                                                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                                                    <app-form-control-error [control]="raceForm.get('nom')"></app-form-control-error>
+                                                </td>
+                                                <td>
+                                                    <label class="active" [for]="'description-' + i">Description</label>
+                                                    <input [id]="'description-' + i" type="text" formControlName="description" required>
+                                                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                                                    <app-form-control-error [control]="raceForm.get('description')"></app-form-control-error>
+                                                </td>
+                                                <td>
+                                                    <a type="button" class="btn-floating deep-orange darken-3 btn-small" (click)="removeParticularite(i)">
+                                                        <i class="material-icons">delete_forever</i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>   
                     </div>
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>Territoire</th>
-                            <th>Niveau de réputation</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let repForm of reputationWikiFormArray.controls; let i = index" [formGroup]="repForm">
-                                <td>
-                                    <label class="active" [for]="'territoire-' + i">Territoire</label>
-                                    <input [id]="'territoire-' + i" type="text" formControlName="territoire" required>
-                                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
-                                    <app-form-control-error [control]="raceForm.get('territoire')"></app-form-control-error>
-                                </td>
-                                <td>
-                                    <label class="active" [for]="'valeur-' + i">Réputation</label>
-                                    <input [id]="'valeur-' + i" type="text" formControlName="valeur" required>
-                                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
-                                    <app-form-control-error [control]="raceForm.get('valeur')"></app-form-control-error>
-                                </td>
-                                <td>
-                                    <a type="button" class="btn-floating deep-orange darken-3 btn-small" (click)="removeReputationWiki(i)">
-                                    <i class="material-icons">delete_forever</i>
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+
+                    <div class="col s12">
+                        <!-------Card------->
+                        <div class="card">
+                            <div class="card-content">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th><h5 class="center-align">Réputation de base</h5></th>
+                                            <th><a class="btn-floating yellow darken-3 btn-small" (click)="addReputationWiki()"><i class="material-icons">add</i></a></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+
+                                <div class="row">
+                                    <table>
+                                        <thead>
+                                        <tr>
+                                            <th>Territoire</th>
+                                            <th>Niveau de réputation</th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        
+                                        <tbody>
+                                            <tr *ngFor="let repForm of reputationWikiFormArray.controls; let i = index" [formGroup]="repForm">
+                                                <td>
+                                                    <label class="active" [for]="'territoire-' + i">Territoire</label>
+                                                    <input [id]="'territoire-' + i" type="text" formControlName="territoire" required>
+                                                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                                                    <app-form-control-error [control]="raceForm.get('territoire')"></app-form-control-error>
+                                                </td>
+                                                <td>
+                                                    <label class="active" [for]="'valeur-' + i">Réputation</label>
+                                                    <input [id]="'valeur-' + i" type="text" formControlName="valeur" required>
+                                                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                                                    <app-form-control-error [control]="raceForm.get('valeur')"></app-form-control-error>
+                                                </td>
+                                                <td>
+                                                    <a type="button" class="btn-floating deep-orange darken-3 btn-small" (click)="removeReputationWiki(i)">
+                                                    <i class="material-icons">delete_forever</i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>   
+                    </div>
                 </div>
             </div>
-            
-            <div class="modal-footer">
-                <button type="submit" class="modal-close btn-flat" [disabled]="raceForm.invalid">Valider</button>
-                <button type="button" class="modal-close btn-flat" (click)="onCancel()">Annuler</button>
-            </div>
-        </form>
-    </div>
+
+            <div class="col s2"></div>
+        </div>
+        
+        <div class="fixed-action-buttons">
+            <button type="submit" class="waves-effect waves-light btn" [disabled]="raceForm.invalid">Valider</button>
+            <button type="button" class="waves-effect waves-light btn" (click)="onCancel()">Annuler</button>
+        </div>
+    </form>
 </div>

@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, Renderer2 } from '@angular/core';
 import * as M from 'materialize-css';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { CardBorderDirective } from './card-border.directive';
 import { CARACTERISTIQUE_BASE_PATH, COMPTETENCE_BASE_PATH, ENVOUTEMENT_BASE_PATH, MAGIE_BASE_PATH, PERSONNAGE_BASE_PATH, PROFESSION_BASE_PATH, RACE_BASE_PATH, RITUEL_BASE_PATH } from './app-routing/app.routes';
 
 @Component({

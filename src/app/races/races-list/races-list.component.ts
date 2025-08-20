@@ -5,11 +5,12 @@ import { Race } from '../../models/race';
 import { RacesDetailComponent } from '../races-detail/races-detail.component';
 import { SelectionBorderDirective } from '../../directives/selection-border.directive';
 import { RacesUpdateComponent } from '../races-update/races-update.component';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-races-list',
     standalone: true,
-    imports: [SelectionBorderDirective, CommonModule, RacesDetailComponent, RacesUpdateComponent],
+    imports: [SelectionBorderDirective, CommonModule, RacesDetailComponent],
     templateUrl: './races-list.component.html',
     styleUrls: ['races-list.component.scss']
 })
@@ -18,6 +19,8 @@ export class RacesListComponent {
   private readonly racesService = inject(RacesService);
   readonly races = signal<Race[]>([]);
   readonly searchTerm = signal('');
+
+  private router = inject(Router);
 
   // Filtrage de la liste selon le terme de recherche
   readonly racesListFiltered = computed(() => {
@@ -53,9 +56,8 @@ export class RacesListComponent {
   }
 
   // Ouvre la modale d'édition
-  openUpdateModal(race: Race) {
-    this.selectedRace = race;
-    this.updateModal.open();
+  goToUpdatePage(race: Race) {
+    this.router.navigate(['/classe/race/update', race.idRace]);
   }
   //#endregion
 

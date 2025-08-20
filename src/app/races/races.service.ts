@@ -18,6 +18,10 @@ export class RacesService {
       return this.http.get<Race[]>(`${EnvironmentConfig.apiBaseUrl}/races`);
     }
 
+    getRaceById(id: number): Observable<Race> {
+      return this.http.get<Race>(`${EnvironmentConfig.apiBaseUrl}/races/${id}`);
+    }
+
     updateRace(race: Race): Observable<Race> {
       console.log('Updating race:', race);
       return this.http.put<Race>(`${EnvironmentConfig.apiBaseUrl}/races/update/${race.idRace}`, race);

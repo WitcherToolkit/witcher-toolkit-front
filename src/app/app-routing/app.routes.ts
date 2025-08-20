@@ -12,8 +12,8 @@ import { RacesListComponent } from '../races/races-list/races-list.component';
 import { PageNotFoundComponent } from '../page-not-found/page-not-found.component';
 import { CreatePersonComponent } from '../fiche-personnage/create-person/create-person.component';
 import { ProfessionsListComponent } from '../professions/professions-list/professions-list.component';
-import { RacesDetailComponent } from '../races/races-detail/races-detail.component';
 import { ConsultCharacterComponent } from '../fiche-personnage/consult-person/consult-character.component';
+import { RacesUpdateComponent } from '../races/races-update/races-update.component';
 
 
 export const ENVOUTEMENT_BASE_PATH = 'grimoire';
@@ -30,17 +30,23 @@ export const routes: Routes = [
     //Partie grimoire
     { path: `${ENVOUTEMENT_BASE_PATH}/envoutement/:id`, component: EnvoutementsDetailComponent },
     { path: `${ENVOUTEMENT_BASE_PATH}/envoutement`, component: EnvoutementsListComponent },
+
     { path: `${RITUEL_BASE_PATH}/rituel/:id`, component: RituelsDetailComponent },
     { path: `${RITUEL_BASE_PATH}/rituel`, component: RituelsListComponent },
+
     { path: `${MAGIE_BASE_PATH}/magie/:id`, component: SortsDetailComponent },
     { path: `${MAGIE_BASE_PATH}/magie`, component: SortsListComponent },
+
     //Partie Aptitudes
     { path: `${COMPTETENCE_BASE_PATH}/competence`, component: CompetencesListComponent },
     { path: `${CARACTERISTIQUE_BASE_PATH}/caracteristique`, component: CaracteristiquesListComponent },
-    //Patie Classe 
+
+    //Partie Classe
     { path: `${RACE_BASE_PATH}/race`, component: RacesListComponent },
+    { path: `${RACE_BASE_PATH}/race/update/:id`, component: RacesUpdateComponent },
+    
     { path: `${PROFESSION_BASE_PATH}/profession`, component: ProfessionsListComponent },
-    //Parite fiche personnage
+    //Partie fiche personnage
     { path: `${PERSONNAGE_BASE_PATH}/nouveau`, component: CreatePersonComponent },
     { path: `${PERSONNAGE_BASE_PATH}/consult`, component: ConsultCharacterComponent },
 
