@@ -5,35 +5,106 @@ import { CommonModule } from '@angular/common';
 import { EnvoutementsDetailComponent } from '../envoutements-detail/envoutements-detail.component';
 import { Envoutement } from '../../models/envoutement';
 import { EnvoutementsUpdateComponent } from '../envoutements-update/envoutements-update.component';
+import { ConfirmDeleteModalComponentComponent } from '../../shared-components/confirm-delete-modal-component/confirm-delete-modal-component.component';
 
 @Component({
   selector: 'app-envoutements-list',
   standalone: true,
-  imports: [DangerBorderDirective, CommonModule, EnvoutementsDetailComponent, EnvoutementsUpdateComponent],
+  imports: [
+    DangerBorderDirective,
+    CommonModule,
+    EnvoutementsDetailComponent,
+    EnvoutementsUpdateComponent,
+    ConfirmDeleteModalComponentComponent
+  ],
   templateUrl: './envoutements-list.component.html',
   styleUrls: ['envoutements-list.component.scss']
 })
 export class EnvoutementsListComponent implements OnInit {
+  // --- Services et constantes ---
   private readonly envoutementService = inject(EnvoutementService);
-
   readonly MAX_LENGTH = 100;
-  envoutements = signal<Envoutement[]>([]);
 
+  // --- Signaux et propriétés réactives ---
+  envoutements = signal<Envoutement[]>([]);
   readonly searchTerm = signal('');
 
+  // --- Propriétés pour la gestion des modales ---
+  @ViewChild(EnvoutementsDetailComponent) detailModal!: EnvoutementsDetailComponent;
+  @ViewChild(EnvoutementsUpdateComponent) updateModal!: EnvoutementsUpdateComponent;
+  @ViewChild('deleteModal') deleteModal!: ConfirmDeleteModalComponentComponent;
+  selectedEnvoutement: Envoutement | null = null; // Envoutement sélectionné pour détail/édition/suppression
+
+  // --- Filtres et computed ---
   readonly envoutementsListFiltered = computed(() => {
     const term = this.searchTerm().trim().toLowerCase();
-    const allEnvoutements = this.envoutements(); // Tous les envoutements chargés (c'est un signal !)
-    if (!term || allEnvoutements === undefined || allEnvoutements.length === 0) { 
-    return allEnvoutements || []; // Retourne tous les envoutements si le terme est vide ou si pas de données
+    const allEnvoutements = this.envoutements();
+    if (!term || allEnvoutements === undefined || allEnvoutements.length === 0) {
+      return allEnvoutements || [];
     }
     return allEnvoutements.filter(envoutement =>
       envoutement.nom.toLowerCase().includes(term)
     );
   });
 
-  trackById(index: number, envoutement: any): number {
-    return envoutement.id;
+  // --- Cycle de vie ---
+  ngOnInit() {
+    this.refreshEnvoutements();
+  }
+
+  // --- Gestion de la recherche ---
+  onSearchChange(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    this.searchTerm.set(inputElement.value);
+  }
+
+  // --- Gestion des modales ---
+  openModal(envoutement: Envoutement) {
+    this.selectedEnvoutement = envoutement;
+    this.detailModal.open();
+  }
+
+  openUpdateModal(envoutement: Envoutement) {
+    this.selectedEnvoutement = envoutement;
+    this.updateModal.open();
+  }
+
+  openCreateModal() {
+    this.selectedEnvoutement = null;
+    this.updateModal.open();
+  }
+
+  openDeleteModal(envoutement: Envoutement) {
+    this.selectedEnvoutement = envoutement;
+    setTimeout(() => {
+      if (this.deleteModal) {
+        this.deleteModal.open();
+      }
+    });
+  }
+
+  // --- Gestion CRUD ---
+  refreshEnvoutements() {
+    this.envoutementService.getEnvoutementList().subscribe(envoutements => {
+      this.envoutements.set(envoutements);
+    });
+  }
+
+  onEnvoutementUpdated(updatedEnvoutement: Envoutement) {
+    this.refreshEnvoutements();
+  }
+
+  deleteEnvoutement() {
+    if (!this.selectedEnvoutement) return;
+    this.envoutementService.deleteEnvoutement(this.selectedEnvoutement.idEnvoutement).subscribe(() => {
+      this.refreshEnvoutements();
+      this.selectedEnvoutement = null;
+    });
+  }
+
+  // --- Utilitaires ---
+  trackById(index: number, envoutement: Envoutement): number {
+    return envoutement.idEnvoutement;
   }
 
   truncateText(text: string): string {
@@ -42,47 +113,4 @@ export class EnvoutementsListComponent implements OnInit {
     }
     return text;
   }
-
-  //#region boite de rialogue
-    @ViewChild(EnvoutementsDetailComponent) detailModal!: EnvoutementsDetailComponent;// Référence à la boîte de dialogue
-    @ViewChild(EnvoutementsUpdateComponent) updateModal!: EnvoutementsUpdateComponent;
-    
-    // Ajoute une propriété pour le envoutement sélectionné
-    selectedEnvoutement: Envoutement | null = null;
-  
-    // Modifie openModal pour recevoir le envoutement
-    openModal(envoutement: Envoutement) {
-      this.selectedEnvoutement = envoutement;
-      this.detailModal.open();
-    }
-
-    openUpdateModal(envoutement: Envoutement) {
-      this.selectedEnvoutement = envoutement;
-      this.updateModal.open();
-    }
-
-    openCreateModal() {
-      this.selectedEnvoutement = null;
-      this.updateModal.open();
-    }
-    //#endRegion boite de dialogue
-  
-    //#region MAJ des Envoutements après une action
-    ngOnInit() {
-      this.refreshEnvoutements();
-    }
-  
-  
-    // Ajoute une méthode pour rafraîchir la liste
-    refreshEnvoutements() {
-      // Recharge la liste depuis le service
-      this.envoutementService.getEnvoutementList().subscribe(envoutements => {
-        this.envoutements.set(envoutements);
-      });
-    }
-  
-    onEnvoutementUpdated(updatedEnvoutement: Envoutement) {
-      this.refreshEnvoutements();
-    }
-    //#endRegion MAJ des envoutements après une action
 }

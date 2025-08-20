@@ -56,7 +56,7 @@
             <div class="card-action">
               <a (click)="openModal(envoutement)" href="javascript:void(0)">Voir</a>
               <a (click)="openUpdateModal(envoutement)" href="javascript:void(0)">Modifier</a>
-              <a href="#">Supprimer</a>
+              <a (click)="openDeleteModal(envoutement)" href="javascript:void(0)">Supprimer</a>
             </div>
             
           </div>
@@ -69,4 +69,5 @@
 <!-- Ajoute ceci à la fin de ton fichier HTML -->
 <app-envoutements-detail-modal [envoutement]="selectedEnvoutement"></app-envoutements-detail-modal>
 <app-envoutements-update-modal [envoutement]="selectedEnvoutement" (envoutementUpdated)="onEnvoutementUpdated($event)"></app-envoutements-update-modal>
+<app-confirm-delete-modal-component #deleteModal *ngIf="selectedEnvoutement" [itemName]="selectedEnvoutement.nom" (confirm)="deleteEnvoutement()" (cancel)="selectedEnvoutement = null"></app-confirm-delete-modal-component>
 
