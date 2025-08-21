@@ -19,9 +19,7 @@ import { Observable } from 'rxjs';
   styleUrl: './professions-update.component.scss'
 })
 export class ProfessionsUpdateComponent implements OnInit {
-  // ----------------------
-  // === PROPRIÉTÉS ===
-  // ----------------------
+  // --- Propriétés et services ---
   @ViewChild('competenceAutocomplete') competenceAutocompleteRef!: ElementRef;
   readonly professionListPath = PROFESSION_LIST_PATH;
   professionForm!: FormGroup;
@@ -37,9 +35,7 @@ export class ProfessionsUpdateComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) {}
 
-  // ----------------------
-  // === INIT & FORMULAIRE ===
-  // ----------------------
+  // --- Initialisation et chargement des données ---
   ngOnInit() {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.competenceService.getCompetencesList().subscribe(list => {
@@ -61,9 +57,7 @@ export class ProfessionsUpdateComponent implements OnInit {
     });
   }
 
-  /**
-   * Initialise le formulaire principal avec les valeurs de la profession (ou valeurs par défaut)
-   */
+  // --- Initialisation du formulaire principal ---
   initForm() {
     this.cdr.detectChanges();
     this.professionForm = this.fb.group({
@@ -94,9 +88,7 @@ export class ProfessionsUpdateComponent implements OnInit {
     });
   }
 
-  /**
-   * Soumission du formulaire : création ou modification
-   */
+  // --- Soumission du formulaire (création ou édition) ---
   onSubmit() {
     if(!this.professionForm.valid) {
       this.professionForm.markAllAsTouched();
@@ -105,7 +97,6 @@ export class ProfessionsUpdateComponent implements OnInit {
     }
     const competenceIds = this.professionForm.value.competenceList;
     const idProfession = this.profession?.idProfession;
-    // Ne pas ajouter la clé étrangère lors de la création
     const competenceList = competenceIds.map((id: number) => {
       const competenceObj = this.allCompetences.find(c => c.idCompetence === id);
       return idProfession
@@ -118,7 +109,6 @@ export class ProfessionsUpdateComponent implements OnInit {
         ...item,
         idInventaireWiki: original?.idInventaireWiki ?? null
       };
-      // Ajoute la clé étrangère seulement en modification
       return idProfession ? { ...base, profession: { idProfession } } : base;
     });
     const updatedProfession = {
@@ -139,9 +129,7 @@ export class ProfessionsUpdateComponent implements OnInit {
     });
   }
 
-  /**
-   * Réinitialise le formulaire aux valeurs de l'objet 'profession' (mode édition)
-   */
+  // --- Réinitialise le formulaire aux valeurs de l'objet 'profession' (édition) ---
   resetForm() {
     if (this.professionForm && this.profession) {
       this.professionForm.get('nom')?.setValue(this.profession.nom);
@@ -178,16 +166,12 @@ export class ProfessionsUpdateComponent implements OnInit {
     }
   }
 
-  /**
-   * Annulation : retour à la liste
-   */
+  // --- Annulation : retour à la liste ---
   onCancel() {
     this.router.navigate(['/', ...this.professionListPath.split('/')]);
   }
 
-  // ----------------------
-  // === INVENTAIRE ===
-  // ----------------------
+  // --- Gestion de l'inventaire (FormArray) ---
   get inventaireWikiFormArray(): FormArray<FormGroup> {
     return this.professionForm.get('inventaireWikiList') as FormArray;
   }
@@ -217,9 +201,7 @@ export class ProfessionsUpdateComponent implements OnInit {
     }
   }
 
-  // ----------------------
-  // === COMPÉTENCES ===
-  // ----------------------
+  // --- Gestion des compétences (FormArray) ---
   get competenceListFormArray(): FormArray {
     return this.professionForm.get('competenceList') as FormArray;
   }
@@ -265,9 +247,7 @@ export class ProfessionsUpdateComponent implements OnInit {
     );
   }
 
-  // ----------------------
-  // === OUTILS UI ===
-  // ----------------------
+  // --- Outils UI ---
   /** Incrémente/décrémente un champ numérique du formulaire principal */
   updateField(field: string, delta: number, min: number = 0) {
     const ctrl = this.professionForm.get(field);

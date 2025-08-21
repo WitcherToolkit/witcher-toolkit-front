@@ -14,34 +14,71 @@ import { CaracteristiquesUpdateComponent } from '../caracteristiques-update/cara
   styleUrls: ['caracteristiques-list.component.scss']
 })
 export class CaracteristiquesListComponent {
-
+  // --- Services et constantes ---
   private readonly caracteristiqueService = inject(CaracteristiqueService);
-
   readonly MAX_LENGTH = 100;
-  readonly caracteristiques = signal<Caracteristique[]>([]);
 
+  // --- Signaux et propriétés réactives ---
+  readonly caracteristiques = signal<Caracteristique[]>([]);
   readonly searchTerm = signal('');
 
+  // --- Propriétés pour la gestion des modales ---
+  @ViewChild(CaracteristiquesDetailComponent) detailModal!: CaracteristiquesDetailComponent;
+  @ViewChild(CaracteristiquesUpdateComponent) updateModal!: CaracteristiquesUpdateComponent;
+  selectedCaracteristique: Caracteristique | null = null; // Pour détail/édition
+
+  // --- Filtres et computed ---
   readonly caracteristiquesListFiltered = computed(() => {
     const term = this.searchTerm().trim().toLowerCase();
     const allCaracteristiques = this.caracteristiques();
-
     if (!term || allCaracteristiques === undefined || allCaracteristiques.length === 0) {
       return allCaracteristiques || [];
     }
-
     return allCaracteristiques.filter(caracteristique =>
       caracteristique.nom.toLowerCase().includes(term)
     );
   });
 
-  // Méthode pour mettre à jour le searchTerm (peut être liée à un événement input)
+  // --- Cycle de vie ---
+  ngOnInit() {
+    this.refreshCaracteristiques();
+  }
+
+  // --- Gestion de la recherche ---
   onSearchChange(event: Event) {
     const inputElement = event.target as HTMLInputElement;
     this.searchTerm.set(inputElement.value);
   }
 
-  trackById(index: number, caracteristique: any): number {
+  // --- Gestion des modales ---
+  openModal(caracteristique: Caracteristique) {
+    this.selectedCaracteristique = caracteristique;
+    this.detailModal.open();
+  }
+
+  openUpdateModal(caracteristique: Caracteristique) {
+    this.selectedCaracteristique = caracteristique;
+    this.updateModal.open();
+  }
+
+  openCreateModal() {
+    this.selectedCaracteristique = null;
+    this.updateModal.open();
+  }
+
+  // --- Gestion CRUD ---
+  refreshCaracteristiques() {
+    this.caracteristiqueService.getCaracteristiquesList().subscribe(caracteristiques => {
+      this.caracteristiques.set(caracteristiques);
+    });
+  }
+
+  onCaracteristiqueUpdated(updatedCaracteristique: Caracteristique) {
+    this.refreshCaracteristiques();
+  }
+
+  // --- Utilitaires ---
+  trackById(index: number, caracteristique: Caracteristique): number {
     return caracteristique.idCaracteristique;
   }
 
@@ -51,46 +88,4 @@ export class CaracteristiquesListComponent {
     }
     return text;
   }
-
-  //#region boite de rialogue
-  @ViewChild(CaracteristiquesDetailComponent) detailModal!: CaracteristiquesDetailComponent;
-  @ViewChild(CaracteristiquesUpdateComponent) updateModal!: CaracteristiquesUpdateComponent;
-  
-  // Ajoute une propriété pour la caracteristique sélectionnée
-  selectedCaracteristique: Caracteristique | null = null;
-
-  openModal(caracteristique: Caracteristique) {
-    this.selectedCaracteristique = caracteristique;
-    this.detailModal.open();
-  }
-
-  openUpdateModal(caracteristique: Caracteristique) {
-      this.selectedCaracteristique = caracteristique;
-      this.updateModal.open();
-    }
-
-    openCreateModal() {
-      this.selectedCaracteristique = null;
-      this.updateModal.open();
-    }
-  //#endRegion boite de dialogue
-
-  //#region MAJ des Caracteristiques après une action
-  ngOnInit() {
-    this.refreshCaracteristiques();
-  }
-
-
-  // Ajoute une méthode pour rafraîchir la liste
-  refreshCaracteristiques() {
-    // Recharge la liste depuis le service
-    this.caracteristiqueService.getCaracteristiquesList().subscribe(caracteristiques => {
-      this.caracteristiques.set(caracteristiques);
-    });
-  }
-
-  onCaracteristiqueUpdated(updatedCaracteristique: Caracteristique) {
-    this.refreshCaracteristiques();
-  }
-  //#endRegion MAJ des caracteristiques après une action
 }

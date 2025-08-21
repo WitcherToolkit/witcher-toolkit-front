@@ -16,65 +16,51 @@ import { Router } from '@angular/router';
   styleUrl: './professions-list.component.scss'
 })
 export class ProfessionsListComponent {
-  // Constantes
+  // --- Constantes ---
   readonly MAX_LENGTH = 150;
-
-  // Service et signaux
-  private readonly professionsService = inject(ProfessionsService);
-  private router = inject(Router);
-
   readonly professionsUpdatePath = PROFESSION_UPDATE_PATH;
   readonly professionsCreatePath = PROFESSION_CREATE_PATH;
+
+  // --- Services et signaux ---
+  private readonly professionsService = inject(ProfessionsService);
+  private readonly router = inject(Router);
   readonly professions = signal<Profession[]>([]);
   readonly searchTerm = signal('');
 
-  // Filtrage de la liste selon le terme de recherche
+  // --- Propriétés pour la gestion des modales ---
+  @ViewChild(ProfessionsDetailComponent) detailModal!: ProfessionsDetailComponent;
+  @ViewChild(ProfessionsUpdateComponent) updateModal!: ProfessionsUpdateComponent;
+  selectedProfession: Profession | null = null;
+
+  // --- Filtres et computed ---
   readonly professionsListFiltered = computed(() => {
-    const term = this.searchTerm().trim().toLowerCase(); // Terme de recherche actuel
-    const allProfessions = this.professions(); // Tous les professions chargés (c'est un signal !)
-
+    const term = this.searchTerm().trim().toLowerCase();
+    const allProfessions = this.professions();
     if (!term || allProfessions === undefined || allProfessions.length === 0) {
-      return allProfessions || []; // Retourne tous les professions si le terme est vide ou si pas de données
+      return allProfessions || [];
     }
-
     return allProfessions.filter(profession =>
       profession.nom.toLowerCase().includes(term)
     );
   });
 
-  // Méthode pour mettre à jour le searchTerm (peut être liée à un événement input)
+  // --- Cycle de vie ---
+  ngOnInit() {
+    this.refreshProfessions();
+  }
+
+  // --- Gestion de la recherche ---
   onSearchChange(event: Event) {
     const inputElement = event.target as HTMLInputElement;
     this.searchTerm.set(inputElement.value);
   }
 
-  // Pour l'affichage optimisé dans *ngFor
-  trackById(index: number, profession: Profession): number {
-    return profession.idProfession || index; // Utilise idProfession si disponible, sinon index
-  }
-
-  // Tronque le texte si trop long
-  truncateText(text: string): string {
-    if (text.length > this.MAX_LENGTH) {
-      return text.substring(0, this.MAX_LENGTH) + '...';
-    }
-    return text;
-  }
-
-  //#region Gestion des modales (détail et édition)
-  @ViewChild(ProfessionsDetailComponent) detailModal!: ProfessionsDetailComponent;
-  @ViewChild(ProfessionsUpdateComponent) updateModal!: ProfessionsUpdateComponent;
-  selectedProfession: Profession | null = null;
-
-  // Ouvre la modale de détail
+  // --- Gestion des modales et navigation ---
   openModal(profession: Profession) {
-    // Assigner l'ID de la profession sélectionnée à selectedProfession
     this.selectedProfession = profession;
     this.detailModal.open();
   }
 
-
-  // Ouvre la page d'édition
   goToUpdatePage(profession: Profession) {
     this.router.navigate([this.professionsUpdatePath, profession.idProfession]);
   }
@@ -82,19 +68,23 @@ export class ProfessionsListComponent {
   openCreatePage() {
     this.router.navigate([this.professionsCreatePath]);
   }
-  //#endregion
 
-  //#region Cycle de vie et gestion de la liste
-  // Initialisation du composant
-  ngOnInit() {
-    this.refreshProfessions();
-  }
-
-  // Rafraîchit la liste des professions depuis le service
+  // --- Gestion CRUD ---
   refreshProfessions() {
     this.professionsService.getProfessionsList().subscribe(professions => {
       this.professions.set(professions);
     });
   }
-  //#endregion
+
+  // --- Utilitaires ---
+  trackById(index: number, profession: Profession): number {
+    return profession.idProfession || index;
+  }
+
+  truncateText(text: string): string {
+    if (text.length > this.MAX_LENGTH) {
+      return text.substring(0, this.MAX_LENGTH) + '...';
+    }
+    return text;
+  }
 }

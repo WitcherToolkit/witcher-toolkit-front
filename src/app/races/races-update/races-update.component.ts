@@ -17,8 +17,8 @@ import { RACE_LIST_PATH } from '../../app-routing/app-routing-constants';
   styleUrl: './races-update.component.scss'
 })
 export class RacesUpdateComponent implements OnInit {
-
-  readonly raceListPath = RACE_LIST_PATH; // importé depuis tes constantes de routing
+  // --- Constantes et services ---
+  readonly raceListPath = RACE_LIST_PATH;
   raceForm!: FormGroup;
   race: Race | null = null;
 
@@ -29,6 +29,7 @@ export class RacesUpdateComponent implements OnInit {
     private router: Router
   ) {}
 
+  // --- Cycle de vie ---
   ngOnInit() {
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
@@ -45,68 +46,67 @@ export class RacesUpdateComponent implements OnInit {
     }
   }
 
+  // --- Initialisation du formulaire ---
+  initForm() {
+    this.raceForm = this.fb.group({
+      nom: [this.race?.nom ?? '', [Validators.required, Validators.maxLength(50)]],
+      particulariteList: this.fb.array(
+        (this.race?.particulariteList ?? []).map(p => this.createParticulariteGroup(p))
+      ),
+      reputationWikiList: this.fb.array(
+        (this.race?.reputationWikiList ?? []).map(r => this.createReputationWikiGroup(r))
+      ),
+    });
+  }
+
+  // --- Création des groupes pour les sous-listes ---
   private createParticulariteGroup(p?: any): FormGroup {
-  return this.fb.group({
-    idParticularite: [p?.idParticularite ?? null],
-    nom: [p?.nom ?? '', [Validators.maxLength(50)]],
-    description: [p?.description ?? '']
-  });
-}
+    return this.fb.group({
+      idParticularite: [p?.idParticularite ?? null],
+      nom: [p?.nom ?? '', [Validators.maxLength(50)]],
+      description: [p?.description ?? '']
+    });
+  }
 
-private createReputationWikiGroup(r?: any): FormGroup {
-  return this.fb.group({
-    idReputationWiki: [r?.idReputationWiki ?? null],
-    territoire: [r?.territoire ?? '', Validators.maxLength(50)],
-    valeur: [r?.valeur ?? '']
-  });
-}
+  private createReputationWikiGroup(r?: any): FormGroup {
+    return this.fb.group({
+      idReputationWiki: [r?.idReputationWiki ?? null],
+      territoire: [r?.territoire ?? '', Validators.maxLength(50)],
+      valeur: [r?.valeur ?? '']
+    });
+  }
 
-initForm() {
-  this.raceForm = this.fb.group({
-    nom: [this.race?.nom ?? '', [Validators.required, Validators.maxLength(50)]],
-    particulariteList: this.fb.array(
-      (this.race?.particulariteList ?? []).map(p => this.createParticulariteGroup(p))
-    ),
-    reputationWikiList: this.fb.array(
-      (this.race?.reputationWikiList ?? []).map(r => this.createReputationWikiGroup(r))
-    ),
-  });
-}
-
+  // --- Soumission du formulaire ---
   onSubmit() {
     if (!this.raceForm.valid) {
       this.raceForm.markAllAsTouched();
       console.error('Le formulaire n\'est pas valide. Veuillez corriger les erreurs.');
       return;
     }
-
     let raceObservable: Observable<Race>;
     if (this.race) {
       // Edition
-      const raceToUpdate = { 
-        ...this.race, 
-        ...this.raceForm.value, 
-        idRace: this.race.idRace };
+      const raceToUpdate = {
+        ...this.race,
+        ...this.raceForm.value,
+        idRace: this.race.idRace
+      };
       raceObservable = this.raceService.updateRace(raceToUpdate);
     } else {
       // Création
       const raceToCreate = this.raceForm.value;
       raceObservable = this.raceService.createRace(raceToCreate);
     }
-
     raceObservable.subscribe({
       next: () => this.router.navigate(['/', ...this.raceListPath.split('/')]),
       error: (err) => console.error('Erreur lors de la sauvegarde de la race', err)
     });
   }
 
-  
-  // Méthode pour réinitialiser le formulaire aux valeurs de l'objet 'race'
+  // --- Réinitialisation du formulaire ---
   resetForm() {
-     if (this.raceForm && this.race) {
-      // Réinitialise le champ nom
+    if (this.raceForm && this.race) {
       this.raceForm.get('nom')?.setValue(this.race.nom);
-
       // Réinitialise les particularités
       const partArray = this.particulariteFormArray;
       partArray.clear();
@@ -117,7 +117,6 @@ initForm() {
           description: [p.description, [Validators.required]]
         }));
       });
-
       // Réinitialise les réputations
       const repArray = this.reputationWikiFormArray;
       repArray.clear();
@@ -128,19 +127,17 @@ initForm() {
           valeur: [r.valeur, [Validators.required]]
         }));
       });
-
       this.raceForm.markAsPristine();
       this.raceForm.markAsUntouched();
     }
   }
-  
-  // Méthode pour gérer l'annulation : réinitialise le formulaire et ferme la modale
+
+  // --- Annulation : retour à la liste ---
   onCancel() {
     this.router.navigate(['/', ...this.raceListPath.split('/')]);
   }
 
-  //#region Particularites
-  // Getter pour le FormArray
+  // --- Gestion des particularités (FormArray) ---
   get particulariteFormArray(): FormArray<FormGroup> {
     return this.raceForm.get('particulariteList') as FormArray<FormGroup>;
   }
@@ -158,10 +155,8 @@ initForm() {
   removeParticularite(index: number) {
     this.particulariteFormArray.removeAt(index);
   }
-  //#endregion Particularites
 
-  //#region ReputationWiki
-  // Getter pour le FormArray
+  // --- Gestion des réputations (FormArray) ---
   get reputationWikiFormArray(): FormArray<FormGroup> {
     return this.raceForm.get('reputationWikiList') as FormArray<FormGroup>;
   }
@@ -179,5 +174,4 @@ initForm() {
   removeReputationWiki(index: number) {
     this.reputationWikiFormArray.removeAt(index);
   }
-  //#endregion Particularites
 }

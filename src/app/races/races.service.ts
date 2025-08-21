@@ -8,28 +8,34 @@ import { EnvironmentConfig } from '../environment.config';
   providedIn: 'root'
 })
 export class RacesService {
+  // --- Signal pour la liste des races ---
   private readonly races = signal<Race[]>([]);
-  
-    constructor(private http: HttpClient) { }
-  
-    getRacesList(): Observable<Race[]> {
-      console.info('Fetching rituels from API...');
-      console.log(`API Base URL: ${EnvironmentConfig.apiBaseUrl}`);
-      return this.http.get<Race[]>(`${EnvironmentConfig.apiBaseUrl}/races`);
-    } 
+  // --- URL de base pour les requêtes races ---
+  private readonly apiUrl = `${EnvironmentConfig.apiBaseUrl}/races`;
 
-    getRaceById(id: number): Observable<Race> {
-      return this.http.get<Race>(`${EnvironmentConfig.apiBaseUrl}/races/${id}`);
-    }
+  constructor(private http: HttpClient) { }
 
-    createRace(race: Race): Observable<Race> {
-      console.log('Creating race:', race);
-      return this.http.post<Race>(`${EnvironmentConfig.apiBaseUrl}/races/create`, race);
-    }
+  // --- Récupérer la liste des races ---
+  getRacesList(): Observable<Race[]> {
+    console.info('Fetching races from API...');
+    console.log(`API Base URL: ${this.apiUrl}`);
+    return this.http.get<Race[]>(this.apiUrl);
+  }
 
-    updateRace(race: Race): Observable<Race> {
-      console.log('Updating race:', race);
-      return this.http.put<Race>(`${EnvironmentConfig.apiBaseUrl}/races/update/${race.idRace}`, race);
-    }
+  // --- Récupérer une race par son ID ---
+  getRaceById(id: number): Observable<Race> {
+    return this.http.get<Race>(`${this.apiUrl}/${id}`);
+  }
 
+  // --- Créer une nouvelle race ---
+  createRace(race: Race): Observable<Race> {
+    console.log('Creating race:', race);
+    return this.http.post<Race>(`${this.apiUrl}/create`, race);
+  }
+
+  // --- Mettre à jour une race existante ---
+  updateRace(race: Race): Observable<Race> {
+    console.log('Updating race:', race);
+    return this.http.put<Race>(`${this.apiUrl}/update/${race.idRace}`, race);
+  }
 }

@@ -15,25 +15,29 @@ import { CaracteristiqueService } from '../../caracteristiques/caracteristique.s
   templateUrl: './competences-update.component.html',
   styleUrl: './competences-update.component.scss'
 })
-export class CompetencesUpdateComponent implements AfterViewInit, OnChanges{
-
-  @Input() competence: Competence | null = null
-  @ViewChild('modal') modalRef! : ElementRef;
+export class CompetencesUpdateComponent implements AfterViewInit, OnChanges {
+  // --- Entrées, sorties et références ---
+  @Input() competence: Competence | null = null;
+  @ViewChild('modal') modalRef!: ElementRef;
   @Output() competenceUpdated = new EventEmitter<Competence>();
 
-  competenceForm! : FormGroup;
-
+  // --- Propriétés du formulaire et données associées ---
+  competenceForm!: FormGroup;
   caracteristiques: Caracteristique[] = [];
   caracteristiquesLoaded = false;
 
-  constructor(private fb: FormBuilder, private competenceService: CompetenceService, private caracteristiqueService: CaracteristiqueService) {}
+  constructor(
+    private fb: FormBuilder,
+    private competenceService: CompetenceService,
+    private caracteristiqueService: CaracteristiqueService
+  ) {}
 
+  // --- Initialisation : chargement des caractéristiques et du formulaire ---
   ngOnInit() {
     this.caracteristiqueService.getCaracteristiquesList().subscribe(caracs => {
       this.caracteristiques = caracs;
       this.caracteristiquesLoaded = true;
       this.competenceForm = this.createCompetenceForm(this.competence);
-      // Abonnement pour gérer l'affichage dynamique des champs
       this.competenceForm.get('exclusive')?.valueChanges.subscribe((value: boolean) => {
         if (!value) {
           this.competenceForm.get('prerequis')?.setValue('');
@@ -46,7 +50,8 @@ export class CompetencesUpdateComponent implements AfterViewInit, OnChanges{
       });
     });
   }
-  
+
+  // --- Cycle de vie : mise à jour du formulaire si competence change ---
   ngOnChanges(changes: SimpleChanges) {
     if (changes['competence'] && this.caracteristiquesLoaded) {
       this.competenceForm = this.createCompetenceForm(this.competence);
@@ -63,6 +68,7 @@ export class CompetencesUpdateComponent implements AfterViewInit, OnChanges{
     }
   }
 
+  // --- Création du FormGroup pour la compétence ---
   createCompetenceForm(competence: Competence | null): FormGroup {
     return this.fb.group({
       nom: [competence?.nom ?? '', [Validators.required, Validators.maxLength(50)]],
@@ -74,15 +80,16 @@ export class CompetencesUpdateComponent implements AfterViewInit, OnChanges{
     });
   }
 
+  // --- Initialisation de la modale Materialize ---
   ngAfterViewInit() {
     if (this.modalRef) {
       M.Modal.init(this.modalRef.nativeElement);
     }
-    
     const elems = document.querySelectorAll('select');
     M.FormSelect.init(elems);
   }
 
+  // --- Ouvre la modale ---
   open() {
     if (this.modalRef) {
       const instance = M.Modal.getInstance(this.modalRef.nativeElement);
@@ -90,76 +97,57 @@ export class CompetencesUpdateComponent implements AfterViewInit, OnChanges{
     }
   }
 
-  onUpperCase(event: Event) {
-  const input = event.target as HTMLInputElement;
-  const upperValue = input.value.toUpperCase();
-  this.competenceForm.get('code')?.setValue(upperValue, { emitEvent: false });
-}
-
+  // --- Soumission du formulaire (création ou édition) ---
   onSubmit() {
-    // Vérifie si le formulaire est valide. Si non, marque tous les champs comme "touchés" pour afficher les erreurs et arrête la soumission.
     if (!this.competenceForm.valid) {
       this.competenceForm.markAllAsTouched();
       console.error('Le formulaire n\'est pas valide. Veuillez corriger les erreurs.');
       return;
     }
-
-    // Fonction utilitaire pour fermer la modale Materialize après succès
     const closeModal = () => {
       const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
       instance.close();
     };
-
-    // Récupère l'ID de la caractéristique sélectionnée dans le formulaire
     const selectedId = this.competenceForm.value.caracteristique;
-    // Recherche l'objet caractéristique correspondant à l'ID sélectionné
     const selectedCarac = this.caracteristiques.find(c => c.idCaracteristique === +selectedId) ?? null;
-
     if (this.competence) {
-      // Cas édition : on prépare un objet avec les valeurs du formulaire et l'objet existant
-      const competenceToUpdate = { 
-        ...this.competence, // garde les propriétés existantes (ex : id)
-        ...this.competenceForm.value, // écrase par les valeurs du formulaire
-        idCompetence: this.competence?.idCompetence, // s'assure que l'ID n'est pas modifié
-        caracteristique: selectedCarac // injecte l'objet caractéristique complet
+      // Edition
+      const competenceToUpdate = {
+        ...this.competence,
+        ...this.competenceForm.value,
+        idCompetence: this.competence?.idCompetence,
+        caracteristique: selectedCarac
       };
-
-      // Appel du service pour mettre à jour la compétence côté backend
       this.competenceService.updateCompetence(competenceToUpdate).subscribe({
         next: (result) => {
-          // Succès : log, émet l'événement, ferme la modale
           console.info('competence mise à jour avec succès', result);
           this.competenceUpdated.emit(result);
           closeModal();
         },
         error: (err) => {
-          // Erreur : log
           console.error('Erreur lors de la mise à jour de la competence', err);
         }
       });
     } else {
-      // Cas création : on prépare un objet avec les valeurs du formulaire et la caractéristique sélectionnée
-      const competenceToCreate = { 
+      // Création
+      const competenceToCreate = {
         ...this.competenceForm.value,
         caracteristique: selectedCarac
       };
-      // Appel du service pour créer la compétence côté backend
       this.competenceService.createCompetence(competenceToCreate).subscribe({
         next: (result) => {
-          // Succès : log, émet l'événement, ferme la modale
           console.info('competence créé avec succès', result);
           this.competenceUpdated.emit(result);
           closeModal();
         },
         error: (err) => {
-          // Erreur : log
           console.error('Erreur lors de la création de la competence', err);
         }
       });
     }
   }
 
-  // Méthode pour réinitialiser le formulaire aux valeurs de l'objet 'competence'
+  // --- Réinitialise le formulaire aux valeurs de l'objet 'competence' (édition) ---
   resetForm() {
     if (this.competenceForm && this.competence) {
       this.competenceForm.reset({
@@ -169,21 +157,17 @@ export class CompetencesUpdateComponent implements AfterViewInit, OnChanges{
         prerequis: this.competence.prerequis,
         exclusive: this.competence.exclusive,
       });
-      // Marquer le formulaire comme non modifié et non touché
-      // Cela permet de réinitialiser l'état du formulaire
       this.competenceForm.markAsPristine();
-      // Marquer tous les champs comme non touchés
       this.competenceForm.markAsUntouched();
     }
   }
 
-  // Méthode pour gérer l'annulation : réinitialise le formulaire et ferme la modale
+  // --- Annulation : réinitialise le formulaire et ferme la modale ---
   onCancel() {
-    this.resetForm(); // Réinitialise le formulaire aux valeurs d'origine
+    this.resetForm();
     if (this.modalRef) {
       const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
       instance.close();
     }
   }
-
 }

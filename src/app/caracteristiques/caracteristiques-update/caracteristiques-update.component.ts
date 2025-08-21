@@ -12,39 +12,32 @@ import { CaracteristiqueService } from '../caracteristique.service';
   imports: [CommonModule, ReactiveFormsModule, FormControlErrorComponent, RequiredAsteriskDirective],
   templateUrl: './caracteristiques-update.component.html'
 })
-export class CaracteristiquesUpdateComponent implements AfterViewInit, OnChanges{
-
-  @Input() caracteristique: Caracteristique | null = null
-  @ViewChild('modal') modalRef! : ElementRef;
+export class CaracteristiquesUpdateComponent implements AfterViewInit, OnChanges {
+  // --- Entrées, sorties et références ---
+  @Input() caracteristique: Caracteristique | null = null;
+  @ViewChild('modal') modalRef!: ElementRef;
   @Output() caracteristiqueUpdated = new EventEmitter<Caracteristique>();
 
-  caracteristiqueForm! : FormGroup;
+  // --- Propriétés du formulaire ---
+  caracteristiqueForm!: FormGroup;
 
   constructor(private fb: FormBuilder, private caracteristiqueService: CaracteristiqueService) {}
 
-  ngOnChanges(changes: SimpleChanges) {// SimpleChanges permet de détecter les changements dans les propriétés d'entrée
-      if (changes['caracteristique']) {
-        this.caracteristiqueForm = this.createCaracteristiqueForm(this.caracteristique);
-      }
+  // --- Cycle de vie : mise à jour du formulaire si caracteristique change ---
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['caracteristique']) {
+      this.caracteristiqueForm = this.createCaracteristiqueForm(this.caracteristique);
     }
-  
-      /**
-       * Crée un FormGroup pour le rituel, prérempli si un objet est fourni, vide sinon.
-       */
-      private createCaracteristiqueForm(caracteristique: Caracteristique | null): FormGroup {
-        return this.fb.group({
-          nom: [caracteristique?.nom ?? '', [Validators.required, Validators.maxLength(16)]],
-          code: [caracteristique?.code ?? '', [Validators.required, Validators.maxLength(6)]],
-          description: [caracteristique?.description ?? '', [Validators.required]],
-        });
-      }
+  }
 
+  // --- Initialisation de la modale Materialize ---
   ngAfterViewInit() {
     if (this.modalRef) {
       M.Modal.init(this.modalRef.nativeElement);
     }
   }
 
+  // --- Ouvre la modale ---
   open() {
     if (this.modalRef) {
       const instance = M.Modal.getInstance(this.modalRef.nativeElement);
@@ -52,32 +45,40 @@ export class CaracteristiquesUpdateComponent implements AfterViewInit, OnChanges
     }
   }
 
-  onUpperCase(event: Event) {
-  const input = event.target as HTMLInputElement;
-  const upperValue = input.value.toUpperCase();
-  this.caracteristiqueForm.get('code')?.setValue(upperValue, { emitEvent: false });
-}
+  // --- Création du FormGroup pour la caractéristique ---
+  private createCaracteristiqueForm(caracteristique: Caracteristique | null): FormGroup {
+    return this.fb.group({
+      nom: [caracteristique?.nom ?? '', [Validators.required, Validators.maxLength(16)]],
+      code: [caracteristique?.code ?? '', [Validators.required, Validators.maxLength(6)]],
+      description: [caracteristique?.description ?? '', [Validators.required]],
+    });
+  }
 
+  // --- Met à jour le champ code en majuscules lors de la saisie ---
+  onUpperCase(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const upperValue = input.value.toUpperCase();
+    this.caracteristiqueForm.get('code')?.setValue(upperValue, { emitEvent: false });
+  }
+
+  // --- Soumission du formulaire (création ou édition) ---
   onSubmit() {
     if (!this.caracteristiqueForm.valid) {
       this.caracteristiqueForm.markAllAsTouched();
       console.error('Le formulaire n\'est pas valide. Veuillez corriger les erreurs.');
       return;
     }
-
     const closeModal = () => {
       const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
       instance.close();
     };
-
     if (this.caracteristique) {
       // Edition
-      const caracteristiqueToUpdate = { 
-        ...this.caracteristique, 
+      const caracteristiqueToUpdate = {
+        ...this.caracteristique,
         ...this.caracteristiqueForm.value,
         idCaracteristique: this.caracteristique?.idCaracteristique,
       };
-
       this.caracteristiqueService.updateCaracteristique(caracteristiqueToUpdate).subscribe({
         next: (result) => {
           console.info('caracteristique mise à jour avec succès', result);
@@ -104,7 +105,7 @@ export class CaracteristiquesUpdateComponent implements AfterViewInit, OnChanges
     }
   }
 
-  // Méthode pour réinitialiser le formulaire aux valeurs de l'objet 'caracteristique'
+  // --- Réinitialise le formulaire aux valeurs de l'objet 'caracteristique' (édition) ---
   resetForm() {
     if (this.caracteristiqueForm && this.caracteristique) {
       this.caracteristiqueForm.reset({
@@ -112,21 +113,17 @@ export class CaracteristiquesUpdateComponent implements AfterViewInit, OnChanges
         code: this.caracteristique.code,
         description: this.caracteristique.description,
       });
-      // Marquer le formulaire comme non modifié et non touché
-      // Cela permet de réinitialiser l'état du formulaire
       this.caracteristiqueForm.markAsPristine();
-      // Marquer tous les champs comme non touchés
       this.caracteristiqueForm.markAsUntouched();
     }
   }
 
-  // Méthode pour gérer l'annulation : réinitialise le formulaire et ferme la modale
+  // --- Annulation : réinitialise le formulaire et ferme la modale ---
   onCancel() {
-    this.resetForm(); // Réinitialise le formulaire aux valeurs d'origine
+    this.resetForm();
     if (this.modalRef) {
       const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
       instance.close();
     }
   }
-
 }

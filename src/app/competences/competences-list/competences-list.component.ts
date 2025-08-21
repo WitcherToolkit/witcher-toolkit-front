@@ -2,7 +2,6 @@ import { Component, computed, inject, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CompetenceService } from '../competence.service';
 import { CompetencesDetailComponent } from '../competences-detail/competences-detail.component';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { Competence } from '../../models/competence';
 import { SelectionBorderDirective } from '../../directives/selection-border.directive';
 import { CompetencesUpdateComponent } from '../competences-update/competences-update.component';
@@ -15,34 +14,72 @@ import { CompetencesUpdateComponent } from '../competences-update/competences-up
   styleUrl: './competences-list.component.scss'
 })
 export class CompetencesListComponent {
+  // --- Services et constantes ---
   private readonly competenceService = inject(CompetenceService);
-
   readonly MAX_LENGTH = 100;
+
+  // --- Signaux et propriétés réactives ---
   readonly competences = signal<Competence[]>([]);
-
   readonly searchTerm = signal('');
-  
+
+  // --- Propriétés pour la gestion des modales ---
+  @ViewChild(CompetencesDetailComponent) detailModal!: CompetencesDetailComponent;
+  @ViewChild(CompetencesUpdateComponent) updateModal!: CompetencesUpdateComponent;
+  selectedCompetence: Competence | null = null; // Pour détail/édition
+
+  // --- Filtres et computed ---
   readonly competencesListFiltered = computed(() => {
-    const term = this.searchTerm().trim().toLowerCase(); // Terme de recherche actuel
-    const allCompetences = this.competences(); // Tous les competences chargés (c'est un signal !)
-
+    const term = this.searchTerm().trim().toLowerCase();
+    const allCompetences = this.competences();
     if (!term || allCompetences === undefined || allCompetences.length === 0) {
-      return allCompetences || []; // Retourne tous les competences si le terme est vide ou si pas de données
+      return allCompetences || [];
     }
-
     return allCompetences.filter(competence =>
       competence.nom.toLowerCase().includes(term)
     );
   });
 
-  // Méthode pour mettre à jour le searchTerm (peut être liée à un événement input)
+  // --- Cycle de vie ---
+  ngOnInit() {
+    this.refreshCompetences();
+  }
+
+  // --- Gestion de la recherche ---
   onSearchChange(event: Event) {
     const inputElement = event.target as HTMLInputElement;
     this.searchTerm.set(inputElement.value);
   }
 
-  trackById(index: number, competence: any): number {
-    return competence.id;
+  // --- Gestion des modales ---
+  openModal(competence: Competence) {
+    this.selectedCompetence = competence;
+    this.detailModal.open();
+  }
+
+  openUpdateModal(competence: Competence) {
+    this.selectedCompetence = competence;
+    this.updateModal.open();
+  }
+
+  openCreateModal() {
+    this.selectedCompetence = null;
+    this.updateModal.open();
+  }
+
+  // --- Gestion CRUD ---
+  refreshCompetences() {
+    this.competenceService.getCompetencesList().subscribe(competences => {
+      this.competences.set(competences);
+    });
+  }
+
+  onCompetenceUpdated(updatedCompetence: Competence) {
+    this.refreshCompetences();
+  }
+
+  // --- Utilitaires ---
+  trackById(index: number, competence: Competence): number {
+    return competence.idCompetence;
   }
 
   truncateText(text: string): string {
@@ -51,47 +88,4 @@ export class CompetencesListComponent {
     }
     return text;
   }
-  
-  //#region boite de rialogue
-    @ViewChild(CompetencesDetailComponent) detailModal!: CompetencesDetailComponent;
-    @ViewChild(CompetencesUpdateComponent) updateModal!: CompetencesUpdateComponent;
-
-    // Ajoute une propriété pour la Competence sélectionnée
-    selectedCompetence: Competence | null = null;
-  
-    // Modifie openModal pour recevoir le competence
-    openModal(competence: Competence) {
-      this.selectedCompetence = competence;
-      this.detailModal.open();
-    }
-
-    openUpdateModal(competence: Competence) {
-      this.selectedCompetence = competence;
-      this.updateModal.open();
-    }
-
-    openCreateModal() {
-      this.selectedCompetence = null;
-      this.updateModal.open();
-    }
-    //#endregion boite de dialogue
-
-    // #region MAJ des competences après une action
-      ngOnInit() {
-        this.refreshCompetences();
-      }
-    
-    // Ajoute une méthode pour rafraîchir la liste
-    refreshCompetences() {
-      // Recharge la liste depuis le service
-      this.competenceService.getCompetencesList().subscribe(competences => {
-        this.competences.set(competences);
-      });
-    }
-  
-    onCompetenceUpdated(updatedCompetence: Competence) {
-      this.refreshCompetences();
-    }
-    // #endregion MAJ des competences après une action
-
 }

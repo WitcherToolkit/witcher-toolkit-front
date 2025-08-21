@@ -14,41 +14,32 @@ import { DANGER_RITUEL } from '../../shared-constants/danger-rituel.constans';
   templateUrl: './envoutements-update.component.html'
 })
 export class EnvoutementsUpdateComponent implements AfterViewInit, OnChanges {
+  // --- Entrées, sorties et références ---
   @Input() envoutement: Envoutement | null = null;
   @ViewChild('modal') modalRef!: ElementRef;
   @Output() envoutementUpdated = new EventEmitter<Envoutement>();
 
+  // --- Propriétés du formulaire et constantes ---
   envoutementForm!: FormGroup;
   dangers = DANGER_RITUEL;
 
-  constructor(private fb: FormBuilder, private envoutementService: EnvoutementService){}
+  constructor(private fb: FormBuilder, private envoutementService: EnvoutementService) {}
 
-  ngOnChanges(changes: SimpleChanges) {// SimpleChanges permet de détecter les changements dans les propriétés d'entrée
+  // --- Cycle de vie : mise à jour du formulaire si envoutement change ---
+  ngOnChanges(changes: SimpleChanges) {
     if (changes['envoutement']) {
       this.envoutementForm = this.createEnvoutementForm(this.envoutement);
     }
   }
 
-    /**
-     * Crée un FormGroup pour le rituel, prérempli si un objet est fourni, vide sinon.
-     */
-    private createEnvoutementForm(envoutement: Envoutement | null): FormGroup {
-      return this.fb.group({
-        nom: [envoutement?.nom ?? '', [Validators.required, Validators.maxLength(60)]],
-        cout: [envoutement?.cout ?? '', [Validators.required, Validators.maxLength(10)]],
-        effet: [envoutement?.effet ?? '', [Validators.required]],
-        prerequis: [envoutement?.prerequis ?? '', [Validators.required]],
-        danger: [envoutement?.danger ?? '', [Validators.required, Validators.maxLength(6)]]
-      });
-    }
-  
-
+  // --- Initialisation de la modale Materialize ---
   ngAfterViewInit() {
     if (this.modalRef) {
       M.Modal.init(this.modalRef.nativeElement);
     }
   }
 
+  // --- Ouvre la modale ---
   open() {
     if (this.modalRef) {
       const instance = M.Modal.getInstance(this.modalRef.nativeElement);
@@ -56,26 +47,35 @@ export class EnvoutementsUpdateComponent implements AfterViewInit, OnChanges {
     }
   }
 
+  // --- Création du FormGroup pour l'envoutement ---
+  private createEnvoutementForm(envoutement: Envoutement | null): FormGroup {
+    return this.fb.group({
+      nom: [envoutement?.nom ?? '', [Validators.required, Validators.maxLength(60)]],
+      cout: [envoutement?.cout ?? '', [Validators.required, Validators.maxLength(10)]],
+      effet: [envoutement?.effet ?? '', [Validators.required]],
+      prerequis: [envoutement?.prerequis ?? '', [Validators.required]],
+      danger: [envoutement?.danger ?? '', [Validators.required, Validators.maxLength(6)]]
+    });
+  }
+
+  // --- Soumission du formulaire (création ou édition) ---
   onSubmit() {
     if (!this.envoutementForm.valid) {
       this.envoutementForm.markAllAsTouched();
       console.error('Le formulaire n\'est pas valide. Veuillez corriger les erreurs.');
       return;
     }
-
     const closeModal = () => {
       const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
       instance.close();
     };
-
     if (this.envoutement) {
       // Edition
-      const envoutementToUpdate = { 
-        ...this.envoutement, 
+      const envoutementToUpdate = {
+        ...this.envoutement,
         ...this.envoutementForm.value,
         idEnvoutement: this.envoutement?.idEnvoutement,
       };
-
       this.envoutementService.updateEnvoutement(envoutementToUpdate).subscribe({
         next: (result) => {
           console.info('Envoutement mise à jour avec succès', result);
@@ -102,7 +102,7 @@ export class EnvoutementsUpdateComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  // Méthode pour réinitialiser le formulaire aux valeurs de l'objet 'envoutement'
+  // --- Réinitialise le formulaire aux valeurs de l'objet 'envoutement' (édition) ---
   resetForm() {
     if (this.envoutementForm && this.envoutement) {
       this.envoutementForm.reset({
@@ -112,21 +112,17 @@ export class EnvoutementsUpdateComponent implements AfterViewInit, OnChanges {
         prerequis: this.envoutement.prerequis,
         danger: this.envoutement.danger
       });
-      // Marquer le formulaire comme non modifié et non touché
-      // Cela permet de réinitialiser l'état du formulaire
       this.envoutementForm.markAsPristine();
-      // Marquer tous les champs comme non touchés
       this.envoutementForm.markAsUntouched();
     }
   }
 
-  // Méthode pour gérer l'annulation : réinitialise le formulaire et ferme la modale
+  // --- Annulation : réinitialise le formulaire et ferme la modale ---
   onCancel() {
-    this.resetForm(); // Réinitialise le formulaire aux valeurs d'origine
+    this.resetForm();
     if (this.modalRef) {
       const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
       instance.close();
     }
   }
-
 }

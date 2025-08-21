@@ -12,30 +12,46 @@ import { ELEMENT_MAGIE } from '../../shared-constants/element-magie.constants';
 @Component({
   selector: 'app-sorts-update-modal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormControlErrorComponent, RequiredAsteriskDirective],// Utilisation de ReactiveFormsModule pour les formulaires
+  imports: [CommonModule, ReactiveFormsModule, FormControlErrorComponent, RequiredAsteriskDirective],
   templateUrl: './sorts-update.component.html',
 })
 export class SortsUpdateComponent implements AfterViewInit, OnChanges {
+  // --- Entrées, sorties et références ---
   @Input() magie: Magie | null = null;
   @ViewChild('modal') modalRef!: ElementRef;
   @Output() magieUpdated = new EventEmitter<Magie>();
 
+  // --- Propriétés du formulaire et constantes ---
   magieForm!: FormGroup;
   niveaux = NIVEAUX_MAGIE;
   types = TYPE_MAGIE;
   elements = ELEMENT_MAGIE;
 
-  constructor(private fb: FormBuilder, private magieService: MagieService){}
+  constructor(private fb: FormBuilder, private magieService: MagieService) {}
 
+  // --- Cycle de vie : mise à jour du formulaire si magie change ---
   ngOnChanges(changes: SimpleChanges) {
     if (changes['magie']) {
       this.magieForm = this.createMagieForm(this.magie);
     }
   }
 
-  /**
-   * Crée un FormGroup pour la magie, prérempli si un objet est fourni, vide sinon.
-   */
+  // --- Initialisation de la modale Materialize ---
+  ngAfterViewInit() {
+    if (this.modalRef) {
+      M.Modal.init(this.modalRef.nativeElement);
+    }
+  }
+
+  // --- Ouvre la modale ---
+  open() {
+    if (this.modalRef) {
+      const instance = M.Modal.getInstance(this.modalRef.nativeElement);
+      instance.open();
+    }
+  }
+
+  // --- Création du FormGroup pour la magie ---
   private createMagieForm(magie: Magie | null): FormGroup {
     return this.fb.group({
       nom: [magie?.nom ?? '', [Validators.required, Validators.maxLength(60)]],
@@ -50,37 +66,23 @@ export class SortsUpdateComponent implements AfterViewInit, OnChanges {
     });
   }
 
-  ngAfterViewInit() {
-    if (this.modalRef) {
-      M.Modal.init(this.modalRef.nativeElement);
-    }
-  }
-
-  open() {
-    if (this.modalRef) {
-      const instance = M.Modal.getInstance(this.modalRef.nativeElement);
-      instance.open();
-    }
-  }
-
+  // --- Soumission du formulaire (création ou édition) ---
   onSubmit() {
     if (!this.magieForm.valid) {
       this.magieForm.markAllAsTouched();
       console.error('Le formulaire n\'est pas valide. Veuillez corriger les erreurs.');
       return;
     }
-
     const closeModal = () => {
       const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
       instance.close();
     };
-
     if (this.magie) {
       // Edition
-      const magieToUpdate = { 
-        ...this.magie, 
-        ...this.magieForm.value ,
-        idMagie: this.magie?.idMagie, // empêche la modification de l'ID
+      const magieToUpdate = {
+        ...this.magie,
+        ...this.magieForm.value,
+        idMagie: this.magie?.idMagie,
       };
       this.magieService.updateMagie(magieToUpdate).subscribe({
         next: (result) => {
@@ -109,7 +111,7 @@ export class SortsUpdateComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  // Méthode pour réinitialiser le formulaire aux valeurs de l'objet 'magie'
+  // --- Réinitialise le formulaire aux valeurs de l'objet 'magie' (édition) ---
   resetForm() {
     if (this.magieForm && this.magie) {
       this.magieForm.reset({
@@ -123,21 +125,17 @@ export class SortsUpdateComponent implements AfterViewInit, OnChanges {
         niveau: this.magie.niveau,
         effet: this.magie.effet
       });
-      // Marquer le formulaire comme non modifié et non touché
-      // Cela permet de réinitialiser l'état du formulaire
       this.magieForm.markAsPristine();
-      // Marquer tous les champs comme non touchés
       this.magieForm.markAsUntouched();
     }
   }
 
-  // Méthode pour gérer l'annulation : réinitialise le formulaire et ferme la modale
+  // --- Annulation : réinitialise le formulaire et ferme la modale ---
   onCancel() {
-    this.resetForm(); // Réinitialise le formulaire aux valeurs d'origine
+    this.resetForm();
     if (this.modalRef) {
       const instance = (window as any).M.Modal.getInstance(this.modalRef.nativeElement);
       instance.close();
     }
   }
-
 }

@@ -8,25 +8,29 @@ import { EnvironmentConfig } from '../environment.config';
   providedIn: 'root'
 })
 export class CompetenceService {
-  // Signal interne pour gérer les données en local
+  // --- Signal pour la liste des compétences (optionnel) ---
   private readonly competences = signal<Competence[]>([]);
+  // --- URL de base pour les requêtes compétences ---
+  private readonly apiUrl = `${EnvironmentConfig.apiBaseUrl}/competences`;
 
   constructor(private http: HttpClient) { }
 
+  // --- Récupérer la liste des compétences ---
   getCompetencesList(): Observable<Competence[]> {
-    console.log('Fetching competence from API...');
-    console.log(`API Base URL: ${EnvironmentConfig.apiBaseUrl}`);
-    return this.http.get<Competence[]>(`${EnvironmentConfig.apiBaseUrl}/competences`);
+    console.log('Fetching competences from API...');
+    console.log(`API Base URL: ${this.apiUrl}`);
+    return this.http.get<Competence[]>(this.apiUrl);
   }
 
+  // --- Mettre à jour une compétence existante ---
   updateCompetence(competence: Competence): Observable<Competence> {
     console.log('Updating competence:', competence);
-    return this.http.put<Competence>(`${EnvironmentConfig.apiBaseUrl}/competences/update/${competence.idCompetence}`, competence);
+    return this.http.put<Competence>(`${this.apiUrl}/update/${competence.idCompetence}`, competence);
   }
 
+  // --- Créer une nouvelle compétence ---
   createCompetence(competence: Competence): Observable<Competence> {
     console.log('Creating competence:', competence);
-    return this.http.post<Competence>(`${EnvironmentConfig.apiBaseUrl}/competences/create`, competence);
+    return this.http.post<Competence>(`${this.apiUrl}/create`, competence);
   }
-
 }

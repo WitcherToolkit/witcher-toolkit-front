@@ -9,20 +9,22 @@ import { CommonModule } from '@angular/common';
   templateUrl: './competences-detail.component.html'
 })
 export class CompetencesDetailComponent implements AfterViewInit {
+  // --- Entrées et références ---
   @Input() competence: Competence | null = null;
   @ViewChild('modal') modalRef!: ElementRef;
 
+  // --- Initialisation de la modale Materialize ---
   ngAfterViewInit() {
     if (this.modalRef) {
       M.Modal.init(this.modalRef.nativeElement);
     }
   }
 
+  // --- Ouvre la modale ---
   open() {
     if (this.modalRef) {
       const instance = M.Modal.getInstance(this.modalRef.nativeElement);
       instance.open();
     }
   }
-
 }

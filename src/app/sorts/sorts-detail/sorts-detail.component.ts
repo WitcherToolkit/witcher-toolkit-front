@@ -10,15 +10,18 @@ import { CommonModule } from '@angular/common';
   styleUrls: []
 })
 export class SortsDetailComponent implements AfterViewInit {
+  // --- Entrées et références ---
   @Input() magie: Magie | null = null;
   @ViewChild('modal') modalRef!: ElementRef;
 
+  // --- Initialisation de la modale Materialize ---
   ngAfterViewInit() {
     if (this.modalRef) {
       M.Modal.init(this.modalRef.nativeElement);
     }
   }
 
+  // --- Ouvre la modale ---
   open() {
     if (this.modalRef) {
       const instance = M.Modal.getInstance(this.modalRef.nativeElement);

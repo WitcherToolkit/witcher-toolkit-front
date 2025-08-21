@@ -12,16 +12,50 @@ import { ProfessionsService } from '../professions.service';
   templateUrl: './professions-detail.component.html'
 })
 export class ProfessionsDetailComponent implements AfterViewInit {
-
- // Use a setter for the input to react to changes and fetch data
+  // --- Entrées et références ---
   @Input() profession: Profession | null = null;
-
   @ViewChild('modal') modalRef!: ElementRef;
 
+  // --- Services et signaux ---
   private readonly professionsService = inject(ProfessionsService);
-  readonly detailedProfession = signal<Profession | null>(null); // Signal pour conserver les données détaillées sur la profession
+  readonly detailedProfession = signal<Profession | null>(null);
+
   constructor() {}
 
+  // --- Cycle de vie ---
+  ngAfterViewInit() {
+    if (this.modalRef && M && M.Modal) {
+      M.Modal.init(this.modalRef.nativeElement);
+    }
+  }
+
+  // --- Ouvre la modale et charge les détails ---
+  open() {
+    if (this.profession?.idProfession) {
+      this.fetchProfessionDetails(this.profession.idProfession);
+    }
+    if (this.modalRef && M && M.Modal) {
+      const instance = M.Modal.getInstance(this.modalRef.nativeElement);
+      if (instance) {
+        instance.open();
+      }
+    }
+  }
+
+  // --- Récupère les détails de la profession depuis le service ---
+  fetchProfessionDetails(id: number) {
+    this.professionsService.getProfessionCompetences(id).subscribe({
+      next: (data: Profession) => {
+        this.detailedProfession.set(data);
+      },
+      error: (err) => {
+        console.error('Error fetching profession details:', err);
+        this.detailedProfession.set(null);
+      }
+    });
+  }
+
+  // --- Accès filtré à l'inventaire ---
   get inventaireNormaux() {
     return this.detailedProfession()?.inventaireWikiList?.filter(i => !i.special) || [];
   }
@@ -30,48 +64,13 @@ export class ProfessionsDetailComponent implements AfterViewInit {
     return this.detailedProfession()?.inventaireWikiList?.filter(i => i.special === true) || [];
   }
 
-  ngAfterViewInit() {
-    // Initialize Materialize modal after the view has been initialized
-    if (this.modalRef && M && M.Modal) {
-      M.Modal.init(this.modalRef.nativeElement);
-    }
-  }
-
-  // Méthode pour récupérer les détails de la profession à partir du service
-  fetchProfessionDetails(id: number) {
-    this.professionsService.getProfessionCompetences(id).subscribe({
-      next: (data: Profession) => {
-        this.detailedProfession.set(data); // Mettre à jour le signal avec les données récupérées
-      },
-      error: (err) => {
-        console.error('Error fetching profession details:', err);
-        this.detailedProfession.set(null); // Effacer les données en cas d'erreur
-        // En option, afficher un message d'erreur à l'utilisateur
-      }
-    });
-  }
-
-  // Méthode pour ouvrir la fenêtre modale Materialize
-  open() {
-  if (this.profession?.idProfession) {
-    this.fetchProfessionDetails(this.profession.idProfession);
-  }
-  if (this.modalRef && M && M.Modal) {
-    const instance = M.Modal.getInstance(this.modalRef.nativeElement);
-    if (instance) {
-      instance.open();
-    }
-  }
-}
-
-  // Aide à l'accès aux compétences du modèle en toute sécurité
+  // --- Accès aux compétences de la profession ---
   get competences(): CompetenceProfession[] {
     return this.detailedProfession()?.competenceList || [];
   }
 
-  // Fonction TrackBy pour *ngFor sur la liste des compétences
+  // --- TrackBy pour *ngFor sur la liste des compétences ---
   trackCompetenceProfessionById(index: number, compProfession: CompetenceProfession): number {
-    return compProfession.idCompetenceProfession || index; // Utiliser l'identifiant s'il est disponible, sinon l'index
+    return compProfession.idCompetenceProfession || index;
   }
-
 }
