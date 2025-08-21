@@ -33,7 +33,8 @@ export class RituelsListComponent {
   @ViewChild(RituelsDetailComponent) detailModal!: RituelsDetailComponent;
   @ViewChild(RituelsUpdateComponent) updateModal!: RituelsUpdateComponent;
   @ViewChild('deleteModal') deleteModal!: ConfirmDeleteModalComponentComponent;
-  selectedRituel: Rituel | null = null; // Rituel sélectionné pour détail/édition/suppression
+  selectedRituel: Rituel | null = null; // Pour détail/édition
+  rituelToDelete: Rituel | null = null; // Pour suppression
 
   // --- Filtres et computed ---
   readonly rituelsListFiltered = computed(() => {
@@ -75,7 +76,7 @@ export class RituelsListComponent {
   }
 
   openDeleteModal(rituel: Rituel) {
-    this.selectedRituel = rituel;
+    this.rituelToDelete = rituel;
     setTimeout(() => {
       if (this.deleteModal) {
         this.deleteModal.open();
@@ -95,10 +96,10 @@ export class RituelsListComponent {
   }
 
   deleteRituel() {
-    if (!this.selectedRituel) return;
-    this.rituelsService.deleteRituel(this.selectedRituel.idRituel).subscribe(() => {
+    if (!this.rituelToDelete) return;
+    this.rituelsService.deleteRituel(this.rituelToDelete.idRituel).subscribe(() => {
       this.refreshRituels();
-      this.selectedRituel = null;
+      this.rituelToDelete = null;
     });
   }
 

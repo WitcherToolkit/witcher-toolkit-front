@@ -1,4 +1,3 @@
-
 <h1 class="center-align">Les rituels</h1>
 
 <div class="container mb-5">
@@ -66,5 +65,5 @@
 
 <app-rituels-detail-modal [rituel]="selectedRituel"></app-rituels-detail-modal>
 <app-rituels-update-modal [rituel]="selectedRituel" (rituelUpdated)="onRituelUpdated($event)"></app-rituels-update-modal>
-<app-confirm-delete-modal-component #deleteModal *ngIf="selectedRituel" [itemName]="selectedRituel.nom" (confirm)="deleteRituel()" (cancel)="selectedRituel = null"></app-confirm-delete-modal-component>
+<app-confirm-delete-modal-component #deleteModal *ngIf="rituelToDelete" [itemName]="rituelToDelete.nom" (confirm)="deleteRituel()" (cancel)="rituelToDelete = null"></app-confirm-delete-modal-component>
 

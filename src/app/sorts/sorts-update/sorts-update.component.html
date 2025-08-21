@@ -3,7 +3,8 @@
         <form *ngIf="magieForm" [formGroup]="magieForm" (ngSubmit)="onSubmit()">
             <!-- ngIf permet de s'assurer que le formulaire est prêt avant de l'afficher -->
 
-            <h4 class="center-align">Modifier un(e) {{ magie?.type}} </h4>
+            <h4 class="center-align">{{ magie ? ('Modifier ' + magie.nom) : 'Nouvelle magie' }}</h4>
+            <h6 class="center-align" *ngIf="magie">{{ magie.type }}</h6>
             <!--Ligne-->
             <div class="row">
                 <div class="input-field col s6">
@@ -36,11 +37,7 @@
                 <div class="input-field col s4">
                     <select id="nature" formControlName="nature" class="browser-default" required>
                         <option value="" disabled selected>Élément</option>
-                        <option value="Feu">Feu</option>
-                        <option value="Eau">Eau</option>
-                        <option value="Terre">Terre</option>
-                        <option value="Air">Air</option>
-                        <option value="Mixte">Mixte</option>
+                        <option *ngFor="let element of elements" [value]="element">{{ element }}</option>
                     </select>
                     <label for="nature" class="active">Élément</label>
                     <app-form-control-error [control]="magieForm.get('nature')"></app-form-control-error>
@@ -51,9 +48,7 @@
                 <div class="input-field col s4">
                     <select id="type" formControlName="type" class="browser-default" required>
                         <option value="" disabled selected>Type</option>
-                        <option value="Sort">Sort</option>
-                        <option value="Invocation">Invocation</option>
-                        <option value="Signe">Signe</option>
+                        <option *ngFor="let type of types" [value]="type">{{ type }}</option>
                     </select>
                     <label for="type" class="active">Type</label>
                     <app-form-control-error [control]="magieForm.get('type')"></app-form-control-error>
@@ -67,8 +62,11 @@
                 </div>
 
                 <div class="input-field col s4">
-                    <label class="active" for="niveau">Niveau</label>
-                    <input id="niveau" type="text" formControlName="niveau" required>
+                    <select id="niveau" formControlName="niveau" class="browser-default" required>
+                        <option value="" disabled selected>Niveau</option>
+                        <option *ngFor="let niveau of niveaux" [value]="niveau">{{ niveau }}</option>
+                    </select>
+                    <label for="niveau" class="active">Niveau</label>
                     <app-form-control-error [control]="magieForm.get('niveau')"></app-form-control-error>
                 </div>
             </div>

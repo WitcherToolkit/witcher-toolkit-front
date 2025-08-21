@@ -33,7 +33,8 @@ export class EnvoutementsListComponent implements OnInit {
   @ViewChild(EnvoutementsDetailComponent) detailModal!: EnvoutementsDetailComponent;
   @ViewChild(EnvoutementsUpdateComponent) updateModal!: EnvoutementsUpdateComponent;
   @ViewChild('deleteModal') deleteModal!: ConfirmDeleteModalComponentComponent;
-  selectedEnvoutement: Envoutement | null = null; // Envoutement sélectionné pour détail/édition/suppression
+  selectedEnvoutement: Envoutement | null = null; // Pour détail/édition
+  envoutementToDelete: Envoutement | null = null; // Pour suppression
 
   // --- Filtres et computed ---
   readonly envoutementsListFiltered = computed(() => {
@@ -75,7 +76,7 @@ export class EnvoutementsListComponent implements OnInit {
   }
 
   openDeleteModal(envoutement: Envoutement) {
-    this.selectedEnvoutement = envoutement;
+    this.envoutementToDelete = envoutement;
     setTimeout(() => {
       if (this.deleteModal) {
         this.deleteModal.open();
@@ -95,10 +96,10 @@ export class EnvoutementsListComponent implements OnInit {
   }
 
   deleteEnvoutement() {
-    if (!this.selectedEnvoutement) return;
-    this.envoutementService.deleteEnvoutement(this.selectedEnvoutement.idEnvoutement).subscribe(() => {
+    if (!this.envoutementToDelete) return;
+    this.envoutementService.deleteEnvoutement(this.envoutementToDelete.idEnvoutement).subscribe(() => {
       this.refreshEnvoutements();
-      this.selectedEnvoutement = null;
+      this.envoutementToDelete = null;
     });
   }
 

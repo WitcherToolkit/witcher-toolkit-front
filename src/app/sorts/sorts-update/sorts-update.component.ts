@@ -5,6 +5,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FormControlErrorComponent } from '../../form-validation/form-control-error.component';
 import { RequiredAsteriskDirective } from '../../directives/required-asterisk.directive';
 import { MagieService } from '../magie.service';
+import { NIVEAUX_MAGIE } from '../../shared-constants/niveau-magie.constants';
+import { TYPE_MAGIE } from '../../shared-constants/type-magie.constants';
+import { ELEMENT_MAGIE } from '../../shared-constants/element-magie.constants';
 
 @Component({
   selector: 'app-sorts-update-modal',
@@ -18,6 +21,9 @@ export class SortsUpdateComponent implements AfterViewInit, OnChanges {
   @Output() magieUpdated = new EventEmitter<Magie>();
 
   magieForm!: FormGroup;
+  niveaux = NIVEAUX_MAGIE;
+  types = TYPE_MAGIE;
+  elements = ELEMENT_MAGIE;
 
   constructor(private fb: FormBuilder, private magieService: MagieService){}
 
@@ -35,7 +41,7 @@ export class SortsUpdateComponent implements AfterViewInit, OnChanges {
       nom: [magie?.nom ?? '', [Validators.required, Validators.maxLength(60)]],
       cout: [magie?.cout ?? '', [Validators.required, Validators.maxLength(10)]],
       duree: [magie?.duree ?? '', [Validators.required, Validators.maxLength(35)]],
-      portee: [magie?.portee ?? '', [Validators.maxLength(15)]],
+      portee: [magie?.portee ?? '', [Validators.maxLength(20)]],
       nature: [magie?.nature ?? '', [Validators.required, Validators.maxLength(5)]],
       type: [magie?.type ?? '', [Validators.required, Validators.maxLength(10)]],
       contre: [magie?.contre ?? '', [Validators.maxLength(25)]],
@@ -93,6 +99,7 @@ export class SortsUpdateComponent implements AfterViewInit, OnChanges {
         next: (result) => {
           console.info('Magie créée avec succès', result);
           this.magieUpdated.emit(result);
+          this.magieForm.reset();
           closeModal();
         },
         error: (err) => {

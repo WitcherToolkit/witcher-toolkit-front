@@ -35,7 +35,8 @@ export class SortsListComponent implements OnInit {
   @ViewChild(SortsDetailComponent) detailModal!: SortsDetailComponent;
   @ViewChild(SortsUpdateComponent) updateModal!: SortsUpdateComponent;
   @ViewChild('deleteModal') deleteModal!: ConfirmDeleteModalComponentComponent; //Autre méthode pour faire appel à la modal
-  selectedMagie: Magie | null = null; // Magie sélectionnée pour détail/édition/suppression
+  selectedMagie: Magie | null = null; // Pour détail/édition
+  magieToDelete: Magie | null = null; // Pour suppression
 
   // --- Filtres et computed ---
   readonly magiesListFiltered = computed(() => {
@@ -82,7 +83,7 @@ export class SortsListComponent implements OnInit {
   }
 
   openDeleteModal(magie: Magie) {
-    this.selectedMagie = magie;
+    this.magieToDelete = magie;
     setTimeout(() => {
       if (this.deleteModal) {
         this.deleteModal.open();
@@ -102,10 +103,10 @@ export class SortsListComponent implements OnInit {
   }
 
   deleteMagie() {
-    if (!this.selectedMagie) return;
-    this.magieService.deleteMagie(this.selectedMagie.idMagie).subscribe(() => {
+    if (!this.magieToDelete) return;
+    this.magieService.deleteMagie(this.magieToDelete.idMagie).subscribe(() => {
       this.refreshMagies();
-      this.selectedMagie = null;
+      this.magieToDelete = null;
     });
   }
 

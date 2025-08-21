@@ -69,5 +69,5 @@
 <!-- Ajoute ceci à la fin de ton fichier HTML -->
 <app-envoutements-detail-modal [envoutement]="selectedEnvoutement"></app-envoutements-detail-modal>
 <app-envoutements-update-modal [envoutement]="selectedEnvoutement" (envoutementUpdated)="onEnvoutementUpdated($event)"></app-envoutements-update-modal>
-<app-confirm-delete-modal-component #deleteModal *ngIf="selectedEnvoutement" [itemName]="selectedEnvoutement.nom" (confirm)="deleteEnvoutement()" (cancel)="selectedEnvoutement = null"></app-confirm-delete-modal-component>
+<app-confirm-delete-modal-component #deleteModal *ngIf="envoutementToDelete" [itemName]="envoutementToDelete.nom" (confirm)="deleteEnvoutement()" (cancel)="envoutementToDelete = null"></app-confirm-delete-modal-component>
 
