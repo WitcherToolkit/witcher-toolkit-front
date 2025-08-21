@@ -5,6 +5,7 @@ import { FormControlErrorComponent } from '../../form-validation/form-control-er
 import { RequiredAsteriskDirective } from '../../directives/required-asterisk.directive';
 import { Envoutement } from '../../models/envoutement';
 import { EnvoutementService } from '../envoutement.service';
+import { DANGER_RITUEL } from '../../shared-constants/danger-rituel.constans';
 
 @Component({
   selector: 'app-envoutements-update-modal',
@@ -18,6 +19,7 @@ export class EnvoutementsUpdateComponent implements AfterViewInit, OnChanges {
   @Output() envoutementUpdated = new EventEmitter<Envoutement>();
 
   envoutementForm!: FormGroup;
+  dangers = DANGER_RITUEL;
 
   constructor(private fb: FormBuilder, private envoutementService: EnvoutementService){}
 
