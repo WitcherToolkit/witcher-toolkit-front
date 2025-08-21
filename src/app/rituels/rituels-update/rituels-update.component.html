@@ -3,7 +3,7 @@
         <form *ngIf="rituelForm" [formGroup]="rituelForm" (ngSubmit)="onSubmit()">
             <!-- ngIf permet de s'assurer que le formulaire est prêt avant de l'afficher -->
 
-            <h4 class="center-align">Modifier le rituel : {{ rituel?.nom}} </h4>
+            <h4 class="center-align">{{ rituel ? ('Modifier ' + rituel.nom) : 'Nouveau rituel' }}</h4>
             <!--Ligne-->
             <div class="row">
                 <div class="input-field col s4">
@@ -41,9 +41,11 @@
                     <app-form-control-error [control]="rituelForm.get('duree')"></app-form-control-error>
                 </div>
                 <div class="input-field col s4">
-                    <label class="active" for="niveau">Niveau</label>
-                    <input id="niveau" type="text" formControlName="niveau" required>
-                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                    <select id="niveau" formControlName="niveau" class="browser-default" required>
+                        <option value="" disabled selected>Niveau</option>
+                        <option *ngFor="let niveau of niveaux" [value]="niveau">{{ niveau }}</option>
+                    </select>
+                    <label for="niveau" class="active">Niveau</label>
                     <app-form-control-error [control]="rituelForm.get('niveau')"></app-form-control-error>
                 </div>
             </div>
@@ -66,7 +68,6 @@
                 </div>
             </div>
             
-
             <div class="modal-footer">
                 <button type="submit" class="modal-close btn-flat" [disabled]="rituelForm.invalid">Valider</button>
                 <button type="button" class="modal-close btn-flat" (click)="onCancel()">Annuler</button>

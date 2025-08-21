@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FormControlErrorComponent } from '../../form-validation/form-control-error.component';
 import { RequiredAsteriskDirective } from '../../directives/required-asterisk.directive';
 import { RituelsService } from '../rituels.service';
+import { NIVEAUX_RITUEL } from '../../shared-constants/niveau-rituel.constants';
 
 
 @Component({
@@ -20,6 +21,7 @@ export class RituelsUpdateComponent implements AfterViewInit, OnChanges{
   @Output() rituelUpdated = new EventEmitter<Rituel>();
 
   rituelForm! : FormGroup;
+  niveaux = NIVEAUX_RITUEL;
 
   constructor(private fb: FormBuilder, private rituelService: RituelsService) {}
 
@@ -38,7 +40,7 @@ export class RituelsUpdateComponent implements AfterViewInit, OnChanges{
       cout: [rituel?.cout ?? '', [Validators.required, Validators.maxLength(10)]],
       effet: [rituel?.effet ?? '', [Validators.required]],
       tempsPreparation: [rituel?.tempsPreparation ?? '', [Validators.required, Validators.maxLength(10)]],
-      sd: [rituel?.sd ?? '', [Validators.required, Validators.maxLength(7)]],
+      sd: [rituel?.sd ?? '', [Validators.required, Validators.maxLength(10)]],
       duree: [rituel?.duree ?? '', [Validators.required, Validators.maxLength(15)]],
       composant: [rituel?.composant ?? '', [Validators.required]],
       niveau: [rituel?.niveau ?? '', [Validators.required, Validators.maxLength(20)]],
@@ -95,6 +97,7 @@ export class RituelsUpdateComponent implements AfterViewInit, OnChanges{
         next: (result) => {
           console.info('Rituel créé avec succès', result);
           this.rituelUpdated.emit(result);
+          this.rituelForm.reset();
           closeModal();
         },
         error: (err) => {
