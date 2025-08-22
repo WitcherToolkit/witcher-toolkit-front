@@ -8,8 +8,8 @@
                         <!-------Card------->
                         <div class="card">
                             <div class="card-content">
-                                <h4 class="center-align">Modifier la profession : {{ profession?.nom}} </h4>
-                                
+                                <h4 class="center-align">{{ profession ? ('Modifier ' + profession.nom) : 'Nouvelle profession' }}</h4>
+
                                 <!-- Ligne 1 -->
                                 <div class="row">
                                     <div class="input-field col s6">

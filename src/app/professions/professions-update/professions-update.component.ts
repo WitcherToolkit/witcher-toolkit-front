@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormControlErrorComponent } from '../../form-validation/form-control-error.component';
 import { RequiredAsteriskDirective } from '../../directives/required-asterisk.directive';
@@ -58,16 +58,33 @@ export class ProfessionsUpdateComponent implements OnInit, AfterViewInit {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.competencesService.getCompetencesList().subscribe((competences) => {
       this.competences = competences;
-      console.log('Compétences chargées:', this.competences);
-      this.initForm();
-      this.cdr.detectChanges();
-      setTimeout(() => this.initMaterializeSelect());
+      if (idParam) {
+        // Edition : charger la profession existante
+        this.professionsService.getProfessionCompetences(+idParam).subscribe((profession) => {
+          this.profession = profession;
+          this.initForm();
+          this.cdr.detectChanges();
+          setTimeout(() => this.initMaterializeSelect());
+        });
+      } else {
+        // Création : pas de profession à charger
+        this.initForm();
+        this.cdr.detectChanges();
+        setTimeout(() => this.initMaterializeSelect());
+      }
     });
   }
 
   // --- Initialisation du formulaire principal ---
   initForm() {
     this.cdr.detectChanges();
+    // Correction : faire correspondre les objets Competence pour le select
+    let selectedCompetences: Competence[] = [];
+    if (this.profession?.competenceList && this.competences.length > 0) {
+      selectedCompetences = this.profession.competenceList
+        .map((c: any) => this.competences.find(comp => comp.idCompetence === (c.idCompetence || c.competence?.idCompetence)))
+        .filter((c): c is Competence => !!c);
+    }
     this.professionForm = this.fb.group({
       nom: [this.profession?.nom ?? '', [Validators.required, Validators.maxLength(50)]],
       description: [this.profession?.description ?? '', [Validators.required]],
@@ -88,7 +105,7 @@ export class ProfessionsUpdateComponent implements OnInit, AfterViewInit {
           })
         )
       ),
-      competenceList: [this.profession?.competenceList ?? [], [Validators.required]]
+      competenceList: [selectedCompetences.length > 0 ? selectedCompetences : (this.profession?.competenceList ?? []), [Validators.required]]
     });
   }
 
