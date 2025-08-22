@@ -4,12 +4,14 @@ import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } fr
 import { FormControlErrorComponent } from '../../form-validation/form-control-error.component';
 import { RequiredAsteriskDirective } from '../../directives/required-asterisk.directive';
 import { ProfessionsService } from '../professions.service';
-import { Competence } from '../../models/competence';
-import { CompetenceService } from '../../competences/competence.service';
 import { PROFESSION_LIST_PATH } from '../../app-routing/app-routing-constants';
 import { Profession } from '../../models/profession';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { Competence } from '../../models/competence';
+import { CompetenceService } from '../../competences/competence.service';
+
+declare var M: any;
 
 @Component({
   selector: 'app-professions-update-modal',
@@ -18,42 +20,48 @@ import { Observable } from 'rxjs';
   templateUrl: './professions-update.component.html',
   styleUrl: './professions-update.component.scss'
 })
-export class ProfessionsUpdateComponent implements OnInit {
+export class ProfessionsUpdateComponent implements OnInit, AfterViewInit {
   // --- Propriétés et services ---
-  @ViewChild('competenceAutocomplete') competenceAutocompleteRef!: ElementRef;
   readonly professionListPath = PROFESSION_LIST_PATH;
   professionForm!: FormGroup;
   profession: Profession | null = null;
-  allCompetences: Competence[] = [];
+  competences: Competence[] = [];
+
+  @ViewChild('competenceSelect') competenceSelect!: ElementRef;
+
+  private selectInstance: any;
 
   constructor(
     private fb: FormBuilder,
     private professionsService: ProfessionsService,
-    private competenceService: CompetenceService,
     private route: ActivatedRoute,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private competencesService: CompetenceService
   ) {}
 
   // --- Initialisation et chargement des données ---
+  ngAfterViewInit() {
+    // Ne rien faire ici pour éviter les conflits d'initialisation Materialize
+  }
+
+  private initMaterializeSelect() {
+    if (this.competenceSelect && this.competenceSelect.nativeElement) {
+      if (this.selectInstance) {
+        this.selectInstance.destroy();
+      }
+      this.selectInstance = M.FormSelect.init(this.competenceSelect.nativeElement);
+    }
+  }
+
   ngOnInit() {
     const idParam = this.route.snapshot.paramMap.get('id');
-    this.competenceService.getCompetencesList().subscribe(list => {
-      this.allCompetences = list;
-      if (idParam) {
-        // Mode édition
-        const id = Number(idParam);
-        this.professionsService.getProfessionCompetences(id).subscribe(profession => {
-          this.profession = profession;
-          this.initForm();
-          setTimeout(() => this.initMaterializeAutocomplete(), 0);
-        });
-      } else {
-        // Mode création
-        this.profession = null;
-        this.initForm();
-        setTimeout(() => this.initMaterializeAutocomplete(), 0);
-      }
+    this.competencesService.getCompetencesList().subscribe((competences) => {
+      this.competences = competences;
+      console.log('Compétences chargées:', this.competences);
+      this.initForm();
+      this.cdr.detectChanges();
+      setTimeout(() => this.initMaterializeSelect());
     });
   }
 
@@ -80,11 +88,7 @@ export class ProfessionsUpdateComponent implements OnInit {
           })
         )
       ),
-      competenceList: this.fb.array(
-        (this.profession?.competenceList ?? []).map(cp =>
-          this.fb.control(cp.competence.idCompetence)
-        )
-      )
+      competenceList: [this.profession?.competenceList ?? [], [Validators.required]]
     });
   }
 
@@ -95,14 +99,7 @@ export class ProfessionsUpdateComponent implements OnInit {
       console.error('Le formulaire n\'est pas valide. Veuillez corriger les erreurs.');
       return;
     }
-    const competenceIds = this.professionForm.value.competenceList;
     const idProfession = this.profession?.idProfession;
-    const competenceList = competenceIds.map((id: number) => {
-      const competenceObj = this.allCompetences.find(c => c.idCompetence === id);
-      return idProfession
-        ? { idProfession, idCompetence: id, competence: competenceObj }
-        : { idCompetence: id, competence: competenceObj };
-    });
     const inventaireWikiList = this.professionForm.value.inventaireWikiList.map((item: any, idx: number) => {
       const original = this.profession?.inventaireWikiList?.[idx];
       const base = {
@@ -114,7 +111,6 @@ export class ProfessionsUpdateComponent implements OnInit {
     const updatedProfession = {
       ...this.profession,
       ...this.professionForm.value,
-      competenceList,
       inventaireWikiList
     };
     let professionObservable: Observable<Profession>;
@@ -152,17 +148,8 @@ export class ProfessionsUpdateComponent implements OnInit {
           special: [!!item.special]
         }));
       });
-      // Réinitialiser les compétences
-      const competenceArray = this.competenceListFormArray;
-      competenceArray.clear();
-      if (this.profession.competenceList) {
-        this.profession.competenceList.forEach(cp => {
-          competenceArray.push(this.fb.control(cp.competence.idCompetence));
-        });
-      }
       this.professionForm.markAsPristine();
       this.professionForm.markAsUntouched();
-      setTimeout(() => this.initMaterializeAutocomplete(), 0);
     }
   }
 
@@ -201,52 +188,6 @@ export class ProfessionsUpdateComponent implements OnInit {
     }
   }
 
-  // --- Gestion des compétences (FormArray) ---
-  get competenceListFormArray(): FormArray {
-    return this.professionForm.get('competenceList') as FormArray;
-  }
-
-  /** Ajoute une compétence à la liste */
-  addCompetence(id: number) {
-    if (!this.competenceListFormArray.value.includes(id)) {
-      this.competenceListFormArray.push(this.fb.control(id));
-      setTimeout(() => this.initMaterializeAutocomplete(), 0);
-    }
-  }
-
-  /** Retire une compétence de la liste */
-  removeCompetence(id: number) {
-    const idx = this.competenceListFormArray.value.indexOf(id);
-    if (idx > -1) {
-      this.competenceListFormArray.removeAt(idx);
-      setTimeout(() => this.initMaterializeAutocomplete(), 0);
-    }
-  }
-
-  /** Sélectionne une compétence via le select */
-  onCompetenceSelect(event: Event) {
-    const select = event.target as HTMLSelectElement;
-    const value = select.value;
-    if (value) {
-      this.addCompetence(Number(value));
-      select.value = ""; // pour réinitialiser la sélection
-    }
-  }
-
-  /** Liste des compétences sélectionnées (objets complets) */
-  get selectedCompetences() {
-    return this.competenceListFormArray.value
-      .map((id: number) => this.allCompetences.find(c => c.idCompetence === id))
-      .filter((c: Competence | undefined): c is Competence => !!c);
-  }
-
-  /** Liste des compétences disponibles (non sélectionnées) */
-  get availableCompetences() {
-    return this.allCompetences.filter(
-      c => !this.competenceListFormArray.value.includes(c.idCompetence)
-    );
-  }
-
   // --- Outils UI ---
   /** Incrémente/décrémente un champ numérique du formulaire principal */
   updateField(field: string, delta: number, min: number = 0) {
@@ -254,32 +195,6 @@ export class ProfessionsUpdateComponent implements OnInit {
     if (ctrl) {
       const value = +ctrl.value || 0;
       ctrl.setValue(Math.max(value + delta, min));
-    }
-  }
-
-  /** Initialise l'autocomplete Materialize pour les compétences */
-  initMaterializeAutocomplete() {
-    if (this.competenceAutocompleteRef) {
-      // Détruit l'ancienne instance si elle existe
-      // @ts-ignore
-      const oldInstance = M.Autocomplete.getInstance(this.competenceAutocompleteRef.nativeElement);
-      if (oldInstance) {
-        oldInstance.destroy();
-      }
-      const data: { [key: string]: null } = {};
-      this.availableCompetences.forEach(c => data[c.nom] = null);
-      // @ts-ignore
-      M.Autocomplete.init(this.competenceAutocompleteRef.nativeElement, {
-        data,
-        onAutocomplete: (selected: string) => {
-          const comp = this.allCompetences.find(c => c.nom === selected);
-          if (comp) {
-            this.addCompetence(comp.idCompetence);
-            this.competenceAutocompleteRef.nativeElement.value = '';
-            setTimeout(() => this.initMaterializeAutocomplete(), 0);
-          }
-        }
-      });
     }
   }
 }

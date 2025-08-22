@@ -1,225 +1,218 @@
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <div class="row">
-        <form *ngIf="professionForm" [formGroup]="professionForm" (ngSubmit)="onSubmit()">
-            <div class="row">
-                <div class="col s2"></div>
-                <div class="col s8">
-                    <div class="row">
-                        <div class="col s12">
-                            <!-------Card------->
-                            <div class="card">
-                                <div class="card-content">
-                                    <h4 class="center-align">Modifier la profession : {{ profession?.nom}} </h4>
-                                    
-                                    <!-- Ligne 1 -->
-                                    <div class="row">
-                                        <div class="input-field col s6">
-                                            <label class="active" for="nom">Nom</label>
-                                            <input id="nom" type="text" formControlName="nom" required>
-                                            <app-form-control-error [control]="professionForm.get('nom')"></app-form-control-error>
-                                        </div>
-
-                                        <div class="input-field col s3">
-                                            <label class="active" for="vigueur">Vigueur</label>
-                                            <div class="vigueur-input-group">
-                                                <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('vigueur', -1)">
-                                                    <i class="material-icons">remove</i>
-                                                </a>
-                                                <input id="vigueur" type="text" formControlName="vigueur" required>
-                                                <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('vigueur', 1)">
-                                                    <i class="material-icons">add</i>
-                                                </a>
-                                            </div>
-                                            <app-form-control-error [control]="professionForm.get('vigueur')"></app-form-control-error>
-                                        </div>
-
-                                        <div class="input-field col s3">
-                                            <label class="active" for="nombreObjets">Nombre d'objets</label>
-                                            <div class="vigueur-input-group">
-                                                <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('nbObjet', -1)">
-                                                    <i class="material-icons">remove</i>
-                                                </a>
-                                                <input id="nombreObjets" type="text" formControlName="nbObjet" required>
-                                                <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('nbObjet', 1)">
-                                                    <i class="material-icons">add</i>
-                                                </a>
-                                            </div>
-                                            <app-form-control-error [control]="professionForm.get('nbObjet')"></app-form-control-error>
-                                        </div>
+<div class="row">
+    <form *ngIf="professionForm" [formGroup]="professionForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+            <div class="col s2"></div>
+            <div class="col s8">
+                <div class="row">
+                    <div class="col s12">
+                        <!-------Card------->
+                        <div class="card">
+                            <div class="card-content">
+                                <h4 class="center-align">Modifier la profession : {{ profession?.nom}} </h4>
+                                
+                                <!-- Ligne 1 -->
+                                <div class="row">
+                                    <div class="input-field col s6">
+                                        <label class="active" for="nom">Nom</label>
+                                        <input id="nom" type="text" formControlName="nom" required>
+                                        <app-form-control-error [control]="professionForm.get('nom')"></app-form-control-error>
                                     </div>
 
-                                    <!-- Ligne 2 -->
-                                    <div class="row">
-                                        <div class="input-field col s3">
-                                            <label class="active" for="maxSort">Nombre sorts max</label>
-                                            <div class="vigueur-input-group">
-                                                <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('maxSort', -1)">
-                                                    <i class="material-icons">remove</i>
-                                                </a>
-                                                <input id="maxSort" type="text" formControlName="maxSort" required>
-                                                <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('maxSort', 1)">
-                                                    <i class="material-icons">add</i>
-                                                </a>
-                                            </div>
-                                            <app-form-control-error [control]="professionForm.get('maxSort')"></app-form-control-error>
+                                    <div class="input-field col s3">
+                                        <label class="active" for="vigueur">Vigueur</label>
+                                        <div class="vigueur-input-group">
+                                            <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('vigueur', -1)">
+                                                <i class="material-icons">remove</i>
+                                            </a>
+                                            <input id="vigueur" type="text" formControlName="vigueur" required>
+                                            <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('vigueur', 1)">
+                                                <i class="material-icons">add</i>
+                                            </a>
                                         </div>
-
-                                        <div class="input-field col s3">
-                                            <label class="active" for="maxRituel">Nombre rituels max</label>
-                                            <div class="vigueur-input-group">
-                                                <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('maxRituel', -1)">
-                                                    <i class="material-icons">remove</i>
-                                                </a>
-                                                <input id="maxRituel" type="text" formControlName="maxRituel" required>
-                                                <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('maxRituel', 1)">
-                                                    <i class="material-icons">add</i>
-                                                </a>
-                                            </div>
-                                            <app-form-control-error [control]="professionForm.get('maxRituel')"></app-form-control-error>
-                                        </div>
-
-                                        <div class="input-field col s3">
-                                            <label class="active" for="maxEnvoutement">Nombre envoûtement max</label>
-                                            <div class="vigueur-input-group">
-                                                <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('maxEnvoutement', -1)">
-                                                    <i class="material-icons">remove</i>
-                                                </a>
-                                                <input id="maxEnvoutement" type="text" formControlName="maxEnvoutement" required>
-                                                <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('maxEnvoutement', 1)">
-                                                    <i class="material-icons">add</i>
-                                                </a>
-                                            </div>
-                                            <app-form-control-error [control]="professionForm.get('maxEnvoutement')"></app-form-control-error>
-                                        </div>
-
-                                        <div class="input-field col s3">
-                                            <label class="active" for="maxInvocation">Nombre invocation max</label>
-                                            <div class="vigueur-input-group">
-                                                <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('maxInvocation', -1)">
-                                                    <i class="material-icons">remove</i>
-                                                </a>
-                                                <input id="maxInvocation" type="text" formControlName="maxInvocation" required>
-                                                <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('maxInvocation', 1)">
-                                                    <i class="material-icons">add</i>
-                                                </a>
-                                            </div>
-                                            <app-form-control-error [control]="professionForm.get('maxInvocation')"></app-form-control-error>
-                                        </div>            
+                                        <app-form-control-error [control]="professionForm.get('vigueur')"></app-form-control-error>
                                     </div>
 
-                                    <!-- Ligne 3 -->
-                                    <div class="row">
-                                        <div class="input-field col s12">
-                                            <label class="active" for="description">Description</label>
-                                            <textarea id="description" formControlName="description" class="materialize-textarea"></textarea>
-                                            <app-form-control-error [control]="professionForm.get('description')"></app-form-control-error>
+                                    <div class="input-field col s3">
+                                        <label class="active" for="nombreObjets">Nombre d'objets</label>
+                                        <div class="vigueur-input-group">
+                                            <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('nbObjet', -1)">
+                                                <i class="material-icons">remove</i>
+                                            </a>
+                                            <input id="nombreObjets" type="text" formControlName="nbObjet" required>
+                                            <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('nbObjet', 1)">
+                                                <i class="material-icons">add</i>
+                                            </a>
                                         </div>
+                                        <app-form-control-error [control]="professionForm.get('nbObjet')"></app-form-control-error>
                                     </div>
-
-                                    <!-- Ligne 4 -->
-                                    <div class="row">
-                                        <div class="input-field col s4">
-                                            <label for="competence-autocomplete">Ajouter une compétence</label>
-                                            <input id="competence-autocomplete" type="text" #competenceAutocomplete autocomplete="off">
-                                        </div>
-
-                                        <!-- Affichage des compétences sélectionnées sous forme de chips-->
-                                        <div class="input-field col s8">
-                                            <div class="chips-container">
-                                                <div class="chip" *ngFor="let comp of selectedCompetences">
-                                                    {{ comp.nom }}
-                                                    <i class="close material-icons" (click)="removeCompetence(comp.idCompetence)">close</i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
                                 </div>
-                            </div>   
-                        </div>
 
-                        <div class="col s12">
-                            <!-------Card------->
-                            <div class="card">
-                                <div class="card-content">
+                                <!-- Ligne 2 -->
+                                <div class="row">
+                                    <div class="input-field col s3">
+                                        <label class="active" for="maxSort">Nombre sorts max</label>
+                                        <div class="vigueur-input-group">
+                                            <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('maxSort', -1)">
+                                                <i class="material-icons">remove</i>
+                                            </a>
+                                            <input id="maxSort" type="text" formControlName="maxSort" required>
+                                            <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('maxSort', 1)">
+                                                <i class="material-icons">add</i>
+                                            </a>
+                                        </div>
+                                        <app-form-control-error [control]="professionForm.get('maxSort')"></app-form-control-error>
+                                    </div>
+
+                                    <div class="input-field col s3">
+                                        <label class="active" for="maxRituel">Nombre rituels max</label>
+                                        <div class="vigueur-input-group">
+                                            <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('maxRituel', -1)">
+                                                <i class="material-icons">remove</i>
+                                            </a>
+                                            <input id="maxRituel" type="text" formControlName="maxRituel" required>
+                                            <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('maxRituel', 1)">
+                                                <i class="material-icons">add</i>
+                                            </a>
+                                        </div>
+                                        <app-form-control-error [control]="professionForm.get('maxRituel')"></app-form-control-error>
+                                    </div>
+
+                                    <div class="input-field col s3">
+                                        <label class="active" for="maxEnvoutement">Nombre envoûtement max</label>
+                                        <div class="vigueur-input-group">
+                                            <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('maxEnvoutement', -1)">
+                                                <i class="material-icons">remove</i>
+                                            </a>
+                                            <input id="maxEnvoutement" type="text" formControlName="maxEnvoutement" required>
+                                            <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('maxEnvoutement', 1)">
+                                                <i class="material-icons">add</i>
+                                            </a>
+                                        </div>
+                                        <app-form-control-error [control]="professionForm.get('maxEnvoutement')"></app-form-control-error>
+                                    </div>
+
+                                    <div class="input-field col s3">
+                                        <label class="active" for="maxInvocation">Nombre invocation max</label>
+                                        <div class="vigueur-input-group">
+                                            <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('maxInvocation', -1)">
+                                                <i class="material-icons">remove</i>
+                                            </a>
+                                            <input id="maxInvocation" type="text" formControlName="maxInvocation" required>
+                                            <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('maxInvocation', 1)">
+                                                <i class="material-icons">add</i>
+                                            </a>
+                                        </div>
+                                        <app-form-control-error [control]="professionForm.get('maxInvocation')"></app-form-control-error>
+                                    </div>            
+                                </div>
+
+                                <!-- Ligne 3 -->
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <label class="active" for="description">Description</label>
+                                        <textarea id="description" formControlName="description" class="materialize-textarea"></textarea>
+                                        <app-form-control-error [control]="professionForm.get('description')"></app-form-control-error>
+                                    </div>
+                                </div>
+                                <!-- Ligne 4 -->
+                                <div class="row">
+                                    <!-- Ici il y aura la liste des compétences-->
+                                     
+                                    <!-- Liste des compétences -->
+                                    <div class="input-field col s12">
+                                        <label class="active" for="competenceList">Compétences</label>
+                                        <select id="competenceList" formControlName="competenceList" multiple #competenceSelect>
+                                            <option *ngFor="let comp of competences" [value]="comp.idCompetence">{{ comp.nom }}</option>
+                                        </select>
+                                        <app-form-control-error [control]="professionForm.get('competenceList')"></app-form-control-error>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>   
+                    </div>
+
+                    <div class="col s12">
+                        <!-------Card------->
+                        <div class="card">
+                            <div class="card-content">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th><h5 class="center-align">Équipements disponibles </h5></th>
+                                            <th><a class="btn-floating yellow darken-3 btn-small" (click)="addInventaireWiki()"><i class="material-icons">add</i></a></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+
+                                <div class="row">
+                                    
                                     <table>
                                         <thead>
-                                            <tr>
-                                                <th><h5 class="center-align">Équipements disponibles </h5></th>
-                                                <th><a class="btn-floating yellow darken-3 btn-small" (click)="addInventaireWiki()"><i class="material-icons">add</i></a></th>
-                                            </tr>
+                                        <tr>
+                                            <th>Quantité</th>
+                                            <th>Nom</th>
+                                            <th>Type</th>
+                                            <th>Effet</th>
+                                            <th>Spécifique</th>
+                                            <th></th>
+                                        </tr>
                                         </thead>
+                                        <tbody>
+                                            <tr *ngFor="let invForm of inventaireWikiFormArray.controls; let i = index" [formGroup]="invForm">
+                                                <td>
+
+                                                    <label class="active" for="quantite">Quantité</label>
+                                                    <div class="vigueur-input-group">
+                                                        <a class="btn-floating yellow darken-3 btn-small" (click)="updateQuantite(i, -1)">
+                                                            <i class="material-icons">remove</i>
+                                                        </a>
+                                                        <input id="quantite" type="text" formControlName="quantite" required>
+                                                        <a class="btn-floating yellow darken-3 btn-small" (click)="updateQuantite(i, 1)">
+                                                            <i class="material-icons">add</i>
+                                                        </a>
+                                                    </div>
+                                                    <app-form-control-error [control]="professionForm.get('quantite')"></app-form-control-error>
+
+                                                </td>
+                                                <td>
+                                                    <label class="active" [for]="'nom-' + i">Nom</label>
+                                                    <input [id]="'nom-' + i" type="text" formControlName="nom" required>
+                                                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                                                    <app-form-control-error [control]="professionForm.get('nom')"></app-form-control-error>
+                                                </td>
+                                                <td>
+                                                    <label class="active" [for]="'type-' + i">Type</label>
+                                                    <input [id]="'type-' + i" type="text" formControlName="type">
+                                                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                                                    <app-form-control-error [control]="professionForm.get('type')"></app-form-control-error>
+                                                </td>
+                                                <td>
+                                                    <label class="active" [for]="'effet-' + i">Effet</label>
+                                                    <input [id]="'effet-' + i" type="text" formControlName="effet">
+                                                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                                                    <app-form-control-error [control]="professionForm.get('effet')"></app-form-control-error>
+                                                </td>
+                                                <td>
+                                                    <label>
+                                                        <input type="checkbox" formControlName="special" [id]="'special-' + i" />
+                                                        <span>Présent dans l'inventaire</span>
+                                                    </label>
+                                                </td>
+                                                <td>
+                                                    <a type="button" class="btn-floating deep-orange darken-3 btn-small" (click)="removeInventaireWiki(i)">
+                                                    <i class="material-icons">delete_forever</i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
                                     </table>
 
-                                    <div class="row">
-                                        
-                                        <table>
-                                            <thead>
-                                            <tr>
-                                                <th>Quantité</th>
-                                                <th>Nom</th>
-                                                <th>Type</th>
-                                                <th>Effet</th>
-                                                <th>Spécifique</th>
-                                                <th></th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr *ngFor="let invForm of inventaireWikiFormArray.controls; let i = index" [formGroup]="invForm">
-                                                    <td>
-
-                                                        <label class="active" for="quantite">Quantité</label>
-                                                        <div class="vigueur-input-group">
-                                                            <a class="btn-floating yellow darken-3 btn-small" (click)="updateQuantite(i, -1)">
-                                                                <i class="material-icons">remove</i>
-                                                            </a>
-                                                            <input id="quantite" type="text" formControlName="quantite" required>
-                                                            <a class="btn-floating yellow darken-3 btn-small" (click)="updateQuantite(i, 1)">
-                                                                <i class="material-icons">add</i>
-                                                            </a>
-                                                        </div>
-                                                        <app-form-control-error [control]="professionForm.get('quantite')"></app-form-control-error>
-
-                                                    </td>
-                                                    <td>
-                                                        <label class="active" [for]="'nom-' + i">Nom</label>
-                                                        <input [id]="'nom-' + i" type="text" formControlName="nom" required>
-                                                        <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
-                                                        <app-form-control-error [control]="professionForm.get('nom')"></app-form-control-error>
-                                                    </td>
-                                                    <td>
-                                                        <label class="active" [for]="'type-' + i">Type</label>
-                                                        <input [id]="'type-' + i" type="text" formControlName="type">
-                                                        <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
-                                                        <app-form-control-error [control]="professionForm.get('type')"></app-form-control-error>
-                                                    </td>
-                                                    <td>
-                                                        <label class="active" [for]="'effet-' + i">Effet</label>
-                                                        <input [id]="'effet-' + i" type="text" formControlName="effet">
-                                                        <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
-                                                        <app-form-control-error [control]="professionForm.get('effet')"></app-form-control-error>
-                                                    </td>
-                                                    <td>
-                                                        <label>
-                                                            <input type="checkbox" formControlName="special" [id]="'special-' + i" />
-                                                            <span>Présent dans l'inventaire</span>
-                                                        </label>
-                                                    </td>
-                                                    <td>
-                                                        <a type="button" class="btn-floating deep-orange darken-3 btn-small" (click)="removeInventaireWiki(i)">
-                                                        <i class="material-icons">delete_forever</i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-
-                                    </div>
                                 </div>
-                            </div>   
-                        </div>
+                            </div>
+                        </div>   
                     </div>
                 </div>
+            </div>
             <div class="col s2"></div>
         </div>           
 
