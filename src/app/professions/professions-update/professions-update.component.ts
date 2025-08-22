@@ -108,10 +108,18 @@ export class ProfessionsUpdateComponent implements OnInit, AfterViewInit {
       };
       return idProfession ? { ...base, profession: { idProfession } } : base;
     });
+    // Adapter la liste des compétences pour respecter le DTO attendu
+    const competenceList = (this.professionForm.value.competenceList || []).map((c: any) => ({
+      idCompetenceProfession: null,
+      idProfession: this.profession?.idProfession ?? null,
+      idCompetence: c.idCompetence,
+      competence: { idCompetence: c.idCompetence }
+    }));
     const updatedProfession = {
       ...this.profession,
       ...this.professionForm.value,
-      inventaireWikiList
+      inventaireWikiList,
+      competenceList
     };
     let professionObservable: Observable<Profession>;
     if(this.profession){

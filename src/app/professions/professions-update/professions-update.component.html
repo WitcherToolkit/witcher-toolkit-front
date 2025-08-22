@@ -122,7 +122,7 @@
                                     <div class="input-field col s12">
                                         <label class="active" for="competenceList">Compétences</label>
                                         <select id="competenceList" formControlName="competenceList" multiple #competenceSelect>
-                                            <option *ngFor="let comp of competences" [value]="comp.idCompetence">{{ comp.nom }}</option>
+                                            <option *ngFor="let comp of competences" [ngValue]="comp">{{ comp.nom }}</option>
                                         </select>
                                         <app-form-control-error [control]="professionForm.get('competenceList')"></app-form-control-error>
                                     </div>
