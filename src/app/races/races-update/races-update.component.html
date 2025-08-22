@@ -10,7 +10,7 @@
                         <!-------Card------->
                         <div class="card">
                             <div class="card-content">
-                                <h4 class="center-align">Modifier la race : {{ race?.nom}} </h4>
+                                <h4 class="center-align">{{ race ? ('Modifier ' + race.nom) : 'Nouvelle race' }}</h4>
                                 <div class="row">
                                     <div class="input-field col s12">
                                         <label class="active" for="nom">Nom</label>

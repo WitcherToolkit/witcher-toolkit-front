@@ -122,6 +122,7 @@ export class CompetencesUpdateComponent implements AfterViewInit, OnChanges {
         next: (result) => {
           console.info('competence mise à jour avec succès', result);
           this.competenceUpdated.emit(result);
+          this.resetForm();
           closeModal();
         },
         error: (err) => {

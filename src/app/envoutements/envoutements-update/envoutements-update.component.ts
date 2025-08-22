@@ -80,6 +80,7 @@ export class EnvoutementsUpdateComponent implements AfterViewInit, OnChanges {
         next: (result) => {
           console.info('Envoutement mise à jour avec succès', result);
           this.envoutementUpdated.emit(result);
+          this.resetForm();
           closeModal();
         },
         error: (err) => {

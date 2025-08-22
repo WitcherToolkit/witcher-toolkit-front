@@ -84,6 +84,7 @@ export class RituelsUpdateComponent implements AfterViewInit, OnChanges {
         next: (result) => {
           console.info('Rituel mise à jour avec succès', result);
           this.rituelUpdated.emit(result);
+          this.resetForm();
           closeModal();
         },
         error: (err) => {

@@ -12,7 +12,12 @@ import { RACE_LIST_PATH } from '../../app-routing/app-routing-constants';
 @Component({
   selector: 'app-races-update',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormControlErrorComponent, RequiredAsteriskDirective],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormControlErrorComponent,
+    RequiredAsteriskDirective
+  ],
   templateUrl: './races-update.component.html',
   styleUrl: './races-update.component.scss'
 })

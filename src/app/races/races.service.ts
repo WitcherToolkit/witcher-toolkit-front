@@ -38,4 +38,10 @@ export class RacesService {
     console.log('Updating race:', race);
     return this.http.put<Race>(`${this.apiUrl}/update/${race.idRace}`, race);
   }
+
+  // --- Supprimer une race par son ID ---
+  deleteRace(id: number): Observable<void> {
+    console.log('Deleting race with ID:', id);
+    return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
+  }
 }

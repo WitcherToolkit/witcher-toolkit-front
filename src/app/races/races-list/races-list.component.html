@@ -64,8 +64,8 @@
 
                     <div class="card-action">
                       <a (click)="openModal(race)" href="javascript:void(0)">Voir</a>
-                      <a (click)="goToUpdatePage(race)">Modifier</a>
-                      <a href="#">Supprimer</a>
+                      <a (click)="openUpdatePage(race)">Modifier</a>
+                      <a (click)="openDeleteModal(race)" href="javascript:void(0)">Supprimer</a>
                     </div>
                   </div>
               </div>
@@ -75,3 +75,4 @@
 </div>
 
 <app-races-detail-modal [race]="selectedRace"></app-races-detail-modal>
+<app-confirm-delete-modal-component #deleteModal *ngIf="raceToDelete" [itemName]="raceToDelete.nom" (confirm)="deleteRace()" (cancel)="raceToDelete = null"></app-confirm-delete-modal-component>

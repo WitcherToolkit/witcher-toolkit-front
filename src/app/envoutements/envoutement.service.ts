@@ -22,16 +22,16 @@ export class EnvoutementService {
     return this.http.get<Envoutement[]>(this.apiUrl);
   }
 
-  // --- Mettre à jour un envoutement existant ---
-  updateEnvoutement(envoutement: Envoutement): Observable<Envoutement> {
-    console.log('Updating envoutement:', envoutement);
-    return this.http.put<Envoutement>(`${this.apiUrl}/update/${envoutement.idEnvoutement}`, envoutement);
-  }
-
   // --- Créer un nouvel envoutement (sans idEnvoutement, géré côté API) ---
   createEnvoutement(envoutement: Omit<Envoutement, 'idEnvoutement'> | Partial<Envoutement>): Observable<Envoutement> {
     console.log('Creating envoutement:', envoutement);
     return this.http.post<Envoutement>(`${this.apiUrl}/create`, envoutement);
+  }
+
+  // --- Mettre à jour un envoutement existant ---
+  updateEnvoutement(envoutement: Envoutement): Observable<Envoutement> {
+    console.log('Updating envoutement:', envoutement);
+    return this.http.put<Envoutement>(`${this.apiUrl}/update/${envoutement.idEnvoutement}`, envoutement);
   }
 
   // --- Supprimer un envoutement par son ID ---
