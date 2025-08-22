@@ -3,7 +3,7 @@
         <form *ngIf="envoutementForm" [formGroup]="envoutementForm" (ngSubmit)="onSubmit()">
             <!-- ngIf permet de s'assurer que le formulaire est prêt avant de l'afficher -->
 
-            <h4 class="center-align">Modifier un(e) {{ envoutement?.nom}} </h4>
+            <h4 class="center-align">{{ envoutement ? ('Modifier ' + envoutement.nom) : 'Nouvel envoûtement' }}</h4>
             <!--Ligne-->
             <div class="row">
                 <div class="input-field col s4">

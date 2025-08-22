@@ -3,7 +3,7 @@
         <form *ngIf="competenceForm" [formGroup]="competenceForm" (ngSubmit)="onSubmit()">
             <!-- ngIf permet de s'assurer que le formulaire est prêt avant de l'afficher -->
 
-            <h4 class="center-align">Modifier la competence : {{ competence?.nom}} </h4>
+            <h4 class="center-align">{{ competence ? ('Modifier ' + competence.nom) : 'Nouvelle compétence' }}</h4>
             <!--Ligne-->
             <div class="row">
                 <div class="input-field col s4">
