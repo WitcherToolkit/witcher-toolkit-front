@@ -54,7 +54,7 @@
             <div class="card-action">
               <a (click)="openModal(caracteristique)" href="javascript:void(0)">Voir</a>
               <a (click)="openUpdateModal(caracteristique)" href="javascript:void(0)">Modifier</a>
-              <a href="#">Supprimer</a>
+              <a (click)="openDeleteModal(caracteristique)" href="javascript:void(0)">Supprimer</a>
             </div>
 
           </div>
@@ -66,4 +66,4 @@
 
 <app-caracteristiques-detail-modal [caracteristique]="selectedCaracteristique"></app-caracteristiques-detail-modal>
 <app-caracteristiques-update-modal [caracteristique]="selectedCaracteristique" (caracteristiqueUpdated)="onCaracteristiqueUpdated($event)"></app-caracteristiques-update-modal>
-
+<app-confirm-delete-modal-component #deleteModal *ngIf="caracteristiqueToDelete" [itemName]="caracteristiqueToDelete.nom" (confirm)="deleteCaracteristique()" (cancel)="caracteristiqueToDelete = null"></app-confirm-delete-modal-component>

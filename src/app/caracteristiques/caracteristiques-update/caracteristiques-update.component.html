@@ -3,7 +3,7 @@
         <form *ngIf="caracteristiqueForm" [formGroup]="caracteristiqueForm" (ngSubmit)="onSubmit()">
             <!-- ngIf permet de s'assurer que le formulaire est prêt avant de l'afficher -->
 
-            <h4 class="center-align">Modifier le caracteristique : {{ caracteristique?.nom}} </h4>
+            <h4 class="center-align">{{ caracteristique ? ('Modifier ' + caracteristique.nom) : 'Nouveau caracteristique' }}</h4>
             <!--Ligne-->
             <div class="row">
                 <div class="input-field col s6">

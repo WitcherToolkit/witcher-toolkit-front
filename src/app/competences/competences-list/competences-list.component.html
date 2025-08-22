@@ -54,7 +54,7 @@
             <div class="card-action">
               <a (click)="openModal(competence)" href="javascript:void(0)">Voir</a>
               <a (click)="openUpdateModal(competence)" href="javascript:void(0)">Modifier</a>
-              <a href="#">Supprimer</a>
+              <a (click)="openDeleteModal(competence)" href="javascript:void(0)">Supprimer</a>
             </div>
           </div>
         </div>
@@ -65,3 +65,4 @@
 
 <app-competences-detail-modal [competence]="selectedCompetence"></app-competences-detail-modal>
 <app-competences-update-modal [competence]="selectedCompetence" (competenceUpdated)="onCompetenceUpdated($event)"></app-competences-update-modal>
+<app-confirm-delete-modal-component #deleteModal *ngIf="competenceToDelete" [itemName]="competenceToDelete.nom" (confirm)="deleteCompetence()" (cancel)="competenceToDelete = null"></app-confirm-delete-modal-component>

@@ -12,25 +12,36 @@ import { EnvironmentConfig } from '../environment.config';
   providedIn: 'root'
 })
 export class CaracteristiqueService {
-  // Signal local (temporaire) pour l'état en mémoire
+  // --- Signal pour la liste des caractéristiques ---
   private readonly caracteristiques = signal<Caracteristique[]>([]);
+  // --- URL de base pour les requêtes caractéristiques ---
+  private readonly apiUrl = `${EnvironmentConfig.apiBaseUrl}/caracteristiques`;
 
   constructor(private http: HttpClient, private fb: FormBuilder) {}
 
+  // --- Récupérer la liste des caractéristiques ---
   getCaracteristiquesList(): Observable<Caracteristique[]> {
     console.info('Fetching caracteristiques from API...');
-    console.log(`API Base URL: ${EnvironmentConfig.apiBaseUrl}`);
-    return this.http.get<Caracteristique[]>(`${EnvironmentConfig.apiBaseUrl}/caracteristiques`);
+    console.log(`API Base URL: ${this.apiUrl}`);
+    return this.http.get<Caracteristique[]>(this.apiUrl);
   }
 
+  // --- Mettre à jour une caractéristique existante ---
   updateCaracteristique(caracteristique: Caracteristique): Observable<Caracteristique> {
     console.log('Updating caracteristique:', caracteristique);
-    return this.http.put<Caracteristique>(`${EnvironmentConfig.apiBaseUrl}/caracteristiques/update/${caracteristique.idCaracteristique}`, caracteristique);
+    return this.http.put<Caracteristique>(`${this.apiUrl}/update/${caracteristique.idCaracteristique}`, caracteristique);
   }
 
+  // --- Créer un nouveau caractéristique (sans idCaracteristique, géré côté API) ---
   createCaracteristique(caracteristique: Omit<Caracteristique, 'idCaracteristique'> | Partial<Caracteristique>): Observable<Caracteristique> {
     console.log('Creating caracteristique:', caracteristique);
-    return this.http.post<Caracteristique>(`${EnvironmentConfig.apiBaseUrl}/caracteristiques/create`, caracteristique);
+    return this.http.post<Caracteristique>(`${this.apiUrl}/create`, caracteristique);
+  }
+
+  // --- Supprimer une caractéristique par son ID ---
+  deleteCaracteristique(id: number): Observable<void> {
+    console.log('Deleting caracteristique with id:', id);
+    return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
   }
 
   //----------------------------------------------------------------------------------//

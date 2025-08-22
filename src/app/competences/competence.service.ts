@@ -33,4 +33,10 @@ export class CompetenceService {
     console.log('Creating competence:', competence);
     return this.http.post<Competence>(`${this.apiUrl}/create`, competence);
   }
+
+  // --- Supprimer une compétence par son ID ---
+  deleteCompetence(id: number): Observable<void> {
+    console.log('Deleting competence with id:', id);
+    return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
+  }
 }

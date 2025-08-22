@@ -5,11 +5,18 @@ import { CaracteristiquesDetailComponent } from '../caracteristiques-detail/cara
 import { Caracteristique } from '../../models/caracteristique';
 import { SelectionBorderDirective } from '../../directives/selection-border.directive';
 import { CaracteristiquesUpdateComponent } from '../caracteristiques-update/caracteristiques-update.component';
+import { ConfirmDeleteModalComponentComponent } from '../../shared-components/confirm-delete-modal-component/confirm-delete-modal-component.component';
 
 @Component({
   selector: 'app-caracteristiques-list',
   standalone: true,
-  imports: [SelectionBorderDirective, CommonModule, CaracteristiquesDetailComponent, CaracteristiquesUpdateComponent],
+  imports: [
+    SelectionBorderDirective,
+    CommonModule,
+    CaracteristiquesDetailComponent,
+    CaracteristiquesUpdateComponent,
+    ConfirmDeleteModalComponentComponent
+  ],
   templateUrl: './caracteristiques-list.component.html',
   styleUrls: ['caracteristiques-list.component.scss']
 })
@@ -25,7 +32,9 @@ export class CaracteristiquesListComponent {
   // --- Propriétés pour la gestion des modales ---
   @ViewChild(CaracteristiquesDetailComponent) detailModal!: CaracteristiquesDetailComponent;
   @ViewChild(CaracteristiquesUpdateComponent) updateModal!: CaracteristiquesUpdateComponent;
+  @ViewChild('deleteModal') deleteModal!: ConfirmDeleteModalComponentComponent;
   selectedCaracteristique: Caracteristique | null = null; // Pour détail/édition
+  caracteristiqueToDelete: Caracteristique | null = null; // Pour suppression
 
   // --- Filtres et computed ---
   readonly caracteristiquesListFiltered = computed(() => {
@@ -66,6 +75,15 @@ export class CaracteristiquesListComponent {
     this.updateModal.open();
   }
 
+  openDeleteModal(caracteristique: Caracteristique) {
+    this.caracteristiqueToDelete = caracteristique;
+    setTimeout(() => {
+      if (this.deleteModal) {
+        this.deleteModal.open();
+      }
+    });
+  }
+
   // --- Gestion CRUD ---
   refreshCaracteristiques() {
     this.caracteristiqueService.getCaracteristiquesList().subscribe(caracteristiques => {
@@ -75,6 +93,14 @@ export class CaracteristiquesListComponent {
 
   onCaracteristiqueUpdated(updatedCaracteristique: Caracteristique) {
     this.refreshCaracteristiques();
+  }
+
+  deleteCaracteristique() {
+    if (!this.caracteristiqueToDelete) return;
+    this.caracteristiqueService.deleteCaracteristique(this.caracteristiqueToDelete.idCaracteristique).subscribe(() => {
+      this.refreshCaracteristiques();
+      this.caracteristiqueToDelete = null;
+    });
   }
 
   // --- Utilitaires ---

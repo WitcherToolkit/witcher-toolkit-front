@@ -5,11 +5,18 @@ import { CompetencesDetailComponent } from '../competences-detail/competences-de
 import { Competence } from '../../models/competence';
 import { SelectionBorderDirective } from '../../directives/selection-border.directive';
 import { CompetencesUpdateComponent } from '../competences-update/competences-update.component';
+import { ConfirmDeleteModalComponentComponent } from '../../shared-components/confirm-delete-modal-component/confirm-delete-modal-component.component';
 
 @Component({
   selector: 'app-competences-list',
   standalone: true,
-  imports: [SelectionBorderDirective, CommonModule, CompetencesDetailComponent, CompetencesUpdateComponent],
+  imports: [
+    SelectionBorderDirective,
+    CommonModule,
+    CompetencesDetailComponent,
+    CompetencesUpdateComponent,
+    ConfirmDeleteModalComponentComponent
+  ],
   templateUrl: './competences-list.component.html',
   styleUrl: './competences-list.component.scss'
 })
@@ -25,7 +32,9 @@ export class CompetencesListComponent {
   // --- Propriétés pour la gestion des modales ---
   @ViewChild(CompetencesDetailComponent) detailModal!: CompetencesDetailComponent;
   @ViewChild(CompetencesUpdateComponent) updateModal!: CompetencesUpdateComponent;
+  @ViewChild('deleteModal') deleteModal!: ConfirmDeleteModalComponentComponent;
   selectedCompetence: Competence | null = null; // Pour détail/édition
+  competenceToDelete: Competence | null = null; // Pour suppression
 
   // --- Filtres et computed ---
   readonly competencesListFiltered = computed(() => {
@@ -66,6 +75,15 @@ export class CompetencesListComponent {
     this.updateModal.open();
   }
 
+  openDeleteModal(competence: Competence) {
+    this.competenceToDelete = competence;
+    setTimeout(() => {
+      if (this.deleteModal) {
+        this.deleteModal.open();
+      }
+      });
+    }
+
   // --- Gestion CRUD ---
   refreshCompetences() {
     this.competenceService.getCompetencesList().subscribe(competences => {
@@ -75,6 +93,14 @@ export class CompetencesListComponent {
 
   onCompetenceUpdated(updatedCompetence: Competence) {
     this.refreshCompetences();
+  }
+
+  deleteCompetence() {
+    if (!this.competenceToDelete) return;
+    this.competenceService.deleteCompetence(this.competenceToDelete.idCompetence).subscribe(() => {
+      this.refreshCompetences();
+      this.competenceToDelete = null;
+    });
   }
 
   // --- Utilitaires ---

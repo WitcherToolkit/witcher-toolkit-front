@@ -83,6 +83,7 @@ export class CaracteristiquesUpdateComponent implements AfterViewInit, OnChanges
         next: (result) => {
           console.info('caracteristique mise à jour avec succès', result);
           this.caracteristiqueUpdated.emit(result);
+          this.resetForm();
           closeModal();
         },
         error: (err) => {

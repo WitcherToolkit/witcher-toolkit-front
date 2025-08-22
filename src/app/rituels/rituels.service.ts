@@ -9,7 +9,7 @@ import { EnvironmentConfig } from '../environment.config';
   providedIn: 'root'
 })
 export class RituelsService {
-  // --- Signal pour la liste des rituels (optionnel) ---
+  // --- Signal pour la liste des rituels ---
   private readonly rituels = signal<Rituel[]>([]);
   // --- URL de base pour les requêtes rituels ---
   private readonly apiUrl = `${EnvironmentConfig.apiBaseUrl}/rituels`;
