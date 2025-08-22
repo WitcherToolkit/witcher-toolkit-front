@@ -93,10 +93,6 @@ export class RacesListComponent {
     });
   }
 
-  onRaceUpdated(updatedRace: Race) {
-    this.refreshRaces();
-  }
-
   deleteRace() {
     if (!this.raceToDelete) return;
     this.racesService.deleteRace(this.raceToDelete.idRace).subscribe(() => {

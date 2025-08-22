@@ -49,8 +49,8 @@
 
                   <div class="card-action">
                     <a (click)="openModal(profession)" href="javascript:void(0)">Voir</a>
-                    <a (click)="goToUpdatePage(profession)">Modifier</a>
-                    <a href="#">Supprimer</a>
+                    <a (click)="openUpdatePage(profession)">Modifier</a>
+                    <a (click)="openDeleteModal(profession)" href="javascript:void(0)">Supprimer</a>
                   </div>
                 </div>
             </div>
@@ -61,3 +61,4 @@
 </div>
 
 <app-professions-detail-modal [profession]="selectedProfession"></app-professions-detail-modal>
+<app-confirm-delete-modal-component #deleteModal *ngIf="professionToDelete" [itemName]="professionToDelete.nom" (confirm)="deleteProfession()" (cancel)="professionToDelete = null"></app-confirm-delete-modal-component>
