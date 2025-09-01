@@ -12,6 +12,9 @@
                     <input id="nom" type="text" formControlName="nom" required>
                     <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
                     <app-form-control-error [control]="magieForm.get('nom')"></app-form-control-error>
+                    <div *ngIf="(magieForm.get('nom')?.errors ?? {})['nomExists'] && magieForm.get('nom')?.touched" class="red-text">
+                        Ce nom existe déjà.
+                    </div>
                 </div>
 
                 <div class="input-field col s6">
@@ -53,14 +56,7 @@
                     <label for="type" class="active">Type</label>
                     <app-form-control-error [control]="magieForm.get('type')"></app-form-control-error>
                 </div>
-
-                <div class="input-field col s4">
-                    <!-- L'attribut [class.active] évite la superposition du label avec le champ de saisie -->
-                    <label [class.active]="magieForm.get('contre')?.value" class="active" for="contre">Contre</label>
-                    <input id="contre" type="text" formControlName="contre">
-                    <app-form-control-error [control]="magieForm.get('contre')"></app-form-control-error>
-                </div>
-
+                
                 <div class="input-field col s4">
                     <select id="niveau" formControlName="niveau" class="browser-default" required>
                         <option value="" disabled selected>Niveau</option>
@@ -69,6 +65,14 @@
                     <label for="niveau" class="active">Niveau</label>
                     <app-form-control-error [control]="magieForm.get('niveau')"></app-form-control-error>
                 </div>
+
+                <div class="input-field col s4">
+                    <!-- L'attribut [class.active] évite la superposition du label avec le champ de saisie -->
+                    <label [class.active]="magieForm.get('contre')?.value" class="active" for="contre">Contre</label>
+                    <input id="contre" type="text" formControlName="contre">
+                    <app-form-control-error [control]="magieForm.get('contre')"></app-form-control-error>
+                </div>
+
             </div>
             <!--Ligne-->
             <div class="row">
@@ -81,8 +85,9 @@
 
             <div class="modal-footer">
                 <button type="submit" class="modal-close btn-flat" [disabled]="magieForm.invalid">Valider</button>
+                <button *ngIf="!magie" type="button" class="btn-flat" [disabled]="magieForm.invalid" (click)="onSubmitAndContinue()">Valider et créer</button>
                 <button type="button" class="modal-close btn-flat" (click)="onCancel()">Annuler</button>
-            </div>
+           </div>
         </form>
     </div>
 </div>

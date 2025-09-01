@@ -4,7 +4,6 @@ import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-page-not-found',
-  imports: [RouterLink],
   templateUrl: './page-not-found.component.html',
   styles: ``
 })

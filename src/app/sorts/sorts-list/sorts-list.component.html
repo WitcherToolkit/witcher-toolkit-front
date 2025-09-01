@@ -100,6 +100,6 @@
 </div>
 
 <app-sorts-detail-modal [magie]="selectedMagie"></app-sorts-detail-modal>
-<app-sorts-update-modal [magie]="selectedMagie" (magieUpdated)="onMagieUpdated($event)"></app-sorts-update-modal>
+<app-sorts-update-modal [magie]="selectedMagie" [magies]="magie()" (magieUpdated)="onMagieUpdated($event)"></app-sorts-update-modal>
 <app-confirm-delete-modal-component #deleteModal *ngIf="magieToDelete" [itemName]="magieToDelete.nom" (confirm)="deleteMagie()" (cancel)="magieToDelete = null"></app-confirm-delete-modal-component>
 

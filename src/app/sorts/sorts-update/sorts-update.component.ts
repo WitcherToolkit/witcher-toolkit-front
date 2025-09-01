@@ -1,13 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Magie } from '../../models/magie';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, AsyncValidatorFn, ValidationErrors } from '@angular/forms';
 import { FormControlErrorComponent } from '../../form-validation/form-control-error.component';
 import { RequiredAsteriskDirective } from '../../directives/required-asterisk.directive';
 import { MagieService } from '../magie.service';
 import { NIVEAUX_MAGIE } from '../../shared/shared-constants/niveau-magie.constants';
 import { TYPE_MAGIE } from '../../shared/shared-constants/type-magie.constants';
 import { ELEMENT_MAGIE } from '../../shared/shared-constants/element-magie.constants';
+import { Observable, of } from 'rxjs';
+import { map, debounceTime, switchMap, first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sorts-update-modal',
@@ -18,6 +20,7 @@ import { ELEMENT_MAGIE } from '../../shared/shared-constants/element-magie.const
 export class SortsUpdateComponent implements AfterViewInit, OnChanges {
   // --- Entrées, sorties et références ---
   @Input() magie: Magie | null = null;
+  @Input() magies: Magie[] = [];
   @ViewChild('modal') modalRef!: ElementRef;
   @Output() magieUpdated = new EventEmitter<Magie>();
 
@@ -54,7 +57,11 @@ export class SortsUpdateComponent implements AfterViewInit, OnChanges {
   // --- Création du FormGroup pour la magie ---
   private createMagieForm(magie: Magie | null): FormGroup {
     return this.fb.group({
-      nom: [magie?.nom ?? '', [Validators.required, Validators.maxLength(60)]],
+      nom: [
+        magie?.nom ?? '',
+        [Validators.required, Validators.maxLength(60)],
+        [this.nomUniqueValidator(magie?.idMagie)]
+      ],
       cout: [magie?.cout ?? '', [Validators.required, Validators.maxLength(10)]],
       duree: [magie?.duree ?? '', [Validators.required, Validators.maxLength(35)]],
       portee: [magie?.portee ?? '', [Validators.maxLength(20)]],
@@ -64,6 +71,27 @@ export class SortsUpdateComponent implements AfterViewInit, OnChanges {
       niveau: [magie?.niveau ?? '', [Validators.required, Validators.maxLength(35)]],
       effet: [magie?.effet ?? '', [Validators.required]]
     });
+  }
+
+  // --- Validation asynchrone pour vérifier l'unicité du nom dans la liste locale ---
+  private nomUniqueValidator(currentId?: number | string | null): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      const nom = control.value?.trim().toLowerCase();
+      if (!nom || nom.length < 1) {
+        return of(null);
+      }
+      return of(nom).pipe(
+        debounceTime(200),
+        map(nomValue => {
+          const found = this.magies.find(m => m.nom.trim().toLowerCase() === nomValue);
+          if (found && found.idMagie !== currentId) {
+            return { nomExists: true };
+          }
+          return null;
+        }),
+        first()
+      );
+    };
   }
 
   // --- Soumission du formulaire (création ou édition) ---
@@ -109,6 +137,28 @@ export class SortsUpdateComponent implements AfterViewInit, OnChanges {
         }
       });
     }
+  }
+
+  // --- Soumission et création en boucle (reste ouvert) ---
+  onSubmitAndContinue() {
+    if (!this.magieForm.valid) {
+      this.magieForm.markAllAsTouched();
+      console.error('Le formulaire n\'est pas valide. Veuillez corriger les erreurs.');
+      return;
+    }
+    const magieToCreate = { ...this.magieForm.value };
+    this.magieService.createMagie(magieToCreate).subscribe({
+      next: (result) => {
+        console.info('Magie créée avec succès', result);
+        this.magieUpdated.emit(result);
+        this.magieForm.reset();
+        this.magieForm.markAsPristine();
+        this.magieForm.markAsUntouched();
+      },
+      error: (err) => {
+        console.error('Erreur lors de la création de la magie', err);
+      }
+    });
   }
 
   // --- Réinitialise le formulaire aux valeurs de l'objet 'magie' (édition) ---
