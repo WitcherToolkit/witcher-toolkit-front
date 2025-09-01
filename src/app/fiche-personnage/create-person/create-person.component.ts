@@ -8,7 +8,7 @@ import { HighlightDirective } from '../../highlight.directive';
 import { Part4Component } from './part4/part4.component';
 import { Router } from '@angular/router';
 import { PROFESSION_LIST } from '../../fake-data-set/profession-fake';
-import { Part2CaracteristiqueComponent } from './part2/part2-caracteristique';
+import { Part2CaracteristiqueComponent } from './part2-caracteristique/part2-caracteristique.component';
 
 @Component({
   selector: 'app-create-person',

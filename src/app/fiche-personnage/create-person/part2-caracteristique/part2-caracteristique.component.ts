@@ -10,7 +10,7 @@ import { ToolsService } from '../../../tools/tools.service';
   selector: 'app-part2',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './part2-caracteristique.html',
+  templateUrl: './part2-caracteristique.component.html',
   styleUrls: ['./part2-caracteristique.component.scss'],
 })
 export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
