@@ -1,11 +1,17 @@
 import { Personnage } from "./personnage";
 
 export interface Inventaire {
-    //id: number;
+
+    idInventaire: number;
+
+    quantite: number;
+
     nom: string;
-    type?: string;
-    effet?: string;
-    quantite?: number;
+
+    type: string;
+
+    effet: string;
+    
 }
 
 export type InventaireList = Inventaire[];
