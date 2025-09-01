@@ -2,22 +2,24 @@ import { Component } from '@angular/core';
 import { Personnage } from '../../models/personnage';
 import { CommonModule } from '@angular/common';
 import { Part1IdentityComponent } from "./part1-identity/part1-identity.component";
-import { Part2Component } from './part2/part2.component';
 import { Part3Component } from './part3/part3.component';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { HighlightDirective } from '../../highlight.directive';
 import { Part4Component } from './part4/part4.component';
 import { Router } from '@angular/router';
 import { PROFESSION_LIST } from '../../fake-data-set/profession-fake';
+import { Part2CaracteristiqueComponent } from './part2/part2-caracteristique';
 
 @Component({
   selector: 'app-create-person',
-  imports: [CommonModule,
-            Part1IdentityComponent,
-            Part2Component,
-            Part3Component,
-            Part4Component,
-            HighlightDirective],
+  imports: [
+    CommonModule,
+    Part1IdentityComponent,
+    Part2CaracteristiqueComponent,
+    Part3Component,
+    Part4Component,
+    HighlightDirective
+  ],
   templateUrl: './create-person.component.html',
   styles: ``
 })

@@ -10,10 +10,10 @@ import { ToolsService } from '../../../tools/tools.service';
   selector: 'app-part2',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './part2.component.html',
-  styles: ``,
+  templateUrl: './part2-caracteristique.html',
+  styleUrls: ['./part2-caracteristique.component.scss'],
 })
-export class Part2Component implements OnInit, OnDestroy {
+export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
   @Input() form!: FormGroup;
   caracteristiques : Caracteristique[] = [];
 
@@ -55,7 +55,7 @@ export class Part2Component implements OnInit, OnDestroy {
 
     this.form.addControl('caracteristiquePersonnage', caracteristiquePersonnageArray);
     this.form.addControl('poings', this.fb.control(''));
-  this.form.addControl('pieds', this.fb.control(''));
+    this.form.addControl('pieds', this.fb.control(''));
     this.form.addControl('niveauJeu', this.fb.control('libre'));
     this.form.addControl('vigueur', this.fb.control(''));
   }
@@ -100,6 +100,11 @@ export class Part2Component implements OnInit, OnDestroy {
   // Récupération du FormArray des caractéristiques
   get caracteristiquePersonnage(): FormArray {
     return this.form.get('caracteristiquePersonnage') as FormArray;
+  }
+
+  /** Retourne la liste des contrôles du FormArray caracteristiquePersonnage */
+  get getCaracteristiquesList() {
+    return this.caracteristiquePersonnage.controls;
   }
 
   // Mise à jour des points restants en fonction du niveau de jeu

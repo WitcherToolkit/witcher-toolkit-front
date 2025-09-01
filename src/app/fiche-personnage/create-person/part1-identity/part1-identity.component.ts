@@ -136,6 +136,7 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
 
   // --- FORM INITIALISATION ---
   /** Initialise les contrôles du formulaire */
+  //TODO Penser à ajouter l'image et l'url de l'image
   private initializeForm() {
     this.form.addControl('nomPersonnage', this.fb.control('', [Validators.maxLength(50), Validators.required]));
     this.form.addControl('nomJoueur', this.fb.control('', [Validators.maxLength(50)]));

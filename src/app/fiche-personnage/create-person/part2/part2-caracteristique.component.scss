@@ -1,0 +1,38 @@
+.genre-radio-group {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  margin-top: 0.5em;
+}
+
+.special-chip {
+  background: #e3e3fa;
+  color: #3a3a6a;
+  font-weight: 500;
+  border-left: 4px solid #6c63ff;
+}
+
+.inventory-chip {
+  background: #e6fae3;
+  color: #256029;
+  font-weight: 500;
+  border-left: 4px solid #4caf50;
+}
+.buton-input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  input[type="text"] {
+    width: 60px;
+    text-align: center;
+    margin: 0 4px;
+  }
+
+  .btn-floating {
+    min-width: 32px;
+    height: 32px;
+    line-height: 32px;
+    padding: 0;
+  }
+}
