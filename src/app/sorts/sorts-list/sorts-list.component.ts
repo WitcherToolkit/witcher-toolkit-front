@@ -6,7 +6,8 @@ import { MagieService } from '../magie.service';
 import { Magie } from '../../models/magie';
 import { SortsDetailComponent } from '../sorts-detail/sorts-detail.component';
 import { SortsUpdateComponent } from '../sorts-update/sorts-update.component';
-import { ConfirmDeleteModalComponentComponent } from '../../shared-components/confirm-delete-modal-component/confirm-delete-modal-component.component';
+import { ConfirmDeleteModalComponentComponent } from '../../shared/confirm-delete-modal-component/confirm-delete-modal-component.component';
+import { AuthService } from '../../shared/shared-services/auth.service';
 
 @Component({
   selector: 'app-sorts-list',
@@ -24,6 +25,7 @@ import { ConfirmDeleteModalComponentComponent } from '../../shared-components/co
 export class SortsListComponent implements OnInit {
   // --- Services et constantes ---
   private readonly magieService = inject(MagieService);
+  readonly auth = inject(AuthService);
   readonly MAX_LENGTH = 100; // Nombre max de caractères avant troncature
 
   // --- Signaux et propriétés réactives ---

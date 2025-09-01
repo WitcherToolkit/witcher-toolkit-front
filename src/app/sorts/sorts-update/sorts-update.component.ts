@@ -5,9 +5,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FormControlErrorComponent } from '../../form-validation/form-control-error.component';
 import { RequiredAsteriskDirective } from '../../directives/required-asterisk.directive';
 import { MagieService } from '../magie.service';
-import { NIVEAUX_MAGIE } from '../../shared-constants/niveau-magie.constants';
-import { TYPE_MAGIE } from '../../shared-constants/type-magie.constants';
-import { ELEMENT_MAGIE } from '../../shared-constants/element-magie.constants';
+import { NIVEAUX_MAGIE } from '../../shared/shared-constants/niveau-magie.constants';
+import { TYPE_MAGIE } from '../../shared/shared-constants/type-magie.constants';
+import { ELEMENT_MAGIE } from '../../shared/shared-constants/element-magie.constants';
 
 @Component({
   selector: 'app-sorts-update-modal',

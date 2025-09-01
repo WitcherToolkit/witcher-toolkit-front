@@ -5,7 +5,7 @@ import { Rituel } from '../../models/rituel';
 import { RituelsDetailComponent } from '../rituels-detail/rituels-detail.component';
 import { SelectionBorderDirective } from '../../directives/selection-border.directive';
 import { RituelsUpdateComponent } from '../rituels-update/rituels-update.component';
-import { ConfirmDeleteModalComponentComponent } from '../../shared-components/confirm-delete-modal-component/confirm-delete-modal-component.component';
+import { ConfirmDeleteModalComponentComponent } from '../../shared/confirm-delete-modal-component/confirm-delete-modal-component.component';
 
 @Component({
   selector: 'app-rituels-list',

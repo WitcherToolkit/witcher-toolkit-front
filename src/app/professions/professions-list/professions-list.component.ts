@@ -7,7 +7,7 @@ import { ProfessionsDetailComponent } from '../professions-detail/professions-de
 import { ProfessionsUpdateComponent } from '../professions-update/professions-update.component';
 import { PROFESSION_CREATE_PATH, PROFESSION_UPDATE_PATH } from '../../app-routing/app-routing-constants';
 import { Router } from '@angular/router';
-import { ConfirmDeleteModalComponentComponent } from '../../shared-components/confirm-delete-modal-component/confirm-delete-modal-component.component';
+import { ConfirmDeleteModalComponentComponent } from '../../shared/confirm-delete-modal-component/confirm-delete-modal-component.component';
 
 @Component({
   selector: 'app-professions-list',

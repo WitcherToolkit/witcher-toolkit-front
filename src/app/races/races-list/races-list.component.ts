@@ -7,7 +7,7 @@ import { SelectionBorderDirective } from '../../directives/selection-border.dire
 import { RacesUpdateComponent } from '../races-update/races-update.component';
 import { Router } from '@angular/router';
 import { RACE_CREATE_PATH, RACE_UPDATE_PATH } from '../../app-routing/app-routing-constants';
-import { ConfirmDeleteModalComponentComponent } from '../../shared-components/confirm-delete-modal-component/confirm-delete-modal-component.component';
+import { ConfirmDeleteModalComponentComponent } from '../../shared/confirm-delete-modal-component/confirm-delete-modal-component.component';
 
 @Component({
     selector: 'app-races-list',

@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FormControlErrorComponent } from '../../form-validation/form-control-error.component';
 import { RequiredAsteriskDirective } from '../../directives/required-asterisk.directive';
 import { RituelsService } from '../rituels.service';
-import { NIVEAUX_RITUEL } from '../../shared-constants/niveau-rituel.constants';
+import { NIVEAUX_RITUEL } from '../../shared/shared-constants/niveau-rituel.constants';
 
 
 @Component({

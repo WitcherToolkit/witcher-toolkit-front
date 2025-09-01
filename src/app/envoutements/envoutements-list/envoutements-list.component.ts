@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { EnvoutementsDetailComponent } from '../envoutements-detail/envoutements-detail.component';
 import { Envoutement } from '../../models/envoutement';
 import { EnvoutementsUpdateComponent } from '../envoutements-update/envoutements-update.component';
-import { ConfirmDeleteModalComponentComponent } from '../../shared-components/confirm-delete-modal-component/confirm-delete-modal-component.component';
+import { ConfirmDeleteModalComponentComponent } from '../../shared/confirm-delete-modal-component/confirm-delete-modal-component.component';
 
 @Component({
   selector: 'app-envoutements-list',

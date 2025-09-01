@@ -5,7 +5,7 @@ import { CaracteristiquesDetailComponent } from '../caracteristiques-detail/cara
 import { Caracteristique } from '../../models/caracteristique';
 import { SelectionBorderDirective } from '../../directives/selection-border.directive';
 import { CaracteristiquesUpdateComponent } from '../caracteristiques-update/caracteristiques-update.component';
-import { ConfirmDeleteModalComponentComponent } from '../../shared-components/confirm-delete-modal-component/confirm-delete-modal-component.component';
+import { ConfirmDeleteModalComponentComponent } from '../../shared/confirm-delete-modal-component/confirm-delete-modal-component.component';
 
 @Component({
   selector: 'app-caracteristiques-list',

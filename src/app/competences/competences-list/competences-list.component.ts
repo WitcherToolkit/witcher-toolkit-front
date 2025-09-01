@@ -5,7 +5,7 @@ import { CompetencesDetailComponent } from '../competences-detail/competences-de
 import { Competence } from '../../models/competence';
 import { SelectionBorderDirective } from '../../directives/selection-border.directive';
 import { CompetencesUpdateComponent } from '../competences-update/competences-update.component';
-import { ConfirmDeleteModalComponentComponent } from '../../shared-components/confirm-delete-modal-component/confirm-delete-modal-component.component';
+import { ConfirmDeleteModalComponentComponent } from '../../shared/confirm-delete-modal-component/confirm-delete-modal-component.component';
 
 @Component({
   selector: 'app-competences-list',
