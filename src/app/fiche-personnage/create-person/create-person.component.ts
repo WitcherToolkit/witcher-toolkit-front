@@ -82,4 +82,10 @@ export class CreatePersonComponent {
     return !!(this.currentStep === 3 && selectedProfession && selectedProfession.nom !== 'Mage' && selectedProfession.nom !== 'Prêtre');
   }
 
+  isCurrentStepValid(): boolean {
+    // Pour l'étape 1, on vérifie la validité du formulaire entier (tous les contrôles sont dans le même form)
+    // Pour les autres étapes, tu peux affiner selon les besoins (ex: vérifier des sous-groupes)
+    return this.form.valid;
+  }
+
 }

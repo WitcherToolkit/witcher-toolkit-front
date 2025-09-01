@@ -53,8 +53,8 @@
         </div>
         <div class="card-action">
           <button *ngIf="currentStep !== 1" class="waves-light btn grey darken-3" (click)="previousStep()" [disabled]="currentStep === 1">Précédent</button>
-          <button *ngIf="currentStep !== 4 && !isSubmitAvailableOnPart3()" class="waves-light btn grey darken-3" (click)="nextStep()">Suivant</button>
-          <button *ngIf="currentStep === 4 || isSubmitAvailableOnPart3()" class="waves-light btn grey darken-3" (click)="submitForm()">Soumettre</button>
+          <button *ngIf="currentStep !== 4 && !isSubmitAvailableOnPart3()" class="waves-light btn yellow darken-3" (click)="nextStep()" [disabled]="!isCurrentStepValid()">Suivant</button>
+          <button *ngIf="currentStep === 4 || isSubmitAvailableOnPart3()" class="waves-light btn yellow darken-3" (click)="submitForm()" [disabled]="!isCurrentStepValid()">Soumettre</button>
         </div>
       </div>
     </div>

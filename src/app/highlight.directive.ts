@@ -11,7 +11,7 @@ export class HighlightDirective implements OnChanges{
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['appHighlight']) {
       if (this.appHighlight) {
-        this.renderer.setStyle(this.el.nativeElement, 'color', 'red');
+        this.renderer.setStyle(this.el.nativeElement, 'color', '#f9a825');
       } else {
         this.renderer.removeStyle(this.el.nativeElement, 'color');
       }

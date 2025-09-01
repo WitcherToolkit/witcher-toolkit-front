@@ -142,7 +142,7 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
     this.form.addControl('genre', this.fb.control('', [Validators.required, Validators.maxLength(1)]));
     this.form.addControl('terreNatale', this.fb.control('', [Validators.maxLength(100)]));
     this.form.addControl('xp', this.fb.control(0));
-    this.form.addControl('age', this.fb.control('', [Validators.min(0)]));
+    this.form.addControl('age', this.fb.control(0, [Validators.min(0)]));
     this.form.addControl('bestiaire', this.fb.control(false));
     this.form.addControl('historique', this.fb.control(''));
     this.form.addControl('profession', this.fb.control('', [Validators.required]));
@@ -236,5 +236,14 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
   /** Retourne la limite max d'objets sélectionnables selon la profession */
   getMaxInventaireItems(): number {
     return this.selectedProfessionNbObjet !== null ? this.selectedProfessionNbObjet : 5;
+  }
+
+  /** Incrémente/décrémente un champ numérique du formulaire principal */
+  updateField(field: string, delta: number, min: number = 0) {
+    const ctrl = this.form.get(field);
+    if (ctrl) {
+      const value = +ctrl.value || 0;
+      ctrl.setValue(Math.max(value + delta, min));
+    }
   }
 }

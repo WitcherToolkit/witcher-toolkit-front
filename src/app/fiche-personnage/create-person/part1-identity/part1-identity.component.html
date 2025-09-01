@@ -13,10 +13,11 @@
     </div>
     
     <div class="input-field col s3">
-        <select #raceSelect id="race" formControlName="race" class="browser-default">
-          <option value="">Choisir Race</option>
-          <option *ngFor="let race of races" [value]="race.idRace">{{ race.nom }}</option>
+        <select id="race" formControlName="race" class="browser-default" required>
+          <option value="" disabled selected>Choisir race</option>
+          <option *ngFor="let race of races" [value]="race.idRace">{{ race.nom }}</option>     
       </select>
+      <label for="race" class="active">Race</label>
       <app-form-control-error [control]="form.get('race')"></app-form-control-error>
     </div>
     
@@ -44,14 +45,22 @@
     </div>
 
     <div class="input-field col s4">
-      <label for="age">Âge</label>
-      <input id="age" formControlName="age" type="number">
-      <app-form-control-error [control]="form.get('age')"></app-form-control-error>
+        <div class="buton-input-group">
+            <label class="active" for="age">Âge</label>
+            <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('age', -1)">
+                <i class="material-icons">remove</i>
+            </a>
+            <input id="age" type="text" formControlName="age">
+            <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('age', 1)">
+                <i class="material-icons">add</i>
+            </a>
+        </div>
+        <app-form-control-error [control]="form.get('age')"></app-form-control-error>
     </div>
 
     <div class="input-field col s4">
       <select id="profession" formControlName="profession" class="browser-default" required>
-        <option value="" disabled selected>Choisir Profession</option>
+        <option value="" disabled selected>Choisir profession</option>
         <option *ngFor="let profession of filteredProfessions" [value]="profession.idProfession">{{ profession.nom }}</option>
       </select>
       <label for="profession" class="active">Profession</label>
