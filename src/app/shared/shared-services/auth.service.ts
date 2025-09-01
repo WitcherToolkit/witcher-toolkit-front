@@ -48,4 +48,10 @@ export class AuthService {
   hasRole(role: string): boolean {
     return this.getRoles().includes(role);
   }
+
+  // Vérifie si l'utilisateur a le droit d'accéder à la création/modification de profession ou de race
+  hasProfOrRaceAccess(): boolean {
+    // Retourne true si l'utilisateur a le rôle 'admin'.
+    return this.getRoles().includes('admin');
+  }
 }
