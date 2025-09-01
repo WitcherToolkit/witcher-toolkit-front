@@ -52,9 +52,9 @@
             </div>
             
             <div class="card-action">
-              <a (click)="openModal(caracteristique)" href="javascript:void(0)">Voir</a>
-              <a (click)="openUpdateModal(caracteristique)" href="javascript:void(0)">Modifier</a>
-              <a (click)="openDeleteModal(caracteristique)" href="javascript:void(0)">Supprimer</a>
+              <a *ngIf="auth.isLoggedIn()" (click)="openModal(caracteristique)" href="javascript:void(0)">Voir</a>
+              <a *ngIf="auth.hasRole('ADMIN')" (click)="openUpdateModal(caracteristique)" href="javascript:void(0)">Modifier</a>
+              <a *ngIf="auth.hasRole('ADMIN')" (click)="openDeleteModal(caracteristique)" href="javascript:void(0)">Supprimer</a>
             </div>
 
           </div>

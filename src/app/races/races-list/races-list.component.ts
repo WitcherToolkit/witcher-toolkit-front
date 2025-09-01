@@ -8,6 +8,7 @@ import { RacesUpdateComponent } from '../races-update/races-update.component';
 import { Router } from '@angular/router';
 import { RACE_CREATE_PATH, RACE_UPDATE_PATH } from '../../app-routing/app-routing-constants';
 import { ConfirmDeleteModalComponentComponent } from '../../shared/confirm-delete-modal-component/confirm-delete-modal-component.component';
+import { AuthService } from '../../shared/shared-services/auth.service';
 
 @Component({
     selector: 'app-races-list',
@@ -24,6 +25,7 @@ import { ConfirmDeleteModalComponentComponent } from '../../shared/confirm-delet
 export class RacesListComponent {
   // --- Services et constantes ---
   private readonly racesService = inject(RacesService);
+    readonly auth = inject(AuthService);
   private router = inject(Router);
   readonly raceUpdatePath = RACE_UPDATE_PATH;
   readonly raceCreatePath = RACE_CREATE_PATH;

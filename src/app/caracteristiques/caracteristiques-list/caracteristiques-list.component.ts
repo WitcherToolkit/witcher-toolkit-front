@@ -6,6 +6,7 @@ import { Caracteristique } from '../../models/caracteristique';
 import { SelectionBorderDirective } from '../../directives/selection-border.directive';
 import { CaracteristiquesUpdateComponent } from '../caracteristiques-update/caracteristiques-update.component';
 import { ConfirmDeleteModalComponentComponent } from '../../shared/confirm-delete-modal-component/confirm-delete-modal-component.component';
+import { AuthService } from '../../shared/shared-services/auth.service';
 
 @Component({
   selector: 'app-caracteristiques-list',
@@ -23,6 +24,7 @@ import { ConfirmDeleteModalComponentComponent } from '../../shared/confirm-delet
 export class CaracteristiquesListComponent {
   // --- Services et constantes ---
   private readonly caracteristiqueService = inject(CaracteristiqueService);
+    readonly auth = inject(AuthService);
   readonly MAX_LENGTH = 100;
 
   // --- Signaux et propriétés réactives ---

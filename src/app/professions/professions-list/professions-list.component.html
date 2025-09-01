@@ -48,9 +48,9 @@
                   </div>
 
                   <div class="card-action">
-                    <a (click)="openModal(profession)" href="javascript:void(0)">Voir</a>
-                    <a (click)="openUpdatePage(profession)">Modifier</a>
-                    <a (click)="openDeleteModal(profession)" href="javascript:void(0)">Supprimer</a>
+                    <a *ngIf="auth.isLoggedIn()" (click)="openModal(profession)" href="javascript:void(0)">Voir</a>
+                    <a *ngIf="auth.hasRole('ADMIN')" (click)="openUpdatePage(profession)">Modifier</a>
+                    <a *ngIf="auth.hasRole('ADMIN')" (click)="openDeleteModal(profession)" href="javascript:void(0)">Supprimer</a>
                   </div>
                 </div>
             </div>

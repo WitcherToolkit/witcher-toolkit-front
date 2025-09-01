@@ -8,6 +8,7 @@ import { ProfessionsUpdateComponent } from '../professions-update/professions-up
 import { PROFESSION_CREATE_PATH, PROFESSION_UPDATE_PATH } from '../../app-routing/app-routing-constants';
 import { Router } from '@angular/router';
 import { ConfirmDeleteModalComponentComponent } from '../../shared/confirm-delete-modal-component/confirm-delete-modal-component.component';
+import { AuthService } from '../../shared/shared-services/auth.service';
 
 @Component({
   selector: 'app-professions-list',
@@ -24,6 +25,7 @@ import { ConfirmDeleteModalComponentComponent } from '../../shared/confirm-delet
 export class ProfessionsListComponent {
   // --- Services et constantes ---
   private readonly professionsService = inject(ProfessionsService);
+    readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   readonly professionsUpdatePath = PROFESSION_UPDATE_PATH;
   readonly professionsCreatePath = PROFESSION_CREATE_PATH;

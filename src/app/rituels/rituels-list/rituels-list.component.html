@@ -51,9 +51,9 @@
             </div>
 
             <div class="card-action">
-              <a (click)="openModal(rituel)" href="javascript:void(0)">Voir</a>
-              <a (click)="openUpdateModal(rituel)" href="javascript:void(0)">Modifier</a>
-              <a (click)="openDeleteModal(rituel)" href="javascript:void(0)">Supprimer</a>
+              <a *ngIf="auth.isLoggedIn()" (click)="openModal(rituel)" href="javascript:void(0)">Voir</a>
+              <a *ngIf="auth.hasRole('ADMIN')" (click)="openUpdateModal(rituel)" href="javascript:void(0)">Modifier</a>
+              <a *ngIf="auth.hasRole('ADMIN')" (click)="openDeleteModal(rituel)" href="javascript:void(0)">Supprimer</a>
             </div>
 
           </div>

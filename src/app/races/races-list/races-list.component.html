@@ -63,9 +63,9 @@
                     </table>
 
                     <div class="card-action">
-                      <a (click)="openModal(race)" href="javascript:void(0)">Voir</a>
-                      <a (click)="openUpdatePage(race)">Modifier</a>
-                      <a (click)="openDeleteModal(race)" href="javascript:void(0)">Supprimer</a>
+                      <a *ngIf="auth.isLoggedIn()" (click)="openModal(race)" href="javascript:void(0)">Voir</a>
+                      <a *ngIf="auth.hasRole('ADMIN')" (click)="openUpdatePage(race)">Modifier</a>
+                      <a *ngIf="auth.hasRole('ADMIN')" (click)="openDeleteModal(race)" href="javascript:void(0)">Supprimer</a>
                     </div>
                   </div>
               </div>

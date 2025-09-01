@@ -6,6 +6,7 @@ import { EnvoutementsDetailComponent } from '../envoutements-detail/envoutements
 import { Envoutement } from '../../models/envoutement';
 import { EnvoutementsUpdateComponent } from '../envoutements-update/envoutements-update.component';
 import { ConfirmDeleteModalComponentComponent } from '../../shared/confirm-delete-modal-component/confirm-delete-modal-component.component';
+import { AuthService } from '../../shared/shared-services/auth.service';
 
 @Component({
   selector: 'app-envoutements-list',
@@ -23,6 +24,7 @@ import { ConfirmDeleteModalComponentComponent } from '../../shared/confirm-delet
 export class EnvoutementsListComponent implements OnInit {
   // --- Services et constantes ---
   private readonly envoutementService = inject(EnvoutementService);
+    readonly auth = inject(AuthService);
   readonly MAX_LENGTH = 100;
 
   // --- Signaux et propriétés réactives ---

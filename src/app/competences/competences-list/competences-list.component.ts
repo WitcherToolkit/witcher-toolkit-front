@@ -6,6 +6,7 @@ import { Competence } from '../../models/competence';
 import { SelectionBorderDirective } from '../../directives/selection-border.directive';
 import { CompetencesUpdateComponent } from '../competences-update/competences-update.component';
 import { ConfirmDeleteModalComponentComponent } from '../../shared/confirm-delete-modal-component/confirm-delete-modal-component.component';
+import { AuthService } from '../../shared/shared-services/auth.service';
 
 @Component({
   selector: 'app-competences-list',
@@ -23,6 +24,7 @@ import { ConfirmDeleteModalComponentComponent } from '../../shared/confirm-delet
 export class CompetencesListComponent {
   // --- Services et constantes ---
   private readonly competenceService = inject(CompetenceService);
+    readonly auth = inject(AuthService);
   readonly MAX_LENGTH = 100;
 
   // --- Signaux et propriétés réactives ---
