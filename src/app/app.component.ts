@@ -10,11 +10,15 @@ import {
   PROFESSION_LIST_PATH, 
   RACE_LIST_PATH, 
   RITUEL_LIST_PATH } from './app-routing/app-routing-constants';
+import { AuthService } from './shared/shared-services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
   imports: [RouterOutlet, RouterLink ],
-  templateUrl: './app.component.html'
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements AfterViewInit {
 
@@ -30,12 +34,17 @@ export class AppComponent implements AfterViewInit {
 
   readonly personnageBasePath = PERSONNAGE_BASE_PATH;
 
-  constructor(private renderer: Renderer2) {}
+  constructor(private renderer: Renderer2, private authService: AuthService, private router: Router) {}
 
   ngAfterViewInit() {
     this.renderer.listen('document', 'DOMContentLoaded', () => {
       const dropdowns = document.querySelectorAll('.dropdown-trigger');
       M.Dropdown.init(dropdowns, {});
     });
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

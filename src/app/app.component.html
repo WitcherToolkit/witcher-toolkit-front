@@ -22,21 +22,18 @@
 
 <nav>
   <div class="nav-wrapper grey darken-3">
-     
-    <a [routerLink]="['/home']" class="brand-logo right">
-      <div class="row valign-wrapper">
-        <div class="col s2">
-          <img src="img/logo-site.png" alt="" class="circle responsive-img">
-        </div>
-      </div>
-    </a>
-
     <ul id="nav-mobile" class="left hide-on-med-and-down">
       <li><a class="dropdown-trigger" data-target="dropdown1">Grimoire<i class="material-icons right">arrow_drop_down</i></a></li>
       <li><a class="dropdown-trigger" data-target="dropdown2">Aptitudes<i class="material-icons right">arrow_drop_down</i></a></li>
       <li><a class="dropdown-trigger" data-target="dropdown2">Classes<i class="material-icons right">arrow_drop_down</i></a></li>
       <li><a [routerLink]="['/' + personnageBasePath + '/nouveau']">Créer</a></li>
     </ul>
+    <div class="nav-actions">
+      <a (click)="logout()" class="logout-btn" href="javascript:void(0)">Déconnexion</a>
+      <a [routerLink]="['/home']" class="brand-logo">
+        <img src="img/logo-site.png" alt="" class="circle responsive-img">
+      </a>
+    </div>
   </div>
 </nav>
 
