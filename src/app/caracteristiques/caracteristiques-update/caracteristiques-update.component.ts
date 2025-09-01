@@ -5,6 +5,7 @@ import { FormControlErrorComponent } from '../../form-validation/form-control-er
 import { RequiredAsteriskDirective } from '../../directives/required-asterisk.directive';
 import { Caracteristique } from '../../models/caracteristique';
 import { CaracteristiqueService } from '../caracteristique.service';
+import { TYPE_CARACTERISTIQUE } from '../../shared/shared-constants/type-caracteristique';
 
 @Component({
   selector: 'app-caracteristiques-update-modal',
@@ -17,6 +18,7 @@ export class CaracteristiquesUpdateComponent implements AfterViewInit, OnChanges
   @Input() caracteristique: Caracteristique | null = null;
   @ViewChild('modal') modalRef!: ElementRef;
   @Output() caracteristiqueUpdated = new EventEmitter<Caracteristique>();
+  types = TYPE_CARACTERISTIQUE;
 
   // --- Propriétés du formulaire ---
   caracteristiqueForm!: FormGroup;
@@ -50,6 +52,7 @@ export class CaracteristiquesUpdateComponent implements AfterViewInit, OnChanges
     return this.fb.group({
       nom: [caracteristique?.nom ?? '', [Validators.required, Validators.maxLength(16)]],
       code: [caracteristique?.code ?? '', [Validators.required, Validators.maxLength(6)]],
+      type: [caracteristique?.type ?? '', [Validators.required]],
       description: [caracteristique?.description ?? '', [Validators.required]],
     });
   }

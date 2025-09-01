@@ -24,6 +24,7 @@
                         <option *ngFor="let danger of dangers" [value]="danger">{{ danger }}</option>
                     </select>
                     <label for="danger" class="active">Danger</label>
+                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
                     <app-form-control-error [control]="envoutementForm.get('danger')"></app-form-control-error>
                 </div>
             </div>
@@ -32,6 +33,7 @@
                 <div class="input-field col s12">
                     <textarea id="prerequis" class="materialize-textarea" formControlName="prerequis" required></textarea>
                     <label class="active" for="prerequis">Prerequis</label>
+                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
                     <app-form-control-error [control]="envoutementForm.get('prerequis')"></app-form-control-error>
                 </div>
             </div>
@@ -40,6 +42,7 @@
                 <div class="input-field col s12">
                     <textarea id="effet" class="materialize-textarea" formControlName="effet" required></textarea>
                     <label class="active" for="effet">Effet</label>
+                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
                     <app-form-control-error [control]="envoutementForm.get('effet')"></app-form-control-error>
                 </div>
             </div>

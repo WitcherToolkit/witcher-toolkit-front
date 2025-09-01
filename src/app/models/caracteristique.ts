@@ -8,6 +8,8 @@ export interface Caracteristique {
 
     description : string;
 
+    type : string;
+
 }
 
 export type CaracteristiqueList = Caracteristique[];

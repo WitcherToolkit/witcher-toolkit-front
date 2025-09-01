@@ -6,17 +6,26 @@
             <h4 class="center-align">{{ caracteristique ? ('Modifier ' + caracteristique.nom) : 'Nouvelle caracteristique' }}</h4>
             <!--Ligne-->
             <div class="row">
-                <div class="input-field col s6">
+                <div class="input-field col s4">
                     <label class="active" for="nom">Nom</label>
                     <input id="nom" type="text" formControlName="nom" required>
                     <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
                     <app-form-control-error [control]="caracteristiqueForm.get('nom')"></app-form-control-error>
                 </div>
-                <div class="input-field col s6">
+                <div class="input-field col s4">
                     <label class="active" for="code">Code</label>
                     <input id="code" type="text" formControlName="code" required (input)="onUpperCase($event)">
                     <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
                     <app-form-control-error [control]="caracteristiqueForm.get('code')"></app-form-control-error>
+                </div>
+                <div class="input-field col s4">
+                    <select id="type" formControlName="type" class="browser-default" required>
+                        <option value="" disabled selected>Type</option>
+                        <option *ngFor="let type of types" [value]="type">{{ type }}</option>
+                    </select>
+                    <label for="type" class="active">Type</label>
+                    <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
+                    <app-form-control-error [control]="caracteristiqueForm.get('type')"></app-form-control-error>
                 </div>
             </div>
 
