@@ -16,7 +16,12 @@ declare var M: any;
 @Component({
   selector: 'app-professions-update-modal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormControlErrorComponent, RequiredAsteriskDirective],
+  imports: [
+    CommonModule, 
+    ReactiveFormsModule, 
+    FormControlErrorComponent, 
+    RequiredAsteriskDirective
+  ],
   templateUrl: './professions-update.component.html',
   styleUrl: './professions-update.component.scss'
 })

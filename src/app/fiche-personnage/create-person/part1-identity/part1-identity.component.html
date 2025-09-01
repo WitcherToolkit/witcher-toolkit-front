@@ -1,13 +1,15 @@
 <div [formGroup]="form">
   <div class="row">
-    <div class="input-field col s4">
+    <div class="input-field col s3">
       <label for="nomPersonnage">Nom du personnage</label>
-      <input id="nomPersonnage" formControlName="nomPersonnage" type="text">
+      <input id="nomPersonnage" formControlName="nomPersonnage" type="text" required>
+      <app-form-control-error [control]="form.get('nomPersonnage')"></app-form-control-error>
     </div>
     
-    <div class="input-field col s4">
+    <div class="input-field col s3">
       <label for="nomJoueur">Nom du joueur</label>
       <input id="nomJoueur" formControlName="nomJoueur" type="text">
+      <app-form-control-error [control]="form.get('nomJoueur')"></app-form-control-error>
     </div>
     
     <div class="input-field col s3">
@@ -15,19 +17,22 @@
           <option value="">Choisir Race</option>
           <option *ngFor="let race of races" [value]="race.idRace">{{ race.nom }}</option>
       </select>
+      <app-form-control-error [control]="form.get('race')"></app-form-control-error>
     </div>
     
-    <div class="input-field col s1">
-      <div>
+    <div class="input-field col s3">
+      <div class="genre-radio-group">
+        <label for="genre">Genre</label>
         <label>
-          <input type="radio" formControlName="genre" value="M">
+          <input id="genre" type="radio" formControlName="genre" value="M" required>
           <span>Masculin</span>
         </label>
         <label>
-          <input type="radio" formControlName="genre" value="F">
+          <input id="genreF" type="radio" formControlName="genre" value="F" required>
           <span>Féminin</span>
         </label>
       </div>
+      <app-form-control-error [control]="form.get('genre')"></app-form-control-error>
     </div>
   </div>
 
@@ -35,18 +40,22 @@
     <div class="input-field col s4">
       <label for="terreNatale">Terre natale</label>
       <input id="terreNatale" formControlName="terreNatale" type="text">
+      <app-form-control-error [control]="form.get('terreNatale')"></app-form-control-error>
     </div>
 
     <div class="input-field col s4">
       <label for="age">Âge</label>
       <input id="age" formControlName="age" type="number">
+      <app-form-control-error [control]="form.get('age')"></app-form-control-error>
     </div>
 
     <div class="input-field col s4">
-      <select #professionSelect id="profession" formControlName="profession" class="browser-default">
-            <option value="">Choisir Profession</option>
+      <select id="profession" formControlName="profession" class="browser-default" required>
+        <option value="" disabled selected>Choisir Profession</option>
         <option *ngFor="let profession of filteredProfessions" [value]="profession.idProfession">{{ profession.nom }}</option>
       </select>
+      <label for="profession" class="active">Profession</label>
+      <app-form-control-error [control]="form.get('profession')"></app-form-control-error>
     </div>
   </div>
 
@@ -56,6 +65,7 @@
         <div class="input-field col s12">
           <textarea id="historique" class="materialize-textarea" formControlName="historique"></textarea>
           <label for="historique">Historique</label>
+          <app-form-control-error [control]="form.get('historique')"></app-form-control-error>
         </div>
       </div>
     </form>
@@ -65,7 +75,7 @@
     <div class="col s12">
       <label>Dans l'inventaire :</label>
       <div class="row">
-        <div *ngFor="let item of selectedInventaire.controls" class="chip">
+        <div *ngFor="let item of selectedInventaire.controls" class="chip inventory-chip">
           {{ item.value.nom }}
           <i class="close material-icons" (click)="removeChip(item.value.nom)">close</i>
         </div>
@@ -75,15 +85,26 @@
 
   <div class="row">
     <div class="col s12">
-      <label>Inventaire</label>
+      <label>choisir {{ selectedProfessionNbObjet !== null ? selectedProfessionNbObjet : '?' }} objets</label>
       <div class="row">
-        <div *ngFor="let item of inventaireSignal(); let i = index" class="col s4">
+        <div *ngFor="let item of filteredInventaireWikiList; let i = index" class="col s4">
           <p>
             <label>
               <input type="checkbox"  [value]="item.nom" (change)="onCheckboxChange($event)" [disabled]="isCheckboxDisabled(item)">
               <span>{{ item.nom }}</span>
             </label>
           </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="row" *ngIf="filteredSpecialInventaireWikiList.length">
+    <div class="col s12">
+      <label>Objets spéciaux :</label>
+      <div class="row">
+        <div *ngFor="let item of filteredSpecialInventaireWikiList" class="chip special-chip">
+          {{ item.nom }}
         </div>
       </div>
     </div>
