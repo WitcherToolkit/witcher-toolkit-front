@@ -9,6 +9,7 @@ import { Part4Component } from './part4/part4.component';
 import { Router } from '@angular/router';
 import { PROFESSION_LIST } from '../../fake-data-set/profession-fake';
 import { Part2CaracteristiqueComponent } from './part2-caracteristique/part2-caracteristique.component';
+import { Profession } from '../../models/profession';
 
 @Component({
   selector: 'app-create-person',
@@ -28,6 +29,7 @@ export class CreatePersonComponent {
   //formData: Personnage = new Personnage();
   selectedProfession: any = null;
   form: FormGroup;
+  professions: Profession[] = [];
 
   constructor(private fb: FormBuilder, private router: Router) {
     this.form = this.fb.group({});

@@ -38,10 +38,10 @@
         <div class="card-content white-text">
           
           <div *ngIf="currentStep === 1">
-            <app-part1 [form]="form"></app-part1>
+            <app-part1 [form]="form" (professionsChange)="professions = $event"></app-part1>
           </div>
           <div *ngIf="currentStep === 2">
-            <app-part2 [form]="form"></app-part2>
+            <app-part2 [form]="form" [professions]="professions"></app-part2>
           </div>
           <div *ngIf="currentStep === 3">
             <app-part3 [form]="form"></app-part3>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, OnDestroy, signal } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, signal, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormArray, Validators } from '@angular/forms';
 import { Profession } from '../../../models/profession';
 import { ProfessionsService } from '../../../professions/professions.service';
@@ -25,6 +25,7 @@ import { Subscription } from 'rxjs';
 export class Part1IdentityComponent implements OnInit, OnDestroy {
   // --- INPUT & FORM ---
   @Input() form!: FormGroup;
+  @Output() professionsChange = new EventEmitter<Profession[]>();
 
   // --- DATA ---
   races: Race[] = [];
@@ -71,6 +72,8 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
       this.professionsService.getProfessionsList().subscribe((professions: Profession[]) => {
         this.professions = professions;
         this.filteredProfessions = professions;
+        // Émet la liste des professions au parent
+        this.professionsChange.emit(professions);
         // Synchronisation de la profession et de l'inventaire si déjà présents dans le form
         const professionId = this.professionControl?.value;
         if (professionId) {

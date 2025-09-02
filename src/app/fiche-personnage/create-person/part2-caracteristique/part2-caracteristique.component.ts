@@ -1,14 +1,15 @@
+// --- Constantes et services ---
 import { Component, effect, Input, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Caracteristique } from '../../../models/caracteristique';
 import { CaracteristiquePersonnage } from '../../../models/caracteristique-personnage';
+import { Profession } from '../../../models/profession';
 import { CaracteristiqueService } from '../../../caracteristiques/caracteristique.service';
 import { ToolsService } from '../../../tools/tools.service';
 import { POINGS_PIEDS_TABLE, SECONDARY_STATS_TABLE } from '../../../shared/shared-constants/caracteristique-tables.constants';
 import { RACE_MAP } from '../../../fake-data-set/race-fake';
-import { PROFESSION_MAP } from '../../../fake-data-set/profession-fake';
 
 @Component({
   selector: 'app-part2',
@@ -18,11 +19,10 @@ import { PROFESSION_MAP } from '../../../fake-data-set/profession-fake';
   styleUrls: ['./part2-caracteristique.component.scss'],
 })
 export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
-  
-  // --- Propriétés du composant ---
-
+  // --- Inputs et propriétés principales ---
   @Input() form!: FormGroup;
-  caracteristiques : Caracteristique[] = [];
+  @Input() professions: Profession[] = [];
+  caracteristiques: Caracteristique[] = [];
   subscriptions: Subscription[] = [];
   pointsRestants = signal<number>(0);
   niveauJeu = signal<string>('libre');
@@ -43,7 +43,13 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    console.log(`Initialisation étape 2:`, this.form.value);
+    console.info(`Initialisation étape 2:`, this.form.value);
+    // Abonnement pour mettre à jour la vigueur si la profession change
+    this.subscriptions.push(
+      this.form.get('profession')?.valueChanges.subscribe(() => {
+        this.updateVigueur();
+      }) || new Subscription()
+    );
 
     // Charger les caractéristiques depuis le service
     this.caracteristiqueService.getCaracteristiquesList().subscribe((caracteristiques: Caracteristique[]) => {
@@ -51,6 +57,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
       this.initializeFormControls();
       this.subscribeToNiveauJeuChanges();
       this.calculateValuesSecondaires();
+      this.updateVigueur();
     });
 
   }
@@ -60,13 +67,11 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  // --- Getters ---
-  /** Retourne le FormArray des caractéristiques */
+  // --- Getters pour le template et la logique ---
   get caracteristiquePersonnage(): FormArray {
     return this.form.get('caracteristiquePersonnage') as FormArray;
   }
 
-  /** Liste des contrôles principales */
   get getCaracteristiquesPrincipalesList() {
     return this.caracteristiquePersonnage.controls.filter((ctrl) => {
       const code = ctrl.get('code')?.value;
@@ -75,7 +80,6 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     });
   }
 
-  /** Liste des contrôles secondaires */
   get getCaracteristiquesSecondairesList() {
     return this.caracteristiquePersonnage.controls.filter((ctrl) => {
       const code = ctrl.get('code')?.value;
@@ -84,11 +88,11 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     });
   }
 
-  /** Liste de tous les contrôles */
   get getCaracteristiquesList() {
     return this.caracteristiquePersonnage.controls;
   }
 
+  // --- Initialisation et gestion du formulaire ---
   private initializeFormControls() {
     // Nettoyage des abonnements précédents
     this.subscriptions.forEach(sub => sub.unsubscribe());
@@ -98,13 +102,21 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     );
 
     this.form.addControl('caracteristiquePersonnage', caracteristiquePersonnageArray);
-    this.form.addControl('poings', this.fb.control(''));
-    this.form.addControl('pieds', this.fb.control(''));
-    this.form.addControl('niveauJeu', this.fb.control('libre'));
-    this.form.addControl('vigueur', this.fb.control(''));
+    if (!this.form.contains('poings')) {
+      this.form.addControl('poings', this.fb.control(''));
+    }
+    if (!this.form.contains('pieds')) {
+      this.form.addControl('pieds', this.fb.control(''));
+    }
+    if (!this.form.contains('niveauJeu')) {
+      this.form.addControl('niveauJeu', this.fb.control('libre'));
+    }
+    if (!this.form.contains('vigueur')) {
+      this.form.addControl('vigueur', this.fb.control(0));
+    }
   }
 
- private createCaracteristiqueControl(code: string): FormGroup {
+  private createCaracteristiqueControl(code: string): FormGroup {
     //On récupère l'objet caractéristique correspondant au code
     const carac = this.caracteristiques.find(c => c.code === code);
     const isPrincipale = carac?.type === 'Principale';
@@ -133,10 +145,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     return control;
   }
 
-  // --- IMPORTANT ---
-  // Avant la persistance (part3), il faudra fusionner valeurPrincipaleMax et valeurSecondaireMax dans valeurMax pour correspondre à la colonne de la base de données.
-
-  /** Abonnement aux changements du niveau de jeu */
+  // --- Abonnements et réinitialisation ---
   private subscribeToNiveauJeuChanges() {
     this.subscriptions.push(
       this.form.get('niveauJeu')!.valueChanges.subscribe((niveau) => {
@@ -171,18 +180,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
   this.updatePointsRestants();
 }
 
-  /*resetCaracteristiques(caracsPerso: CaracteristiquePersonnage[]) {
-    this.caracteristiques = caracsPerso.map(cp => cp.caracteristique);
-    if (this.form.contains('caracteristiquePersonnage')) {
-      this.form.removeControl('caracteristiquePersonnage');
-    }
-    const caracteristiquePersonnageArray = this.fb.array(
-      caracsPerso.map(cp => this.createCaracteristiqueControl(cp.caracteristique, cp.valeurMax))
-    );
-    this.form.addControl('caracteristiquePersonnage', caracteristiquePersonnageArray);
-  }*/
-
-  /** Met à jour les points restants selon le niveau de jeu */
+  // --- Calculs et mises à jour des valeurs ---
   updatePointsRestants() {
     const niveau = this.niveauJeu();
     let totalPoints = 0;
@@ -208,7 +206,6 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     this.pointsRestants.set(pointsRestants);
   }
 
-  /** Retourne le tableau des caractéristiques du personnage */
   getCaracteristiquePersonnageArray(): CaracteristiquePersonnage[] {
     return this.caracteristiquePersonnage.controls.map((ctrl, i) => ({
       valeurActuelle: ctrl.get('valeurActuelle')?.value,
@@ -217,14 +214,32 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     }));
   }
 
-  /** Met à jour la valeur actuelle des caractéristiques principales à partir de la valeur max */
   updateValeurActuelle() {
     this.caracteristiquePersonnage.controls.forEach(control => {
       control.get('valeurActuelle')?.setValue(control.get('valeurMax')?.value);
     });
   }
 
-  /** Calcule et met à jour toutes les valeurs secondaires et dérivées */
+  private updateVigueur() {
+    const vigueur = this.getVigueur();
+    const ctrl = this.form.get('vigueur');
+    if (ctrl) {
+      ctrl.setValue(vigueur);
+    }
+  }
+
+  private getVigueur(): number {
+    const professionId = this.form.get('profession')?.value;
+    const profession = this.professions.find((p: any) => p.idProfession === +professionId);
+    const professionName = profession?.nom;
+    if (professionName === 'Mage') {
+      return 5;
+    } else if (professionName === 'Prêtre' || professionName === 'Sorceleur') {
+      return 2;
+    }
+    return 0;
+  }
+
   private calculateValuesSecondaires() {
     // --- Récupération des indices et valeurs principales ---
     const corIndex = this.caracteristiques.findIndex(c => c.code === 'COR');
@@ -239,7 +254,6 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     const vitValue = this.caracteristiquePersonnage.at(vitIndex)?.get('valeurMax')?.value;
     const average = Math.floor((corValue + volValue) / 2);
 
-    
     // --- Valeurs issues de la table de correspondance ---
     const secondary = SECONDARY_STATS_TABLE[average] || { PS: 0, END: 0, RÉC: 0, ÉTOU: 0 };
     ['PS', 'END', 'RÉC', 'ÉTOU'].forEach(code => {
@@ -268,14 +282,8 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     const { poings, pieds } = POINGS_PIEDS_TABLE[corValue] || { poings: '', pieds: '' };
     this.form.get('poings')?.setValue(poings);
     this.form.get('pieds')?.setValue(pieds);
-
-    // --- Vigueur ---
-    const vigueur = this.getVigueur();
-    this.form.get('vigueur')?.setValue(vigueur);
-    console.log('VIG =', vigueur);
   }
 
-  /** Met à jour la valeur d'une caractéristique secondaire dans le FormArray */
   private setSecondaireValue(code: string, value: number): void {
     const index = this.caracteristiques.findIndex(c => c.code === code);
     if (index !== -1 && this.caracteristiquePersonnage.at(index)) {
@@ -285,22 +293,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     }
   }
 
-
-  /** Calcule la vigueur selon la profession */
-  private getVigueur(): number {
-    let vigueurValue = 0;
-    const professionId = this.form.get('profession')?.value;
-    const professionName = PROFESSION_MAP[professionId];
-    if (professionName === 'Mage') {
-      vigueurValue = 5;
-    } else if (professionName === 'Prêtre' || professionName === 'Sorceleur') {
-      vigueurValue = 2;
-    }
-    return vigueurValue;
-  }
-
   // --- Handlers pour le template ---
-  /** Change le niveau de jeu (radio) */
   setNiveauJeu(niveau: string) {
     this.niveauJeu.set(niveau);
   }
@@ -325,7 +318,6 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     }
   }
 
-  /** Désactive le bouton de décrément si la valeur est à 3 */
   isDecrementDisabled(code: string): boolean {
     const index = this.getFormArrayIndexByCode(code);
     const control = this.caracteristiquePersonnage.at(index)?.get('valeurMax');
