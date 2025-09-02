@@ -33,6 +33,9 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     private caracteristiqueService: CaracteristiqueService,
     private toolsService: ToolsService
   ) {
+    if (this.form && !this.form.contains('niveauJeu')) {
+      this.form.addControl('niveauJeu', this.fb.control('libre'));
+    }
     // Met à jour les points restants à chaque changement
     effect(() => {
       this.updatePointsRestants();
@@ -87,6 +90,9 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
   }
 
   private initializeFormControls() {
+    // Nettoyage des abonnements précédents
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+    this.subscriptions = [];
     const caracteristiquePersonnageArray = this.fb.array(
       this.caracteristiques.map(caracteristique => this.createCaracteristiqueControl(caracteristique.code))
     );
@@ -141,6 +147,9 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
   }
 
   initCaracteristiques(caracs: Caracteristique[]) {
+    // Nettoyage des abonnements précédents
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+    this.subscriptions = [];
     this.caracteristiques = caracs;
     if (this.form.contains('caracteristiquePersonnage')) {
       this.form.removeControl('caracteristiquePersonnage');
@@ -221,11 +230,16 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     const corIndex = this.caracteristiques.findIndex(c => c.code === 'COR');
     const volIndex = this.caracteristiques.findIndex(c => c.code === 'VOL');
     const vitIndex = this.caracteristiques.findIndex(c => c.code === 'VIT');
-    const corValue = this.caracteristiquePersonnage.at(corIndex).get('valeurMax')?.value;
-    const volValue = this.caracteristiquePersonnage.at(volIndex).get('valeurMax')?.value;
-    const vitValue = this.caracteristiquePersonnage.at(vitIndex).get('valeurMax')?.value;
+    if (corIndex === -1 || volIndex === -1 || vitIndex === -1) {
+      // Les caractéristiques principales ne sont pas encore chargées
+      return;
+    }
+    const corValue = this.caracteristiquePersonnage.at(corIndex)?.get('valeurMax')?.value;
+    const volValue = this.caracteristiquePersonnage.at(volIndex)?.get('valeurMax')?.value;
+    const vitValue = this.caracteristiquePersonnage.at(vitIndex)?.get('valeurMax')?.value;
     const average = Math.floor((corValue + volValue) / 2);
 
+    
     // --- Valeurs issues de la table de correspondance ---
     const secondary = SECONDARY_STATS_TABLE[average] || { PS: 0, END: 0, RÉC: 0, ÉTOU: 0 };
     ['PS', 'END', 'RÉC', 'ÉTOU'].forEach(code => {
@@ -292,14 +306,18 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
   }
 
   incrementCaracteristique(index: number): void {
-    const control = this.caracteristiquePersonnage.at(index).get('valeurMax');
+    const ctrl = this.caracteristiquePersonnage.at(index);
+    if (!ctrl) return;
+    const control = ctrl.get('valeurMax');
     if (control && control.value < 10 && (this.niveauJeu() === 'libre' || this.pointsRestants() > 0)) {
       control.setValue(control.value + 1);
     }
   }
 
   decrementCaracteristique(index: number): void {
-    const control = this.caracteristiquePersonnage.at(index).get('valeurMax');
+    const ctrl = this.caracteristiquePersonnage.at(index);
+    if (!ctrl) return;
+    const control = ctrl.get('valeurMax');
     if (control && control.value > 3) {
       control.setValue(control.value - 1);
     }
