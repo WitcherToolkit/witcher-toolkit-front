@@ -15,18 +15,14 @@ import { ToolsService } from '../../../tools/tools.service';
   styleUrls: ['./part2-caracteristique.component.scss'],
 })
 export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
-  // ======================
-  // === PROPRIÉTÉS ===
-  // ======================
+  // --- Propriétés du composant ---
   @Input() form!: FormGroup;
   caracteristiques: Caracteristique[] = [];
   subscriptions: Subscription[] = [];
   niveauJeu = signal<string>('libre');
   pointsRestants = signal<number>(0);
 
-  // ======================
-  // === CYCLE DE VIE ===
-  // ======================
+  // --- Cycle de vie ---
   constructor(
     private fb: FormBuilder,
     private caracteristiqueService: CaracteristiqueService,
@@ -48,7 +44,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     this.caracteristiqueService.getCaracteristiquesList().subscribe((caracteristiques: Caracteristique[]) => {
       this.caracteristiques = caracteristiques;
       this.initializeFormControls();
-      this.caracteristiqueService.calculateDerivedValues(this.caracteristiquePersonnage, this.caracteristiques, this.form);
+      this.caracteristiqueService.calculateValuesSecondaires(this.caracteristiquePersonnage, this.caracteristiques, this.form);
       this.subscribeToNiveauJeuChanges();
       // Abonnement aux changements de valeur des caractéristiques principales pour mettre à jour dynamiquement les points restants
       this.subscriptions.push(
@@ -64,9 +60,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  // ======================
-  // === GETTERS ===
-  // ======================
+  // --- Getters ---
   /** Retourne le FormArray des caractéristiques */
   get caracteristiquePersonnage(): FormArray {
     return this.form.get('caracteristiquePersonnage') as FormArray;
@@ -95,9 +89,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     return this.caracteristiquePersonnage.controls;
   }
 
-  // ======================
-  // === INITIALISATION ===
-  // ======================
+  // --- Initialisation ---
   /** Initialise les contrôles du formulaire */
   private initializeFormControls() {
     const caracteristiquePersonnageArray = this.fb.array(
@@ -163,9 +155,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     this.form.addControl('caracteristiquePersonnage', caracteristiquePersonnageArray);
   }
 
-  // ======================
-  // === MÉTHODES UTILITAIRES ===
-  // ======================
+  // --- Utilitaires ---
   /** Met à jour les points restants selon le niveau de jeu */
   updatePointsRestants() {
     const niveau = this.niveauJeu();
@@ -204,9 +194,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     }));
   }
 
-  // ======================
-  // === HANDLERS POUR LE TEMPLATE ===
-  // ======================
+  // --- Handlers pour le template ---
   /** Change le niveau de jeu (radio) */
   setNiveauJeu(niveau: string) {
     this.niveauJeu.set(niveau);

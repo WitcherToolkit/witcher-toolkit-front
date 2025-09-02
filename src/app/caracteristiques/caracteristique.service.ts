@@ -91,7 +91,7 @@ export class CaracteristiqueService {
 
   //#region caractéristiques dérivées
   // Récupération des valeurs dérivées (PS, END, RÉC, ÉTOU) en fonction de la moyenne de COR et de VOL
-  getDerivedValues(average: number) {
+  getValuesSecondaires(average: number) {
     const table: { [key: number]: { PS: number; END: number; RÉC: number; ÉTOU: number } } = {
       2: { PS: 10, END: 10, RÉC: 2, ÉTOU: 2 },
       3: { PS: 15, END: 15, RÉC: 3, ÉTOU: 3 },
@@ -121,7 +121,7 @@ export class CaracteristiqueService {
   }
 
   // Calcul des valeurs dérivées (PS, END, RÉC, ÉTOU, ENC, COU, SAUT, poings, pieds)
-  calculateDerivedValues(caracteristiquePersonnage: FormArray, caracteristiques: Caracteristique[], form: FormGroup) {
+  calculateValuesSecondaires(caracteristiquePersonnage: FormArray, caracteristiques: Caracteristique[], form: FormGroup) {
     const corIndex = caracteristiques.findIndex(c => c.code === 'COR');
     const volIndex = caracteristiques.findIndex(c => c.code === 'VOL');
     const vitIndex = caracteristiques.findIndex(c => c.code === 'VIT');
@@ -131,7 +131,7 @@ export class CaracteristiqueService {
     const vitValue = caracteristiquePersonnage.at(vitIndex).get('valeurMax')?.value;
 
     const average = Math.floor((corValue + volValue) / 2);
-    const derivedValues = this.getDerivedValues(average);
+    const derivedValues = this.getValuesSecondaires(average);
 
     this.setDerivedValue(caracteristiquePersonnage, caracteristiques, 'PS', derivedValues.PS);
     this.setDerivedValue(caracteristiquePersonnage, caracteristiques, 'END', derivedValues.END);
