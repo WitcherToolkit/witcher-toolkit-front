@@ -3,7 +3,6 @@ import { Caracteristique } from '../models/caracteristique';
 import { Observable } from 'rxjs';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-
 import { PROFESSION_MAP } from '../fake-data-set/profession-fake';
 import { RACE_MAP } from '../fake-data-set/race-fake';
 import { EnvironmentConfig } from '../environment.config';
@@ -45,16 +44,12 @@ export class CaracteristiqueService {
     return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
   }
 
-  //----------------------------------------------------------------------------------//
-  //-----------------------------Créer PERSONNGE -------------------------------------//
-  //----------------------------------------------------------------------------------//
-
-  // Récupération des valeurs de poings et pieds en fonction de la valeur de COR
+  // --- Récupérer les valeurs de poings et pieds en fonction de la valeur de COR ---
   getPoingsPiedsValues(corValue: number) {
     return POINGS_PIEDS_TABLE[corValue] || { poings: '', pieds: '' };
   }
 
-  // Méthode pour obtenir la vigueur
+  // --- Obtenir la vigueur selon la profession ---
   getVigueur(form: FormGroup): number {
     let vigueurValue = 0;
     const professionId = form.get('profession')?.value;
@@ -69,78 +64,61 @@ export class CaracteristiqueService {
     return vigueurValue;
   }
 
-  //#region caractéristiques dérivées
-  // Récupération des valeurs dérivées (PS, END, RÉC, ÉTOU) en fonction de la moyenne de COR et de VOL
+  // --- Récupérer les valeurs secondaires (PS, END, RÉC, ÉTOU) via table ---
   getValuesSecondaires(average: number) {
     return SECONDARY_STATS_TABLE[average] || { PS: 0, END: 0, RÉC: 0, ÉTOU: 0 };
   }
 
-  // Mise à jour de la valeur d'une caractéristique dérivée
-  setDerivedValue(formArray: FormArray, caracteristiques: Caracteristique[], code: string, value: number): void {
+  // --- Calculer et mettre à jour toutes les valeurs secondaires et dérivées ---
+  calculateValuesSecondaires(caracteristiquePersonnage: FormArray, caracteristiques: Caracteristique[], form: FormGroup) {
+    // --- Récupération des indices et valeurs principales ---
+    const corIndex = caracteristiques.findIndex(c => c.code === 'COR');
+    const volIndex = caracteristiques.findIndex(c => c.code === 'VOL');
+    const vitIndex = caracteristiques.findIndex(c => c.code === 'VIT');
+    const corValue = caracteristiquePersonnage.at(corIndex).get('valeurMax')?.value;
+    const volValue = caracteristiquePersonnage.at(volIndex).get('valeurMax')?.value;
+    const vitValue = caracteristiquePersonnage.at(vitIndex).get('valeurMax')?.value;
+    const average = Math.floor((corValue + volValue) / 2);
+
+    // --- Valeurs issues de la table de correspondance ---
+    const secondary = SECONDARY_STATS_TABLE[average] || { PS: 0, END: 0, RÉC: 0, ÉTOU: 0 };
+    ['PS', 'END', 'RÉC', 'ÉTOU'].forEach(code => {
+      const value = secondary[code as keyof typeof secondary];
+      this.setSecondaireValue(caracteristiquePersonnage, caracteristiques, code, value);
+    });
+
+    // --- Valeurs calculées par formule ---
+    let encValue = corValue * 10;
+    const couValue = vitValue * 3;
+    const sautValue = Math.ceil(couValue / 5);
+    const raceId = form.get('race')?.value;
+    const raceName = RACE_MAP[raceId];
+    if (raceName === 'Nain') encValue += 25;
+    [
+      { code: 'ENC', value: encValue },
+      { code: 'COU', value: couValue },
+      { code: 'SAUT', value: sautValue }
+    ].forEach(({ code, value }) => {
+      this.setSecondaireValue(caracteristiquePersonnage, caracteristiques, code, value);
+    });
+
+    // --- Poings et pieds ---
+    const { poings, pieds } = this.getPoingsPiedsValues(corValue);
+    form.get('poings')?.setValue(poings);
+    form.get('pieds')?.setValue(pieds);
+
+    // --- Vigueur ---
+    const vigueur = this.getVigueur(form);
+    form.get('vigueur')?.setValue(vigueur);
+  }
+
+  // --- Mettre à jour la valeur d'une caractéristique secondaire dans le FormArray ---
+  setSecondaireValue(formArray: FormArray, caracteristiques: Caracteristique[], code: string, value: number): void {
     const index = caracteristiques.findIndex(c => c.code === code);
     if (index !== -1 && formArray.at(index)) {
       const control = formArray.at(index);
       control.get('valeurMax')?.setValue(value);
       control.get('valeurActuelle')?.setValue(value);
     }
-  }
-
-  // Calcul des valeurs dérivées (PS, END, RÉC, ÉTOU, ENC, COU, SAUT, poings, pieds)
-  calculateValuesSecondaires(caracteristiquePersonnage: FormArray, caracteristiques: Caracteristique[], form: FormGroup) {
-    const corIndex = caracteristiques.findIndex(c => c.code === 'COR');
-    const volIndex = caracteristiques.findIndex(c => c.code === 'VOL');
-    const vitIndex = caracteristiques.findIndex(c => c.code === 'VIT');
-
-    const corValue = caracteristiquePersonnage.at(corIndex).get('valeurMax')?.value;
-    const volValue = caracteristiquePersonnage.at(volIndex).get('valeurMax')?.value;
-    const vitValue = caracteristiquePersonnage.at(vitIndex).get('valeurMax')?.value;
-
-    const average = Math.floor((corValue + volValue) / 2);
-    const derivedValues = this.getValuesSecondaires(average);
-
-    this.setDerivedValue(caracteristiquePersonnage, caracteristiques, 'PS', derivedValues.PS);
-    this.setDerivedValue(caracteristiquePersonnage, caracteristiques, 'END', derivedValues.END);
-    this.setDerivedValue(caracteristiquePersonnage, caracteristiques, 'RÉC', derivedValues.RÉC);
-    this.setDerivedValue(caracteristiquePersonnage, caracteristiques, 'ÉTOU', derivedValues.ÉTOU);
-
-    let encValue = corValue * 10;
-    const couValue = vitValue * 3;
-    const sautValue = Math.floor(couValue / 5);
-
-    const raceId = form.get('race')?.value;
-    const raceName = RACE_MAP[raceId];
-    if (raceName === 'Nain') {
-      encValue += 25;
-    }
-    this.setDerivedValue(caracteristiquePersonnage, caracteristiques, 'ENC', encValue);
-    this.setDerivedValue(caracteristiquePersonnage, caracteristiques, 'COU', couValue);
-    this.setDerivedValue(caracteristiquePersonnage, caracteristiques, 'SAUT', sautValue);
-
-    const { poings, pieds } = this.getPoingsPiedsValues(corValue);
-    form.get('poings')?.setValue(poings);
-    form.get('pieds')?.setValue(pieds);
-
-    // Mettre à jour la vigueur
-    const vigueur = this.getVigueur(form);
-    form.get('vigueur')?.setValue(vigueur);
-  }
-  
-  //#endregion caractéristiques dérivées
-
-  // Mise à jour des valeurs actuelles des caractéristiques (Lors le la création, valeur actuelle = valeur max)
-  updateValeurActuelle(caracteristiquePersonnage: FormArray) {
-    caracteristiquePersonnage.controls.forEach(control => {
-      control.get('valeurActuelle')?.setValue(control.get('valeurMax')?.value);
-    });
-  }
-
-  // Méthode pour réinitialiser les caractéristiques
-  resetCaracteristiques(caracteristiquePersonnage: FormArray, niveauJeu: Signal<string>, pointsRestants: Signal<number>) {
-    //
-  }
-
-  // Méthode pour mettre à jour les points restants
-  updatePointsRestants(caracteristiquePersonnage: FormArray, niveauJeu: Signal<string>, pointsRestants: Signal<number>) {
-    //
   }
 }

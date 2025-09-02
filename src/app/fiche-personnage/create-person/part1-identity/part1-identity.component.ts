@@ -216,12 +216,10 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
     const specialItems = this.inventaireWikiList
       .filter((w: any) => w.special === true && !userItems.some((i: any) => i.nom === w.nom))
       .map((wiki: any) => {
-        console.log('Ajout de l\'objet spécial :', wiki.nom);
         const inventaire: any = { nom: wiki.nom };
         if (wiki.type) inventaire.type = wiki.type;
         if (wiki.effet) inventaire.effet = wiki.effet;
         if (wiki.quantite !== undefined && wiki.quantite !== null && wiki.quantite !== '') inventaire.quantite = wiki.quantite;
-        console.log('Ajout de l\'objet spécial dans l\'inventaire :', inventaire);
         return inventaire;
       });
     return [...userItems, ...specialItems];

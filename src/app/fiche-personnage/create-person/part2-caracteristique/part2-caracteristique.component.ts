@@ -6,6 +6,9 @@ import { Caracteristique } from '../../../models/caracteristique';
 import { CaracteristiquePersonnage } from '../../../models/caracteristique-personnage';
 import { CaracteristiqueService } from '../../../caracteristiques/caracteristique.service';
 import { ToolsService } from '../../../tools/tools.service';
+import { POINGS_PIEDS_TABLE, SECONDARY_STATS_TABLE } from '../../../shared/shared-constants/caracteristique-tables.constants';
+import { RACE_MAP } from '../../../fake-data-set/race-fake';
+import { PROFESSION_MAP } from '../../../fake-data-set/profession-fake';
 
 @Component({
   selector: 'app-part2',
@@ -15,12 +18,14 @@ import { ToolsService } from '../../../tools/tools.service';
   styleUrls: ['./part2-caracteristique.component.scss'],
 })
 export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
+  
   // --- Propriétés du composant ---
+
   @Input() form!: FormGroup;
-  caracteristiques: Caracteristique[] = [];
+  caracteristiques : Caracteristique[] = [];
   subscriptions: Subscription[] = [];
-  niveauJeu = signal<string>('libre');
   pointsRestants = signal<number>(0);
+  niveauJeu = signal<string>('libre');
 
   // --- Cycle de vie ---
   constructor(
@@ -35,28 +40,20 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // S'assure que le formControl 'niveauJeu' existe et a la bonne valeur par défaut
-    if (!this.form.contains('niveauJeu')) {
-      this.form.addControl('niveauJeu', this.fb.control('libre'));
-    }
     console.log(`Initialisation étape 2:`, this.form.value);
-    // Charge les caractéristiques puis initialise le formulaire
+
+    // Charger les caractéristiques depuis le service
     this.caracteristiqueService.getCaracteristiquesList().subscribe((caracteristiques: Caracteristique[]) => {
       this.caracteristiques = caracteristiques;
       this.initializeFormControls();
-      this.caracteristiqueService.calculateValuesSecondaires(this.caracteristiquePersonnage, this.caracteristiques, this.form);
       this.subscribeToNiveauJeuChanges();
-      // Abonnement aux changements de valeur des caractéristiques principales pour mettre à jour dynamiquement les points restants
-      this.subscriptions.push(
-        this.caracteristiquePersonnage.valueChanges.subscribe(() => {
-          this.updatePointsRestants();
-        })
-      );
+      this.calculateValuesSecondaires();
     });
+
   }
 
-  ngOnDestroy(): void {
-    // Nettoie les abonnements
+  ngOnDestroy() {
+    // Annuler tous les abonnements pour éviter les fuites de mémoire
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
@@ -89,37 +86,49 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     return this.caracteristiquePersonnage.controls;
   }
 
-  // --- Initialisation ---
-  /** Initialise les contrôles du formulaire */
   private initializeFormControls() {
     const caracteristiquePersonnageArray = this.fb.array(
-      this.caracteristiques.map(caracteristique => this.createCaracteristiqueControl(caracteristique))
+      this.caracteristiques.map(caracteristique => this.createCaracteristiqueControl(caracteristique.code))
     );
+
     this.form.addControl('caracteristiquePersonnage', caracteristiquePersonnageArray);
     this.form.addControl('poings', this.fb.control(''));
     this.form.addControl('pieds', this.fb.control(''));
+    this.form.addControl('niveauJeu', this.fb.control('libre'));
     this.form.addControl('vigueur', this.fb.control(''));
   }
 
-  /** Crée un FormGroup pour une caractéristique */
-  private createCaracteristiqueControl(carac: Caracteristique, valeur?: number): FormGroup {
-    const initialValue = valeur ?? 3;
-    const group = this.fb.group({
-      code: this.fb.control(carac.code),
-      valeurMax: this.fb.control(initialValue, [Validators.required, Validators.min(3), Validators.max(10)]),
-      valeurActuelle: this.fb.control(initialValue)
+ private createCaracteristiqueControl(code: string): FormGroup {
+    //On récupère l'objet caractéristique correspondant au code
+    const carac = this.caracteristiques.find(c => c.code === code);
+    const isPrincipale = carac?.type === 'Principale';
+    const initialValue = isPrincipale ? 3 : 0;
+    const control = this.fb.group({
+      valeurMax: [initialValue, [Validators.required, Validators.min(3)]],
+      valeurActuelle: [initialValue],
+      code: [code],
+      type: [carac?.type] 
     });
-    // Synchronise valeurMax et valeurActuelle
-    group.get('valeurMax')!.valueChanges.subscribe(val => {
-      group.get('valeurActuelle')?.setValue(val, { emitEvent: false });
-    });
-    // Désactive les champs pour les secondaires
-    if (carac.type !== 'Principale') {
-      group.get('valeurMax')!.disable();
-      group.get('valeurActuelle')!.disable();
+
+    if (isPrincipale) {
+      this.subscriptions.push(
+        control.get('valeurMax')!.valueChanges.subscribe(() => {
+          this.updateValeurActuelle();
+          this.calculateValuesSecondaires();
+          this.updatePointsRestants();
+        })
+      );
+    } else {
+      control.get('valeurMax')!.valueChanges.subscribe(val => {
+        control.get('valeurActuelle')?.setValue(val, { emitEvent: false });
+      });
     }
-    return group;
+
+    return control;
   }
+
+  // --- IMPORTANT ---
+  // Avant la persistance (part3), il faudra fusionner valeurPrincipaleMax et valeurSecondaireMax dans valeurMax pour correspondre à la colonne de la base de données.
 
   /** Abonnement aux changements du niveau de jeu */
   private subscribeToNiveauJeuChanges() {
@@ -131,20 +140,29 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     );
   }
 
-  /** Initialise le FormArray caracteristiquePersonnage à partir d'une liste de caractéristiques */
   initCaracteristiques(caracs: Caracteristique[]) {
     this.caracteristiques = caracs;
     if (this.form.contains('caracteristiquePersonnage')) {
       this.form.removeControl('caracteristiquePersonnage');
     }
     const caracteristiquePersonnageArray = this.fb.array(
-      this.caracteristiques.map(caracteristique => this.createCaracteristiqueControl(caracteristique))
+      this.caracteristiques.map(caracteristique => this.createCaracteristiqueControl(caracteristique.code))
     );
     this.form.addControl('caracteristiquePersonnage', caracteristiquePersonnageArray);
   }
 
-  /** Initialise le FormArray caracteristiquePersonnage à partir d'une liste de caractéristiquesPersonnage (pour édition) */
-  initCaracteristiquesPersonnage(caracsPerso: CaracteristiquePersonnage[]) {
+  private resetCaracteristiques(): void {
+  this.caracteristiquePersonnage.controls.forEach(control => {
+    // On récupère le type directement depuis le contrôle (stocké lors de la création)
+    if (control.get('type')?.value === 'Principale') {
+      control.get('valeurMax')?.setValue(3);
+      control.get('valeurActuelle')?.setValue(3);
+    }
+  });
+  this.updatePointsRestants();
+}
+
+  /*resetCaracteristiques(caracsPerso: CaracteristiquePersonnage[]) {
     this.caracteristiques = caracsPerso.map(cp => cp.caracteristique);
     if (this.form.contains('caracteristiquePersonnage')) {
       this.form.removeControl('caracteristiquePersonnage');
@@ -153,20 +171,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
       caracsPerso.map(cp => this.createCaracteristiqueControl(cp.caracteristique, cp.valeurMax))
     );
     this.form.addControl('caracteristiquePersonnage', caracteristiquePersonnageArray);
-  }
-
-  /** Réinitialise les caractéristiques principales à 3 */
-  private resetCaracteristiques(): void {
-    this.caracteristiquePersonnage.controls.forEach(control => {
-      const code = control.get('code')?.value;
-      const carac = this.caracteristiques.find(c => c.code === code);
-      if (carac && carac.type === 'Principale') {
-        control.get('valeurMax')?.setValue(3);
-        control.get('valeurActuelle')?.setValue(3);
-      }
-    });
-    this.updatePointsRestants();
-  }
+  }*/
 
   /** Met à jour les points restants selon le niveau de jeu */
   updatePointsRestants() {
@@ -203,31 +208,117 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     }));
   }
 
+  /** Met à jour la valeur actuelle des caractéristiques principales à partir de la valeur max */
+  updateValeurActuelle() {
+    this.caracteristiquePersonnage.controls.forEach(control => {
+      control.get('valeurActuelle')?.setValue(control.get('valeurMax')?.value);
+    });
+  }
+
+  /** Calcule et met à jour toutes les valeurs secondaires et dérivées */
+  private calculateValuesSecondaires() {
+    // --- Récupération des indices et valeurs principales ---
+    const corIndex = this.caracteristiques.findIndex(c => c.code === 'COR');
+    const volIndex = this.caracteristiques.findIndex(c => c.code === 'VOL');
+    const vitIndex = this.caracteristiques.findIndex(c => c.code === 'VIT');
+    const corValue = this.caracteristiquePersonnage.at(corIndex).get('valeurMax')?.value;
+    const volValue = this.caracteristiquePersonnage.at(volIndex).get('valeurMax')?.value;
+    const vitValue = this.caracteristiquePersonnage.at(vitIndex).get('valeurMax')?.value;
+    const average = Math.floor((corValue + volValue) / 2);
+
+    // --- Valeurs issues de la table de correspondance ---
+    const secondary = SECONDARY_STATS_TABLE[average] || { PS: 0, END: 0, RÉC: 0, ÉTOU: 0 };
+    ['PS', 'END', 'RÉC', 'ÉTOU'].forEach(code => {
+      const value = secondary[code as keyof typeof secondary];
+      this.setSecondaireValue(code, value);
+      console.log(`${code} =`, value);
+    });
+
+    // --- Valeurs calculées par formule ---
+    let encValue = corValue * 10;
+    const couValue = vitValue * 3;
+    const sautValue = Math.ceil(couValue / 5);
+    const raceId = this.form.get('race')?.value;
+    const raceName = RACE_MAP[raceId];
+    if (raceName === 'Nain') encValue += 25;
+    [
+      { code: 'ENC', value: encValue },
+      { code: 'COU', value: couValue },
+      { code: 'SAUT', value: sautValue }
+    ].forEach(({ code, value }) => {
+      this.setSecondaireValue(code, value);
+      console.log(`${code} =`, value);
+    });
+
+    // --- Poings et pieds ---
+    const { poings, pieds } = POINGS_PIEDS_TABLE[corValue] || { poings: '', pieds: '' };
+    this.form.get('poings')?.setValue(poings);
+    this.form.get('pieds')?.setValue(pieds);
+
+    // --- Vigueur ---
+    const vigueur = this.getVigueur();
+    this.form.get('vigueur')?.setValue(vigueur);
+    console.log('VIG =', vigueur);
+  }
+
+  /** Met à jour la valeur d'une caractéristique secondaire dans le FormArray */
+  private setSecondaireValue(code: string, value: number): void {
+    const index = this.caracteristiques.findIndex(c => c.code === code);
+    if (index !== -1 && this.caracteristiquePersonnage.at(index)) {
+      const control = this.caracteristiquePersonnage.at(index);
+      control.get('valeurMax')?.setValue(value);
+      control.get('valeurActuelle')?.setValue(value);
+    }
+  }
+
+
+  /** Calcule la vigueur selon la profession */
+  private getVigueur(): number {
+    let vigueurValue = 0;
+    const professionId = this.form.get('profession')?.value;
+    const professionName = PROFESSION_MAP[professionId];
+    if (professionName === 'Mage') {
+      vigueurValue = 5;
+    } else if (professionName === 'Prêtre' || professionName === 'Sorceleur') {
+      vigueurValue = 2;
+    }
+    return vigueurValue;
+  }
+
   // --- Handlers pour le template ---
   /** Change le niveau de jeu (radio) */
   setNiveauJeu(niveau: string) {
     this.niveauJeu.set(niveau);
   }
 
-  /** Incrémente la valeur d'une caractéristique principale */
   incrementCaracteristique(index: number): void {
-    this.toolsService.incrementFormControlValue(this.caracteristiquePersonnage, index, 'valeurMax', 10);
+    const control = this.caracteristiquePersonnage.at(index).get('valeurMax');
+    if (control && control.value < 10 && (this.niveauJeu() === 'libre' || this.pointsRestants() > 0)) {
+      control.setValue(control.value + 1);
+    }
   }
 
-  /** Décrémente la valeur d'une caractéristique principale */
   decrementCaracteristique(index: number): void {
-    this.toolsService.decrementFormControlValue(this.caracteristiquePersonnage, index, 'valeurMax', 3);
+    const control = this.caracteristiquePersonnage.at(index).get('valeurMax');
+    if (control && control.value > 3) {
+      control.setValue(control.value - 1);
+    }
   }
 
   /** Désactive le bouton de décrément si la valeur est à 3 */
-  isDecrementDisabled(index: number): boolean {
-    const control = this.caracteristiquePersonnage.at(index).get('valeurMax');
+  isDecrementDisabled(code: string): boolean {
+    const index = this.getFormArrayIndexByCode(code);
+    const control = this.caracteristiquePersonnage.at(index)?.get('valeurMax');
     return control ? control.value <= 3 : true;
   }
 
-  /** Désactive le bouton d'incrément si la valeur est à 10 ou plus de points */
-  isIncrementDisabled(index: number): boolean {
-    const control = this.caracteristiquePersonnage.at(index).get('valeurMax');
+  isIncrementDisabled(code: string): boolean {
+    const index = this.getFormArrayIndexByCode(code);
+    const control = this.caracteristiquePersonnage.at(index)?.get('valeurMax');
     return control ? control.value >= 10 || (this.niveauJeu() !== 'libre' && this.pointsRestants() <= 0) : true;
+  }
+
+  getFormArrayIndexByCode(code: string): number {
+    return this.caracteristiquePersonnage.controls.findIndex(ctrl => ctrl.get('code')?.value === code);
   }
 }
