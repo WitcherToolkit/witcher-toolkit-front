@@ -262,7 +262,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     ['PS', 'END', 'RÉC', 'ÉTOU'].forEach(code => {
       const value = secondary[code as keyof typeof secondary];
       this.setSecondaireValue(code, value);
-      console.log(`${code} =`, value);
+      //console.log(`${code} =`, value);
     });
 
     // --- Valeurs calculées par formule ---
@@ -278,7 +278,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
       { code: 'SAUT', value: sautValue }
     ].forEach(({ code, value }) => {
       this.setSecondaireValue(code, value);
-      console.log(`${code} =`, value);
+      //console.log(`${code} =`, value);
     });
 
     // --- Poings et pieds ---
