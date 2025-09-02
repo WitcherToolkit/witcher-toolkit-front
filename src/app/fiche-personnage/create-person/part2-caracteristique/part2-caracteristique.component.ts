@@ -311,6 +311,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     const control = ctrl.get('valeurMax');
     if (control && control.value < 10 && (this.niveauJeu() === 'libre' || this.pointsRestants() > 0)) {
       control.setValue(control.value + 1);
+      this.calculateValuesSecondaires();
     }
   }
 
@@ -320,6 +321,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     const control = ctrl.get('valeurMax');
     if (control && control.value > 3) {
       control.setValue(control.value - 1);
+      this.calculateValuesSecondaires();
     }
   }
 
