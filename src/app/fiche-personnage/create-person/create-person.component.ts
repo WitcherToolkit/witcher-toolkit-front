@@ -96,6 +96,15 @@ export class CreatePersonComponent {
              (this.form.get('profession')?.valid ?? false) &&
              (this.form.get('inventaires')?.valid ?? false);
     }
+    if (this.currentStep === 2) {
+      const caracsValid = this.form.get('caracteristiquePersonnage')?.valid ?? false;
+      const poingsExists = this.form.get('poings') !== null;
+      const piedsExists = this.form.get('pieds') !== null;
+      const vigueurExists = this.form.get('vigueur') !== null;
+      const niveauJeuValid = this.form.get('niveauJeu')?.valid ?? false;
+      console.log('[isCurrentStepValid] caracsValid:', caracsValid, 'poingsExists:', poingsExists, 'piedsExists:', piedsExists, 'vigueurExists:', vigueurExists, 'niveauJeuValid:', niveauJeuValid);
+      return caracsValid && poingsExists && piedsExists && vigueurExists && niveauJeuValid;
+    }
     // Pour les autres étapes, tu peux affiner selon les besoins
     return this.form.valid;
   }

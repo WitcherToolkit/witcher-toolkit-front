@@ -117,17 +117,19 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
   }
 
   private createCaracteristiqueControl(code: string): FormGroup {
-    //On récupère l'objet caractéristique correspondant au code
     const carac = this.caracteristiques.find(c => c.code === code);
     const isPrincipale = carac?.type === 'Principale';
     const initialValue = isPrincipale ? 3 : 0;
+    const valeurMaxValidators = isPrincipale
+      ? [Validators.required, Validators.min(3), Validators.max(10)]
+      : [Validators.required];
     const control = this.fb.group({
-      valeurMax: [initialValue, [Validators.required, Validators.min(3)]],
+      valeurMax: [initialValue, valeurMaxValidators],
       valeurActuelle: [initialValue],
       code: [code],
-      type: [carac?.type] 
+      idCaracteristique: [carac?.idCaracteristique],
+      type: [carac?.type]
     });
-
     if (isPrincipale) {
       this.subscriptions.push(
         control.get('valeurMax')!.valueChanges.subscribe(() => {
@@ -141,7 +143,6 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
         control.get('valeurActuelle')?.setValue(val, { emitEvent: false });
       });
     }
-
     return control;
   }
 
@@ -207,10 +208,12 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
   }
 
   getCaracteristiquePersonnageArray(): CaracteristiquePersonnage[] {
-    return this.caracteristiquePersonnage.controls.map((ctrl, i) => ({
+    return this.caracteristiquePersonnage.controls.map(ctrl => ({
       valeurActuelle: ctrl.get('valeurActuelle')?.value,
       valeurMax: ctrl.get('valeurMax')?.value,
-      caracteristique: this.caracteristiques[i]
+      caracteristique: this.caracteristiques.find(
+        c => c.idCaracteristique === ctrl.get('idCaracteristique')?.value
+      )!
     }));
   }
 
