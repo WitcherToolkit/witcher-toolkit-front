@@ -1,10 +1,9 @@
 import { Injectable, signal } from '@angular/core';
 import { Profession } from '../models/profession';
-import { PROFESSION_LIST, PROFESSION_MAP } from '../fake-data-set/profession-fake';
-import { map, Observable, of } from 'rxjs';
-import { RACE_MAP } from '../fake-data-set/race-fake';
+import { map, Observable, of, switchMap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { EnvironmentConfig } from '../environment.config';
+import { RacesService } from '../races/races.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +14,7 @@ export class ProfessionsService {
   // --- URL de base pour les requêtes professions ---
   private readonly apiUrl = `${EnvironmentConfig.apiBaseUrl}/professions`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private racesService: RacesService) {}
 
   // --- Récupérer la liste des professions ---
   getProfessionsList(): Observable<Profession[]> {
@@ -53,34 +52,28 @@ export class ProfessionsService {
   //------------------------------------------------------------------------------------------------------------------------------------//
   // Création personnage
   filterProfessions(raceId: number): Observable<Profession[]> {
-    // Récupération des IDs des professions Sorceleur et Mage
-    const sorceleurProfessionId = Object.keys(PROFESSION_MAP).find(key => PROFESSION_MAP[+key] === 'Sorceleur');
-    const mageProfessionId = Object.keys(PROFESSION_MAP).find(key => PROFESSION_MAP[+key] === 'Mage');
-  
-    // Récupération des IDs des races Sorceleur, Humain et Elfe
-    const sorceleurRaceId = Object.keys(RACE_MAP).find(key => RACE_MAP[+key] === 'Sorceleur');
-    const humainRaceId = Object.keys(RACE_MAP).find(key => RACE_MAP[+key] === 'Humain');
-    const elfeRaceId = Object.keys(RACE_MAP).find(key => RACE_MAP[+key] === 'Elfe');
-  
-    return this.getProfessionsList().pipe(
-      map(professions => {
-        let filteredProfessions = professions;
-  
-        // Si la race sélectionnée est Sorceleur
-        if (raceId.toString() === sorceleurRaceId) {
-          return filteredProfessions.filter(prof => prof.nom === 'Sorceleur');
-        }
-  
-        // Si la race sélectionnée n'est PAS Sorceleur
-        filteredProfessions = filteredProfessions.filter(prof => prof.nom !== 'Sorceleur');
-  
-        // Si la race sélectionnée N'EST PAS Humain ou Elfe, on exclut Mage de la liste
-        if (![humainRaceId, elfeRaceId].includes(raceId.toString())) {
-          filteredProfessions = filteredProfessions.filter(prof => prof.nom !== 'Mage');
-        }
-  
-        return filteredProfessions;
-      })
+    return this.racesService.getRacesList().pipe(
+      map(races => {
+        const sorceleurRace = races.find(r => r.nom === 'Sorceleur');
+        const humainRace = races.find(r => r.nom === 'Humain');
+        const elfeRace = races.find(r => r.nom === 'Elfe');
+        return { sorceleurRaceId: sorceleurRace?.idRace, humainRaceId: humainRace?.idRace, elfeRaceId: elfeRace?.idRace };
+      }),
+      switchMap(({ sorceleurRaceId, humainRaceId, elfeRaceId }) =>
+        this.getProfessionsList().pipe(
+          map(professions => {
+            let filteredProfessions = professions;
+            if (String(raceId) === String(sorceleurRaceId)) {
+              return filteredProfessions.filter(prof => prof.nom === 'Sorceleur');
+            }
+            filteredProfessions = filteredProfessions.filter(prof => prof.nom !== 'Sorceleur');
+            if (![String(humainRaceId), String(elfeRaceId)].includes(String(raceId))) {
+              filteredProfessions = filteredProfessions.filter(prof => prof.nom !== 'Mage');
+            }
+            return filteredProfessions;
+          })
+        )
+      )
     );
   }
 }

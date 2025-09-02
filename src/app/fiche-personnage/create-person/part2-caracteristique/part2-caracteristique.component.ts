@@ -9,7 +9,7 @@ import { Profession } from '../../../models/profession';
 import { CaracteristiqueService } from '../../../caracteristiques/caracteristique.service';
 import { ToolsService } from '../../../tools/tools.service';
 import { POINGS_PIEDS_TABLE, SECONDARY_STATS_TABLE } from '../../../shared/shared-constants/caracteristique-tables.constants';
-import { RACE_MAP } from '../../../fake-data-set/race-fake';
+import { RacesService } from '../../../races/races.service';
 
 @Component({
   selector: 'app-part2',
@@ -31,7 +31,8 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private caracteristiqueService: CaracteristiqueService,
-    private toolsService: ToolsService
+    private toolsService: ToolsService,
+    private racesService: RacesService
   ) {
     if (this.form && !this.form.contains('niveauJeu')) {
       this.form.addControl('niveauJeu', this.fb.control('libre'));
@@ -266,25 +267,26 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     });
 
     // --- Valeurs calculées par formule ---
-    let encValue = corValue * 10;
-    const couValue = vitValue * 3;
-    const sautValue = Math.ceil(couValue / 5);
     const raceId = this.form.get('race')?.value;
-    const raceName = RACE_MAP[raceId];
-    if (raceName === 'Nain') encValue += 25;
-    [
-      { code: 'ENC', value: encValue },
-      { code: 'COU', value: couValue },
-      { code: 'SAUT', value: sautValue }
-    ].forEach(({ code, value }) => {
-      this.setSecondaireValue(code, value);
-      //console.log(`${code} =`, value);
+    this.racesService.getRacesList().subscribe(races => {
+      const race = races.find(r => String(r.idRace) === String(raceId));
+      const raceName = race?.nom;
+      let encValue = corValue * 10;
+      if (raceName === 'Nain') encValue += 25;
+      const couValue = vitValue * 3;
+      const sautValue = Math.ceil(couValue / 5);
+      [
+        { code: 'ENC', value: encValue },
+        { code: 'COU', value: couValue },
+        { code: 'SAUT', value: sautValue }
+      ].forEach(({ code, value }) => {
+        this.setSecondaireValue(code, value);
+      });
+      // --- Poings et pieds ---
+      const { poings, pieds } = POINGS_PIEDS_TABLE[corValue] || { poings: '', pieds: '' };
+      this.form.get('poings')?.setValue(poings);
+      this.form.get('pieds')?.setValue(pieds);
     });
-
-    // --- Poings et pieds ---
-    const { poings, pieds } = POINGS_PIEDS_TABLE[corValue] || { poings: '', pieds: '' };
-    this.form.get('poings')?.setValue(poings);
-    this.form.get('pieds')?.setValue(pieds);
   }
 
   private setSecondaireValue(code: string, value: number): void {

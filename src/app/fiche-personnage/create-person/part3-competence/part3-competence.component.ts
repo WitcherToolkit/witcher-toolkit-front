@@ -2,50 +2,51 @@ import { Component, Input, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Competence } from '../../../models/competence';
-import { COMPETENCE_LIST } from '../../../fake-data-set/competence-fake';
-import { PROFESSION_LIST } from '../../../fake-data-set/profession-fake';
 import { ToolsService } from '../../../tools/tools.service';
+import { CompetenceService } from '../../../competences/competence.service';
+import { ProfessionsService } from '../../../professions/professions.service';
 
 @Component({
   selector: 'app-part3',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule
+  ],
   templateUrl: './part3-competence.component.html',
-  styles: []
+  styleUrls: ['./part3-competence.component.scss']
 })
 export class Part3CompetenceComponent implements OnInit {
   @Input() form!: FormGroup;
-  //competences: Competence[] = COMPETENCE_LIST;
-  filteredCompetences: Competence[] = []; // Liste des compétences filtrées
+  competences: Competence[] = [];
+  filteredCompetences: Competence[] = [];
   pointsRestants = signal<number>(0);
   pointsDispo: number = 0;
 
-  constructor(private fb: FormBuilder, private toolsService: ToolsService) {}
+  constructor(
+    private fb: FormBuilder,
+    private toolsService: ToolsService,
+    private competenceService: CompetenceService,
+    private professionsService: ProfessionsService
+  ) {}
 
   ngOnInit() {
-    // Initialisation du FormGroup
     this.form.addControl('competencePersonnage', this.fb.array([]));
     this.form.addControl('competences', this.fb.array([]));
     this.form.addControl('nonAssociatedCompetences', this.fb.array([]));
-    this.initCompetences();
-    this.calculerPointsDispo(); 
-
-    // Écoute les changements de la profession sélectionnée
+    this.competenceService.getCompetencesList().subscribe((competences: Competence[]) => {
+      this.competences = competences;
+      const selectedProfessionId = this.form.get('profession')?.value;
+      this.filterCompetences(selectedProfessionId);
+    });
+    this.calculerPointsDispo();
     this.form.get('profession')?.valueChanges.subscribe(professionId => {
       this.filterCompetences(professionId);
     });
-
-    // Initialisation des compétences filtrées
-    const selectedProfessionId = this.form.get('profession')?.value;
-    this.filterCompetences(selectedProfessionId);
-
-    // Écoute les changements des valeurs des compétences associées
     this.competencesArray.valueChanges.subscribe(() => {
       this.updatePointsRestants();
       this.updateCompetencePersonnage();
     });
-
-    // Écoute les changements des valeurs des compétences non associées
     this.nonAssociatedCompetencesArray.valueChanges.subscribe(() => {
       this.calculerPointsDispo();
       this.updateCompetencePersonnage();
@@ -63,10 +64,10 @@ export class Part3CompetenceComponent implements OnInit {
   }
 
   private initCompetences() {
-    /*if (!this.competences) {
+    if (!this.competences) {
       console.error('Competences are not defined');
       return;
-    }*/
+    }
   }
 
   // Filtre des compétences
@@ -78,51 +79,37 @@ export class Part3CompetenceComponent implements OnInit {
       this.form.get('competencePersonnage')?.reset();
       return;
     }
-  
-    // Convertir l'ID de la profession en un objet profession
-    const selectedProfession = PROFESSION_LIST.find(prof => prof.idProfession === +professionId);
-    if (!selectedProfession) {
-      console.error(`Profession with ID ${professionId} not found.`);
-      this.filteredCompetences = [];
-      this.nonAssociatedCompetencesArray.clear();
+
+    this.professionsService.getProfessionCompetences(+professionId).subscribe(selectedProfession => {
+      // Filtrer les compétences associées à la profession sélectionnée
+      this.filteredCompetences = this.competences.filter(competence =>
+        selectedProfession.competenceList?.some((profComp: any) => profComp.idCompetence === competence.idCompetence)
+      );
+      // Filtrer les compétences non associées à la profession sélectionnée
+      const nonAssociatedCompetences = this.competences.filter(competence =>
+        !selectedProfession.competenceList?.some((profComp: any) => profComp.idCompetence === competence.idCompetence) && !competence.exclusive
+      );
+      // Réinitialiser le tableau des compétences associées dans le formulaire
       this.competencesArray.clear();
-      this.form.get('competencePersonnage')?.reset();
-      return;
-    }
-  
-    // Filtrer les compétences associées à la profession sélectionnée
-    /*this.filteredCompetences = this.competences.filter(competence =>
-      competence.professions?.some(prof => prof.idProfession === selectedProfession.idProfession)
-    );
-  
-    // Filtrer les compétences non associées à la profession sélectionnée
-    const nonAssociatedCompetences = this.competences.filter(competence =>
-      !competence.professions?.some(prof => prof.idProfession === selectedProfession.idProfession) && !competence.exclusif
-    );*/
-  
-    // Réinitialiser le tableau des compétences associées dans le formulaire
-    this.competencesArray.clear();
-    this.filteredCompetences.forEach(competence => {
-      this.competencesArray.push(this.fb.group({
-        valeurMax: [1, [Validators.min(1), Validators.max(6)]], // Valeur minimale 1, maximale 6
-        competence: [competence]
-      }));
+      this.filteredCompetences.forEach(competence => {
+        this.competencesArray.push(this.fb.group({
+          valeurMax: [1, [Validators.min(1), Validators.max(6)]],
+          competence: [competence]
+        }));
+      });
+      // Réinitialiser le tableau des compétences non associées dans le formulaire
+      this.nonAssociatedCompetencesArray.clear();
+      nonAssociatedCompetences.forEach(competence => {
+        this.nonAssociatedCompetencesArray.push(this.fb.group({
+          valeurMax: [0, [Validators.min(0), Validators.max(6)]],
+          competence: [competence]
+        }));
+      });
+      // Mettre à jour competencePersonnage
+      this.updateCompetencePersonnage();
+      // Recalculer les points restants
+      this.updatePointsRestants();
     });
-  
-    // Réinitialiser le tableau des compétences non associées dans le formulaire
-    /*this.nonAssociatedCompetencesArray.clear();
-    nonAssociatedCompetences.forEach(competence => {
-      this.nonAssociatedCompetencesArray.push(this.fb.group({
-        valeurMax: [0, [Validators.min(0), Validators.max(6)]], // Valeur minimale 0, maximale 6
-        competence: [competence]
-      }));
-    });*/
-  
-    // Mettre à jour competencePersonnage
-    this.updateCompetencePersonnage();
-  
-    // Recalculer les points restants
-    this.updatePointsRestants();
   }
 
   // Regrouper les compétences du personnage en une liste
