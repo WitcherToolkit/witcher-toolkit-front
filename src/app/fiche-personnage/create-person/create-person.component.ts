@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Personnage } from '../../models/personnage';
 import { CommonModule } from '@angular/common';
 import { Part1IdentityComponent } from "./part1-identity/part1-identity.component";
-import { Part3Component } from './part3/part3.component';
+import { Part3CompetenceComponent } from './part3-competence/part3-competence.component';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { HighlightDirective } from '../../highlight.directive';
 import { Part4Component } from './part4/part4.component';
@@ -17,7 +17,7 @@ import { Profession } from '../../models/profession';
     CommonModule,
     Part1IdentityComponent,
     Part2CaracteristiqueComponent,
-    Part3Component,
+    Part3CompetenceComponent,
     Part4Component,
     HighlightDirective
   ],

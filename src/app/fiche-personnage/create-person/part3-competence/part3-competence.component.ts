@@ -10,10 +10,10 @@ import { ToolsService } from '../../../tools/tools.service';
   selector: 'app-part3',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './part3.component.html',
+  templateUrl: './part3-competence.component.html',
   styles: []
 })
-export class Part3Component implements OnInit {
+export class Part3CompetenceComponent implements OnInit {
   @Input() form!: FormGroup;
   //competences: Competence[] = COMPETENCE_LIST;
   filteredCompetences: Competence[] = []; // Liste des compétences filtrées
