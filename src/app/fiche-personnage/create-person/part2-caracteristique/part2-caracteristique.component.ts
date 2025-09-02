@@ -155,7 +155,19 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     this.form.addControl('caracteristiquePersonnage', caracteristiquePersonnageArray);
   }
 
-  // --- Utilitaires ---
+  /** Réinitialise les caractéristiques principales à 3 */
+  private resetCaracteristiques(): void {
+    this.caracteristiquePersonnage.controls.forEach(control => {
+      const code = control.get('code')?.value;
+      const carac = this.caracteristiques.find(c => c.code === code);
+      if (carac && carac.type === 'Principale') {
+        control.get('valeurMax')?.setValue(3);
+        control.get('valeurActuelle')?.setValue(3);
+      }
+    });
+    this.updatePointsRestants();
+  }
+
   /** Met à jour les points restants selon le niveau de jeu */
   updatePointsRestants() {
     const niveau = this.niveauJeu();
@@ -170,19 +182,16 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
         this.pointsRestants.set(0);
         return;
     }
-    const pointsRestants = this.toolsService.calculatePointsRestants(totalPoints, this.caracteristiquePersonnage, this.caracteristiqueService.isEditable);
-    this.pointsRestants.set(pointsRestants);
-  }
-
-  /** Réinitialise les caractéristiques éditables à 3 */
-  private resetCaracteristiques(): void {
-    this.caracteristiquePersonnage.controls.forEach(control => {
-      if (this.caracteristiqueService.isEditable(control.get('code')?.value)) {
-        control.get('valeurMax')?.setValue(3);
-        control.get('valeurActuelle')?.setValue(3);
+    // On ne compte que les caractéristiques principales pour le calcul des points restants
+    const pointsRestants = this.toolsService.calculatePointsRestants(
+      totalPoints,
+      this.caracteristiquePersonnage,
+      (code: string) => {
+        const carac = this.caracteristiques.find(c => c.code === code);
+        return !!carac && carac.type === 'Principale';
       }
-    });
-    this.updatePointsRestants();
+    );
+    this.pointsRestants.set(pointsRestants);
   }
 
   /** Retourne le tableau des caractéristiques du personnage */

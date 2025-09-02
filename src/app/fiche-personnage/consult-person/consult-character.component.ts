@@ -17,16 +17,12 @@ export class ConsultCharacterComponent implements AfterViewInit {
     this.characterData = history.state.data;
   }
 
-  isEditableCaracteristiques() {
-  return this.characterData.caracteristiquePersonnage.filter((carac: any) =>
-    this.caracteristiqueService.isEditable(carac.code)
-  );
+  isPrincipaleCaracteristiques() {
+    return this.characterData.caracteristiquePersonnage.filter((carac: any) => carac.type === 'Principale');
   }
 
-  nonEditableCaracteristiques() {
-    return this.characterData.caracteristiquePersonnage.filter((carac: any) =>
-      !this.caracteristiqueService.isEditable(carac.code)
-    );
+  nonPrincipaleCaracteristiques() {
+    return this.characterData.caracteristiquePersonnage.filter((carac: any) => carac.type === 'Secondaire');
   }
 
   ngAfterViewInit() {

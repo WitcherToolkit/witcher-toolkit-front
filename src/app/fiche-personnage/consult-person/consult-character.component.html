@@ -14,7 +14,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let cateristique of isEditableCaracteristiques()">
+        <tr *ngFor="let cateristique of isPrincipaleCaracteristiques()">
           <td>{{ cateristique.code }}</td>
           <td>{{ cateristique.valeurActuelle }}</td>
           <td>{{ cateristique.valeurMax }}</td>
@@ -76,7 +76,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let cateristique of nonEditableCaracteristiques()">
+        <tr *ngFor="let cateristique of nonPrincipaleCaracteristiques()">
           <td>{{ cateristique.code }}</td>
           <td>{{ cateristique.valeurActuelle }}</td>
           <td>{{ cateristique.valeurMax }}</td>

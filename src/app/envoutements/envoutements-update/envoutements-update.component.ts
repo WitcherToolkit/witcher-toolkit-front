@@ -5,7 +5,7 @@ import { FormControlErrorComponent } from '../../form-validation/form-control-er
 import { RequiredAsteriskDirective } from '../../directives/required-asterisk.directive';
 import { Envoutement } from '../../models/envoutement';
 import { EnvoutementService } from '../envoutement.service';
-import { DANGER_RITUEL } from '../../shared/shared-constants/danger-rituel.constans';
+import { DANGER_RITUEL } from '../../shared/shared-constants/danger-rituel.constants';
 
 @Component({
   selector: 'app-envoutements-update-modal',

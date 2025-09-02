@@ -98,17 +98,15 @@ export class ToolsService {
   }
 
   // Méthode générique pour calculer les points restants
-  calculatePointsRestants(totalPoints: number, formArray: FormArray, isEditableFn: (code: string) => boolean): number {
-    // Calcul des points dépensés
+  calculatePointsRestants(totalPoints: number, formArray: FormArray, isPrincipaleFn: (code: string) => boolean): number {
+    // Calcul des points dépensés (uniquement pour les principales)
     const pointsDepenses = formArray.controls.reduce((sum, control) => {
       const code = control.get('code')?.value;
-      if (isEditableFn(code)) {
+      if (isPrincipaleFn(code)) {
         return sum + (control.get('valeurMax')?.value || 0);
       }
       return sum;
     }, 0);
-
-    // Mise à jour des points restants
     return totalPoints - pointsDepenses;
   }
 
