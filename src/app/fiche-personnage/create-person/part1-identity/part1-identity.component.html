@@ -99,7 +99,7 @@
         <div *ngFor="let item of filteredInventaireWikiList; let i = index" class="col s4">
           <p>
             <label>
-              <input type="checkbox"  [value]="item.nom" (change)="onCheckboxChange($event)" [disabled]="isCheckboxDisabled(item)">
+              <input type="checkbox"  [value]="item.nom" (change)="onCheckboxChange($event)" [disabled]="isCheckboxDisabled(item)" [checked]="isItemChecked(item)">
               <span>{{ item.nom }}</span>
             </label>
           </p>

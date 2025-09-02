@@ -53,6 +53,8 @@ export class CreatePersonComponent {
   previousStep() {
     if (this.currentStep > 1) {
       console.log(`Etape ${this.currentStep} :`, this.form.value);
+      // Ajout du log détaillé pour debug
+      console.log('Formulaire complet au retour arrière :', JSON.stringify(this.form.value, null, 2));
       this.currentStep--;
     }
   }
@@ -85,8 +87,14 @@ export class CreatePersonComponent {
   }
 
   isCurrentStepValid(): boolean {
-    // Pour l'étape 1, on vérifie la validité du formulaire entier (tous les contrôles sont dans le même form)
-    // Pour les autres étapes, tu peux affiner selon les besoins (ex: vérifier des sous-groupes)
+    if (this.currentStep === 1) {
+      return (this.form.get('nomPersonnage')?.valid ?? false) &&
+             (this.form.get('genre')?.valid ?? false) &&
+             (this.form.get('race')?.valid ?? false) &&
+             (this.form.get('profession')?.valid ?? false) &&
+             (this.form.get('inventaires')?.valid ?? false);
+    }
+    // Pour les autres étapes, tu peux affiner selon les besoins
     return this.form.valid;
   }
 

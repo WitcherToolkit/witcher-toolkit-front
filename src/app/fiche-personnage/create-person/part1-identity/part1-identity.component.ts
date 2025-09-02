@@ -51,6 +51,18 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
   // --- LIFECYCLE ---
   ngOnInit() {
     this.initializeForm();
+
+    // Synchronise le FormArray selectedInventaire avec la valeur brute du FormGroup
+    const selectedInventaireRaw = this.form.get('selectedInventaire')?.value;
+    if (Array.isArray(selectedInventaireRaw)) {
+      this.selectedInventaire.clear();
+      selectedInventaireRaw.forEach(item => {
+        if (item && item.nom) {
+          this.selectedInventaire.push(this.fb.group({ nom: item.nom }));
+        }
+      });
+    }
+
     // Chargement des listes de base
     this.subscriptions.push(
       this.racesService.getRacesList().subscribe((races: Race[]) => this.races = races)
@@ -59,6 +71,18 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
       this.professionsService.getProfessionsList().subscribe((professions: Profession[]) => {
         this.professions = professions;
         this.filteredProfessions = professions;
+        // Synchronisation de la profession et de l'inventaire si déjà présents dans le form
+        const professionId = this.professionControl?.value;
+        if (professionId) {
+          this.professionSignal.set(professionId);
+          this.professionsService.getProfessionCompetences(professionId).subscribe(prof => {
+            this.inventaireWikiList = prof.inventaireWikiList || [];
+            this.selectedProfessionNbObjet = prof.nbObjet ?? null;
+            // Synchronise l'inventaire sélectionné si déjà présent
+            const inventaires = this.convertInventaireToObject(this.selectedInventaire.controls);
+            this.inventairesControl?.setValue(inventaires, { emitEvent: false });
+          });
+        }
       })
     );
     // Gestion des changements de profession
@@ -244,5 +268,12 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
       const value = +ctrl.value || 0;
       ctrl.setValue(Math.max(value + delta, min));
     }
+  }
+
+  /** Vérifie si un objet est déjà sélectionné dans l'inventaire (pour cocher la case) */
+  isItemChecked(item: any): boolean {
+    const result = this.selectedInventaire.controls.some(ctrl => ctrl.value.nom === item.nom);
+    console.log('isItemChecked', item.nom, result);
+    return result;
   }
 }
