@@ -1,9 +1,0 @@
-export const INTELLIGENCE =   { idCaracteristique: 1, code:"INT", nom: "Intelligence", description: "Permet de résoudre des énigmes, de réaliser des expériences scientifiques, de construire des raisonnements logiques…" };
-export const REFLEXES =       { idCaracteristique: 2, code:"RÉF", nom: "Réflexes", description: "Sert à combattre, esquiver et effectuer des actions nécessitant des réactions rapides et des gestes précis." };
-export const DEXTERITE =      { idCaracteristique: 3, code:"DEX", nom: "Dextérité", description: "Capacité à manipuler des objets" };
-export const CORPS =          { idCaracteristique: 4, code:"COR", nom: "Corps", description: "Capacité à encaisser des dégâts" };
-export const VITESSE =        { idCaracteristique: 5, code:"VIT", nom: "Vitesse", description: "Capacité à se déplacer rapidement" };
-export const EMPATHIE =       { idCaracteristique: 6, code:"EMP", nom: "Empathie", description: "Capacité à comprendre les autres" };
-export const TECHNIQUE =      { idCaracteristique: 7, code:"TECH", nom: "Technique", description: "Capacité à utiliser des outils" };
-export const VOLONTE =        { idCaracteristique: 8, code:"VOL", nom: "Volonté", description: "Capacité à résister à la douleur" };
-export const CHANCE =         { idCaracteristique: 9, code:"CHA", nom: "Chance", description: "Capacité à avoir de la chance" };

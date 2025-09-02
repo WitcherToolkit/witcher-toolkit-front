@@ -7,7 +7,6 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { HighlightDirective } from '../../highlight.directive';
 import { Part4Component } from './part4/part4.component';
 import { Router } from '@angular/router';
-import { PROFESSION_LIST } from '../../fake-data-set/profession-fake';
 import { Part2CaracteristiqueComponent } from './part2-caracteristique/part2-caracteristique.component';
 import { Profession } from '../../models/profession';
 
@@ -37,7 +36,7 @@ export class CreatePersonComponent {
     // Ajout d'un écouteur pour mettre à jour selectedProfession
     this.form.valueChanges.subscribe(() => {
       const professionId = this.form.get('profession')?.value;
-      this.selectedProfession = PROFESSION_LIST.find(p => p.idProfession === +professionId);
+      this.selectedProfession = this.professions.find(p => p.idProfession === +professionId);
     });
   }
 
@@ -84,7 +83,7 @@ export class CreatePersonComponent {
 
   isSubmitAvailableOnPart3(): boolean {
     const professionId = this.form.get('profession')?.value;
-    const selectedProfession = PROFESSION_LIST.find(p => p.idProfession === +professionId);
+    const selectedProfession = this.professions.find(p => p.idProfession === +professionId);
     return !!(this.currentStep === 3 && selectedProfession && selectedProfession.nom !== 'Mage' && selectedProfession.nom !== 'Prêtre');
   }
 
