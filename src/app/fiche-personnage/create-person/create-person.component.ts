@@ -101,7 +101,6 @@ export class CreatePersonComponent {
       const piedsExists = this.form.get('pieds') !== null;
       const vigueurExists = this.form.get('vigueur') !== null;
       const niveauJeuValid = this.form.get('niveauJeu')?.valid ?? false;
-      console.log('[isCurrentStepValid] caracsValid:', caracsValid, 'poingsExists:', poingsExists, 'piedsExists:', piedsExists, 'vigueurExists:', vigueurExists, 'niveauJeuValid:', niveauJeuValid);
       return caracsValid && poingsExists && piedsExists && vigueurExists && niveauJeuValid;
     }
     // Pour les autres étapes, tu peux affiner selon les besoins

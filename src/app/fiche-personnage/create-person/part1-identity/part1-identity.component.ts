@@ -276,7 +276,6 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
   /** Vérifie si un objet est déjà sélectionné dans l'inventaire (pour cocher la case) */
   isItemChecked(item: any): boolean {
     const result = this.selectedInventaire.controls.some(ctrl => ctrl.value.nom === item.nom);
-    console.log('isItemChecked', item.nom, result);
     return result;
   }
 }
