@@ -77,6 +77,7 @@ export class CompetencesUpdateComponent implements AfterViewInit, OnChanges {
       prerequis: [competence?.prerequis ?? '', [Validators.maxLength(20)]],
       exclusive: [!!this.competence?.exclusive],
       caracteristique: [competence?.caracteristique?.idCaracteristique ?? '', Validators.required],
+      step: [competence?.step ?? 1, [Validators.required, Validators.min(1), Validators.max(10)]]
     });
   }
 
@@ -116,7 +117,8 @@ export class CompetencesUpdateComponent implements AfterViewInit, OnChanges {
         ...this.competence,
         ...this.competenceForm.value,
         idCompetence: this.competence?.idCompetence,
-        caracteristique: selectedCarac
+        caracteristique: selectedCarac,
+        step: this.competenceForm.value.step
       };
       this.competenceService.updateCompetence(competenceToUpdate).subscribe({
         next: (result) => {
@@ -133,7 +135,8 @@ export class CompetencesUpdateComponent implements AfterViewInit, OnChanges {
       // Création
       const competenceToCreate = {
         ...this.competenceForm.value,
-        caracteristique: selectedCarac
+        caracteristique: selectedCarac,
+        step: this.competenceForm.value.step
       };
       this.competenceService.createCompetence(competenceToCreate).subscribe({
         next: (result) => {
@@ -146,6 +149,34 @@ export class CompetencesUpdateComponent implements AfterViewInit, OnChanges {
         }
       });
     }
+  }
+
+  // --- Soumission et création en boucle (reste ouvert) ---
+  onSubmitAndContinue() {
+    if (!this.competenceForm.valid) {
+      this.competenceForm.markAllAsTouched();
+      console.error('Le formulaire n\'est pas valide. Veuillez corriger les erreurs.');
+      return;
+    }
+    const selectedId = this.competenceForm.value.caracteristique;
+    const selectedCarac = this.caracteristiques.find(c => c.idCaracteristique === +selectedId) ?? null;
+    const competenceToCreate = {
+      ...this.competenceForm.value,
+      caracteristique: selectedCarac,
+      step: this.competenceForm.value.step
+    };
+    this.competenceService.createCompetence(competenceToCreate).subscribe({
+      next: (result) => {
+        console.info('compétence créée avec succès', result);
+        this.competenceUpdated.emit(result);
+        this.competenceForm.reset();
+        this.competenceForm.markAsPristine();
+        this.competenceForm.markAsUntouched();
+      },
+      error: (err) => {
+        console.error('Erreur lors de la création de la compétence', err);
+      }
+    });
   }
 
   // --- Réinitialise le formulaire aux valeurs de l'objet 'competence' (édition) ---
@@ -180,6 +211,16 @@ export class CompetencesUpdateComponent implements AfterViewInit, OnChanges {
     const controlName = input.getAttribute('formControlName');
     if (controlName && this.competenceForm) {
       this.competenceForm.get(controlName)?.setValue(input.value, { emitEvent: false });
+    }
+  }
+
+  // --- Outils UI ---
+  /** Incrémente/décrémente un champ numérique du formulaire principal */
+  updateField(field: string, delta: number, min: number = 0) {
+    const ctrl = this.competenceForm.get(field);
+    if (ctrl) {
+      const value = +ctrl.value || 0;
+      ctrl.setValue(Math.max(value + delta, min));
     }
   }
 }

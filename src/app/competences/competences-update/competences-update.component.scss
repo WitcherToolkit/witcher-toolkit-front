@@ -3,3 +3,28 @@
   max-height: 15em !important; /* environ 5 lignes */
   overflow-y: auto !important;
 }
+.buton-input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  input[type="text"] {
+    text-align: center;
+    margin: 0 4px;
+  }
+
+  .btn-floating {
+    min-width: 32px;
+    height: 32px;
+    line-height: 32px;
+    padding: 0;
+  }
+}
+.fixed-action-buttons {
+  position: fixed;
+  right: 32px;
+  bottom: 32px;
+  z-index: 1000;
+  display: flex;
+  gap: 16px;
+}

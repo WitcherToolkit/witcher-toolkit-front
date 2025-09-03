@@ -14,7 +14,9 @@ export interface Competence {
 
     exclusive: boolean;
 
-    caracteristique?: Caracteristique
+    caracteristique?: Caracteristique;
+
+    step?: number;
 
     //tags?: string; // revoir l'utilisation des tags...
     //professions?: Profession[]; //pour éviter les dépendence cyclique, on ne met pas les professions ici

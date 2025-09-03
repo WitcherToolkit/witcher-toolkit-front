@@ -6,13 +6,13 @@
             <h4 class="center-align">{{ competence ? ('Modifier ' + competence.nom) : 'Nouvelle compétence' }}</h4>
             <!--Ligne-->
             <div class="row">
-                <div class="input-field col s4">
+                <div class="input-field col s6">
                     <label class="active" for="nom">Nom</label>
                     <input id="nom" type="text" formControlName="nom" required>
                     <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
                     <app-form-control-error [control]="competenceForm.get('nom')"></app-form-control-error>
                 </div>
-                <div class="input-field col s4">
+                <div class="input-field col s6">
                     <select class="select-dropdown" formControlName="caracteristique" #caracSelect>
                         <option value="" disabled selected>Choisissez une caractéristique</option>
                         <option *ngFor="let carac of caracteristiques" [value]="carac.idCaracteristique">{{ carac.nom }}</option>
@@ -20,7 +20,24 @@
                     <label>Caractéristique</label>
                     <app-form-control-error [control]="competenceForm.get('caracteristique')"></app-form-control-error>
                 </div>
-                <div class="input-field col s4">
+            </div>
+
+            <!--Ligne-->
+            <div class="row">
+                <div class="input-field col s6">
+                    <label class="active" for="step">Step</label>
+                    <div class="buton-input-group">
+                        <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('step', -1)">
+                            <i class="material-icons">remove</i>
+                        </a>
+                        <input id="step" type="text" formControlName="step" required>
+                        <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('step', 1)">
+                            <i class="material-icons">add</i>
+                        </a>
+                    </div>
+                    <app-form-control-error [control]="competenceForm.get('step')"></app-form-control-error>
+                </div>
+                <div class="input-field col s6">
                     <label>
                         <input type="checkbox" formControlName="exclusive" />
                         <span>Compétence exclusive</span>
@@ -28,6 +45,7 @@
                     <app-form-control-error [control]="competenceForm.get('exclusive')"></app-form-control-error>
                 </div>
             </div>
+
             <!--Ligne-->
             <div class="row" *ngIf="competenceForm.get('exclusive')?.value">
                 <div class="input-field col s6">
@@ -52,6 +70,7 @@
 
             <div class="modal-footer">
                 <button type="submit" class="modal-close btn-flat" [disabled]="competenceForm.invalid">Valider</button>
+                <button *ngIf="!competence" type="button" class="btn-flat" [disabled]="competenceForm.invalid" (click)="onSubmitAndContinue()">Valider et créer</button>
                 <button type="button" class="modal-close btn-flat" (click)="onCancel()">Annuler</button>
             </div>
         </form>
