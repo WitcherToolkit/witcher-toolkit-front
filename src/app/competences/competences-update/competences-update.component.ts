@@ -35,7 +35,7 @@ export class CompetencesUpdateComponent implements AfterViewInit, OnChanges {
   // --- Initialisation : chargement des caractéristiques et du formulaire ---
   ngOnInit() {
     this.caracteristiqueService.getCaracteristiquesList().subscribe(caracs => {
-      this.caracteristiques = caracs;
+      this.caracteristiques = caracs.filter(c => c.type === 'Principale');
       this.caracteristiquesLoaded = true;
       this.competenceForm = this.createCompetenceForm(this.competence);
       this.competenceForm.get('exclusive')?.valueChanges.subscribe((value: boolean) => {
@@ -77,7 +77,8 @@ export class CompetencesUpdateComponent implements AfterViewInit, OnChanges {
       prerequis: [competence?.prerequis ?? '', [Validators.maxLength(20)]],
       exclusive: [!!this.competence?.exclusive],
       caracteristique: [competence?.caracteristique?.idCaracteristique ?? '', Validators.required],
-      step: [competence?.step ?? 1, [Validators.required, Validators.min(1), Validators.max(10)]]
+      step: [competence?.step ?? 1, [Validators.required, Validators.min(1), Validators.max(10)]],
+      type: [competence?.type ?? '']
     });
   }
 
@@ -172,6 +173,7 @@ export class CompetencesUpdateComponent implements AfterViewInit, OnChanges {
         this.competenceForm.reset();
         this.competenceForm.markAsPristine();
         this.competenceForm.markAsUntouched();
+        this.resetForm();
       },
       error: (err) => {
         console.error('Erreur lors de la création de la compétence', err);
@@ -181,17 +183,11 @@ export class CompetencesUpdateComponent implements AfterViewInit, OnChanges {
 
   // --- Réinitialise le formulaire aux valeurs de l'objet 'competence' (édition) ---
   resetForm() {
-    if (this.competenceForm && this.competence) {
-      this.competenceForm.reset({
-        nom: this.competence.nom,
-        description: this.competence.description,
-        specialisation: this.competence.specialisation,
-        prerequis: this.competence.prerequis,
-        exclusive: this.competence.exclusive,
-      });
-      this.competenceForm.markAsPristine();
-      this.competenceForm.markAsUntouched();
-    }
+    this.competenceForm = this.createCompetenceForm(null);
+    setTimeout(() => {
+      const elems = document.querySelectorAll('select');
+      M.FormSelect.init(elems);
+    });
   }
 
   // --- Annulation : réinitialise le formulaire et ferme la modale ---

@@ -18,7 +18,8 @@ export interface Competence {
 
     step?: number;
 
-    //tags?: string; // revoir l'utilisation des tags...
+    type?: string;
+
     //professions?: Profession[]; //pour éviter les dépendence cyclique, on ne met pas les professions ici
 }
 

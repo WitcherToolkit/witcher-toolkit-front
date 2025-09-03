@@ -24,7 +24,7 @@
 
             <!--Ligne-->
             <div class="row">
-                <div class="input-field col s6">
+                <div class="input-field col s4">
                     <label class="active" for="step">Step</label>
                     <div class="buton-input-group">
                         <a class="btn-floating yellow darken-3 btn-small" (click)="updateField('step', -1)">
@@ -37,12 +37,22 @@
                     </div>
                     <app-form-control-error [control]="competenceForm.get('step')"></app-form-control-error>
                 </div>
-                <div class="input-field col s6">
+                <div class="input-field col s3">
                     <label>
                         <input type="checkbox" formControlName="exclusive" />
                         <span>Compétence exclusive</span>
                     </label>
                     <app-form-control-error [control]="competenceForm.get('exclusive')"></app-form-control-error>
+                </div>
+                <div class="input-field col s5">
+                    <div class="input-field">
+                        <select formControlName="type">
+                            <option value="">Aucun</option>
+                            <option value="Langue">Langue</option>
+                            <option value="Combat">Combat</option>
+                        </select>
+                        <label for="type">Type de compétence</label>
+                    </div>
                 </div>
             </div>
 

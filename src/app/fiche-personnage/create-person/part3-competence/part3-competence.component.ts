@@ -2,7 +2,6 @@ import { Component, Input, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Competence } from '../../../models/competence';
-import { ToolsService } from '../../../tools/tools.service';
 import { CompetenceService } from '../../../competences/competence.service';
 import { ProfessionsService } from '../../../professions/professions.service';
 
@@ -26,7 +25,6 @@ export class Part3CompetenceComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private toolsService: ToolsService,
     private competenceService: CompetenceService,
     private professionsService: ProfessionsService
   ) {}
@@ -75,7 +73,7 @@ export class Part3CompetenceComponent implements OnInit {
       this.competencesArray.clear();
       this.competencesAssociees.forEach(competence => {
         this.competencesArray.push(this.fb.group({
-          valeurMax: [1, [Validators.min(1), Validators.max(6)]],
+          valeurMax: [0, [Validators.min(1), Validators.max(6)]],
           competence: [competence]
         }));
       });
@@ -139,13 +137,24 @@ export class Part3CompetenceComponent implements OnInit {
   // Ajout de points de caractéristique
   incrementCompetence(index: number, listType: 'competences' | 'nonAssociatedCompetences'): void {
     const formArray = this.getArrayByType(listType);
-    this.toolsService.incrementFormControlValue(formArray, index, 'valeurMax', 6);
+    const competence = formArray.at(index).get('competence')?.value;
+    const step = competence?.step || 1;
+    const control = formArray.at(index).get('valeurMax');
+    if (control && control.value < 6) {
+      control.setValue(Math.min(control.value + step, 6));
+    }
   }
-    // Supression de points de caractéristique
 
+  // Suppression de points de caractéristique
   decrementCompetence(index: number, listType: 'competences' | 'nonAssociatedCompetences'): void {
     const formArray = this.getArrayByType(listType);
-    this.toolsService.decrementFormControlValue(formArray, index, 'valeurMax', 0); // ou autre valeur minimale si applicable
+    const competence = formArray.at(index).get('competence')?.value;
+    const step = competence?.step || 1;
+    const control = formArray.at(index).get('valeurMax');
+    const minValue = listType === 'competences' ? 1 : 0;
+    if (control && control.value > minValue) {
+      control.setValue(Math.max(control.value - step, minValue));
+    }
   }
   
   // Griser le bouton si le minimum est atteind
