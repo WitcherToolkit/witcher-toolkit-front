@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { FormArray, FormControl } from '@angular/forms';
-import { PROFESSION_MAP } from '../fake-data-set/profession-fake';
-import { CaracteristiqueService } from '../caracteristiques/caracteristique.service';
 
 @Injectable({
   providedIn: 'root'
@@ -63,8 +61,8 @@ export class ToolsService {
   }
 
   // Méthode générique pour obtenir le nombre maximum d'éléments sélectionnables en fonction de la profession
-  getMaxSelectableItems(professionId: number | null, professionLimits: { [key: string]: number }): number {
-    const professionName = PROFESSION_MAP[professionId || 0];
+  getMaxSelectableItems(professionId: number | null, professionLimits: { [key: string]: number }) {
+    /*const professionName = PROFESSION_MAP[professionId || 0];
 
     if (!professionName) return Infinity;
 
@@ -73,7 +71,7 @@ export class ToolsService {
       return professionLimits[professionName];
     }
 
-    return Infinity; // Par défaut, aucun plafond, donc renvoie Infinity
+    return Infinity; // Par défaut, aucun plafond, donc renvoie Infinity*/
   }
 
   // Méthode générique pour vérifier si un élément est désactivé en fonction de la sélection actuelle et du maximum autorisé

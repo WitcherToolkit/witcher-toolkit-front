@@ -1,6 +1,5 @@
 import { Injectable, signal } from '@angular/core';
 import { Rituel } from '../models/rituel';
-import { RITUEL_LIST } from '../fake-data-set/rituel-fake';
 import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { EnvironmentConfig } from '../environment.config';
