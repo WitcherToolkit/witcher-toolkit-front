@@ -1,12 +1,25 @@
-<form (ngSubmit)="onSubmit()">
-  <div>
-    <label>Email</label>
-    <input type="email" [(ngModel)]="email" name="email" required>
+<div class="row">
+  <div class="card">
+    <div class="card-image">
+      <img src="img/logo-site.png">
+    </div>
+    <form (ngSubmit)="onSubmit()">
+      <div class="card-content">
+        <div>
+          <label>Email</label>
+          <input type="email" [(ngModel)]="email" name="email" required>
+        </div>
+        <div>
+          <label>Mot de passe</label>
+          <input type="password" [(ngModel)]="password" name="password" required>
+          <div *ngIf="error" class="error">{{ error }}</div>
+        </div>
+      </div>
+      <div class="card-action">
+        <button type="submit" class="btn teal lighten-2">Connexion</button>
+      </div>
+    </form>
   </div>
-  <div>
-    <label>Mot de passe</label>
-    <input type="password" [(ngModel)]="password" name="password" required>
-  </div>
-  <div *ngIf="error" class="error">{{ error }}</div>
-  <button type="submit">Connexion</button>
-</form>
+</div>
+
+

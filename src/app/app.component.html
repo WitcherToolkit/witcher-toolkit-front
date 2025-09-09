@@ -23,13 +23,14 @@
 <nav>
   <div class="nav-wrapper grey darken-3">
     <ul id="nav-mobile" class="left hide-on-med-and-down">
-      <li><a class="dropdown-trigger" data-target="dropdown1">Grimoire<i class="material-icons right">arrow_drop_down</i></a></li>
-      <li><a class="dropdown-trigger" data-target="dropdown2">Aptitudes<i class="material-icons right">arrow_drop_down</i></a></li>
-      <li><a class="dropdown-trigger" data-target="dropdown2">Classes<i class="material-icons right">arrow_drop_down</i></a></li>
-      <li><a [routerLink]="['/' + personnageBasePath + '/nouveau']">Créer</a></li>
+      <li *ngIf="isLoggedIn"><a class="dropdown-trigger" data-target="dropdown1">Grimoire<i class="material-icons right">arrow_drop_down</i></a></li>
+      <li *ngIf="isLoggedIn"><a class="dropdown-trigger" data-target="dropdown2">Aptitudes<i class="material-icons right">arrow_drop_down</i></a></li>
+      <li *ngIf="isLoggedIn"><a class="dropdown-trigger" data-target="dropdown2">Classes<i class="material-icons right">arrow_drop_down</i></a></li>
+      <li *ngIf="isLoggedIn"><a [routerLink]="['/' + personnageBasePath + '/nouveau']">Créer</a></li>
+      <li *ngIf="!isLoggedIn"><a [routerLink]="['/login']">Connexion</a></li>
     </ul>
     <div class="nav-actions">
-      <a (click)="logout()" class="logout-btn" href="javascript:void(0)">Déconnexion</a>
+      <a *ngIf="isLoggedIn" (click)="logout()" class="logout-btn" href="javascript:void(0)">Déconnexion</a>
       <a [routerLink]="['/home']" class="brand-logo">
         <img src="img/logo-site.png" alt="" class="circle responsive-img">
       </a>

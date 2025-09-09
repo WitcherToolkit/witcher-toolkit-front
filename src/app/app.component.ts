@@ -12,11 +12,16 @@ import {
   RITUEL_LIST_PATH } from './app-routing/app-routing-constants';
 import { AuthService } from './shared/shared-services/auth.service';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink ],
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    CommonModule
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
@@ -46,5 +51,9 @@ export class AppComponent implements AfterViewInit {
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  get isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
   }
 }
