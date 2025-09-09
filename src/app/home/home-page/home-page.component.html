@@ -1,129 +1,91 @@
-
-<div class="row">
-
-  <div class="col s12 m2"></div>
-
-  <div class="col s12 m8">
-    <div class="row">
-      <div class="col s12 m4">
-        <!------------------------------------------------------------->
-        <div class="card horizontal">
-          <div class="card-img-circle-wrapper">
-            <img src="img/sort.jpg" class="card-img-circle">
-          </div>
-          <div class="card-stacked">
-            <div class="card-content">
-                <h5>Grimoire</h5>
-                <ul class="card-action">
-                  <li><a [routerLink]="['/' + magieListPath]">Magie</a></li>
-                  <li><a [routerLink]="['/' + rituelListPath]">Rituels</a></li>
-                  <li><a [routerLink]="['/' + envoutementListPath]">Envoûtements</a></li>
-                </ul>
-            </div>
-          </div>
-        </div>
-        <!------------------------------------------------------------->
+<div class="home-center">
+  <div class="cards-grid">
+    <div class="card horizontal">
+      <div class="card-img-circle-wrapper">
+        <img src="img/sort.jpg" class="card-img-circle">
       </div>
-    
-      <div class="col s12 m4">
-        <!------------------------------------------------------------->
-        <div class="card horizontal">
-          <div class="card-img-circle-wrapper">
-            <img src="img/creer_personnage.jpg" class="card-img-circle">
-          </div>
-          <div class="card-stacked">
-            <div class="card-content">
-                <h5>Fiche personnage</h5>
-                <ul class="card-action">
-                  <li><a [routerLink]="['/' + personnageBasePath + '/nouveau']">Créer</a></li>
-                  <li><a >Consulter</a></li>
-                </ul>
-            </div>
-          </div>
+      <div class="card-stacked">
+        <div class="card-content">
+            <h5>Grimoire</h5>
+            <ul class="card-action">
+              <li><a [routerLink]="['/' + magieListPath]">Magie</a></li>
+              <li><a [routerLink]="['/' + rituelListPath]">Rituels</a></li>
+              <li><a [routerLink]="['/' + envoutementListPath]">Envoûtements</a></li>
+            </ul>
         </div>
-        <!------------------------------------------------------------->
       </div>
-
-      <div class="col s12 m4">
-        <!------------------------------------------------------------->
-        <div class="card horizontal">
-          <div class="card-img-circle-wrapper">
-            <img src="img/don.jpg" class="card-img-circle">
-          </div>
-          <div class="card-stacked">
-            <div class="card-content">
-                <h5>Les aptitudes</h5>
-                <ul class="card-action">
-                  <li><a [routerLink]="['/' + caracteristiqueListPath]">Caractéristiques</a></li>
-                  <li><a [routerLink]="['/' + competenceListPath]">Compétences</a></li>
-                </ul>
-            </div>
-          </div>
+    </div>
+    <div class="card horizontal">
+      <div class="card-img-circle-wrapper">
+        <img src="img/creer_personnage.jpg" class="card-img-circle">
+      </div>
+      <div class="card-stacked">
+        <div class="card-content">
+            <h5>Fiche personnage</h5>
+            <ul class="card-action">
+              <li><a [routerLink]="['/' + personnageBasePath + '/nouveau']">Créer</a></li>
+              <li><a >Consulter</a></li>
+            </ul>
         </div>
-        <!------------------------------------------------------------->
       </div>
-
-      <div class="col s12 m4">
-        <!------------------------------------------------------------->
-        <div class="card horizontal">
-          <div class="card-img-circle-wrapper">
-            <img src="img/races.jpg" class="card-img-circle">
-          </div>
-          <div class="card-stacked">
-            <div class="card-content">
-                <h5>Les classes</h5>
-                <ul class="card-action">
-                  <li><a [routerLink]="['/' + professionListPath]">Profession</a></li>
-                  <li><a [routerLink]="['/' + raceListPath]">Races</a></li>
-                </ul>
-            </div>
-          </div>
+    </div>
+    <div class="card horizontal">
+      <div class="card-img-circle-wrapper">
+        <img src="img/don.jpg" class="card-img-circle">
+      </div>
+      <div class="card-stacked">
+        <div class="card-content">
+            <h5>Les aptitudes</h5>
+            <ul class="card-action">
+              <li><a [routerLink]="['/' + caracteristiqueListPath]">Caractéristiques</a></li>
+              <li><a [routerLink]="['/' + competenceListPath]">Compétences</a></li>
+            </ul>
         </div>
-        <!------------------------------------------------------------->
       </div>
-
-      <div class="col s12 m4">
-        <!------------------------------------------------------------->
-        <div class="card horizontal">
-          <div class="card-img-circle-wrapper">
-            <img src="img/magasin.jpg" class="card-img-circle">
-          </div>
-          <div class="card-stacked">
-            <div class="card-content">
-                <h5>Magasin</h5>
-                <ul class="card-action">
-                  <li><a >Armes</a></li>
-                  <li><a >Armures</a></li>
-                  <li><a >Ingrédients</a></li>
-                </ul>
-            </div>
-          </div>
+    </div>
+    <div class="card horizontal">
+      <div class="card-img-circle-wrapper">
+        <img src="img/races.jpg" class="card-img-circle">
+      </div>
+      <div class="card-stacked">
+        <div class="card-content">
+            <h5>Les classes</h5>
+            <ul class="card-action">
+              <li><a [routerLink]="['/' + professionListPath]">Profession</a></li>
+              <li><a [routerLink]="['/' + raceListPath]">Races</a></li>
+            </ul>
         </div>
-        <!------------------------------------------------------------->
       </div>
-    
-      <div class="col s12 m4">
-        <!------------------------------------------------------------->
-        <div class="card horizontal">
-          <div class="card-img-circle-wrapper">
-            <img src="img/classes.jpg" class="card-img-circle">
-          </div>
-          <div class="card-stacked">
-            <div class="card-content">
-                <h5>Combat</h5>
-                <ul class="card-action">
-                  <li><a >Voir</a></li>
-                </ul>
-            </div>
-          </div>
+    </div>
+    <div class="card horizontal">
+      <div class="card-img-circle-wrapper">
+        <img src="img/magasin.jpg" class="card-img-circle">
+      </div>
+      <div class="card-stacked">
+        <div class="card-content">
+            <h5>Magasin</h5>
+            <ul class="card-action">
+              <li><a >Armes</a></li>
+              <li><a >Armures</a></li>
+              <li><a >Ingrédients</a></li>
+            </ul>
         </div>
-        <!------------------------------------------------------------->
       </div>
-
-
+    </div>
+    <div class="card horizontal">
+      <div class="card-img-circle-wrapper">
+        <img src="img/classes.jpg" class="card-img-circle">
+      </div>
+      <div class="card-stacked">
+        <div class="card-content">
+            <h5>Combat</h5>
+            <ul class="card-action">
+              <li><a >Voir</a></li>
+            </ul>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="col s12 m2"></div>
 </div>
 
 

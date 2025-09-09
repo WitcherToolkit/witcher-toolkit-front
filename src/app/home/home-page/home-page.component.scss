@@ -31,3 +31,32 @@ $card-min-height: 215px;
   padding-top: 10px;
   border-top: 1px solid #eee;
 }
+
+.home-center {
+  min-height: calc(100vh - 64px); // 64px pour la barre de navigation
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  overflow-x: hidden;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  max-width: 100%;
+  margin-left: 2vw;
+  margin-right: 2vw;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+    margin-left: 4vw;
+    margin-right: 4vw;
+  }
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+    margin-left: 6vw;
+    margin-right: 6vw;
+  }
+}
