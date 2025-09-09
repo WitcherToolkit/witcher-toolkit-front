@@ -21,7 +21,7 @@ import { Profession } from '../../models/profession';
     HighlightDirective
   ],
   templateUrl: './create-person.component.html',
-  styles: ``
+  styleUrls: ['./create-person.component.scss'],
 })
 export class CreatePersonComponent {
   currentStep = 1;

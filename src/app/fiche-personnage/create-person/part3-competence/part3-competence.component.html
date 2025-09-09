@@ -7,21 +7,22 @@
     </span>
   </div>
 
+  <!-- Bloc des compétences principales -->
   <div class="row">
     <form class="col s12">
       <div class="row" formArrayName="competences">
         <div *ngFor="let competenceCtrl of competencesArray.controls; let i = index" [formGroupName]="i" class="col s4">
           <div class="row">
             <div class="col s2 center-align">
-              <button type="button" class="btn-floating btn-small" (click)="decrementCompetence(i, 'competences')" [disabled]="isDecrementDisabled(i, 'competences')">
+              <button type="button" class="btn-floating btn-small yellow darken-4" (click)="decrementCompetence(i, 'competences')" [disabled]="isDecrementDisabled(i, 'competences')">
                 <i class="material-icons">remove</i>
               </button>
             </div>
             <div class="col s6">
               <label>
-                {{ competenceCtrl.value.competence.nom }} ({{ competenceCtrl.value.competence.caracteristique.code }})
-                <span *ngIf="competenceCtrl.value.competence.step && competenceCtrl.value.competence.step > 1" class="badge orange">
-                  {{ competenceCtrl.value.competence.step }}
+                {{ competenceCtrl.value.competence.nom }}
+                <span *ngIf="competenceCtrl.value.competence.step && competenceCtrl.value.competence.step > 1" class="badge teal lighten-2">
+                  coût {{ competenceCtrl.value.competence.step }}
                 </span>
               </label>
               <input type="text" formControlName="valeurMax" class="validate">
@@ -29,7 +30,7 @@
               </div>
             </div>
             <div class="col s2 center-align">
-              <button type="button" class="btn-floating btn-small" (click)="incrementCompetence(i, 'competences')" [disabled]="isIncrementDisabled(i, 'competences')">
+              <button type="button" class="btn-floating btn-small yellow darken-4" (click)="incrementCompetence(i, 'competences')" [disabled]="isIncrementDisabled(i, 'competences')">
                 <i class="material-icons">add</i>
               </button>
             </div>
@@ -39,7 +40,7 @@
     </form>
   </div>
 
-  <!-- Bloc des compétences non associées -->
+  <!-- Bloc des compétences secondaires -->
   <div class="col s6"> 
     <span class="badge">
       Vous avez <b>{{ pointsDispo }}</b> points à mettre dans les compétences suivantes :
@@ -47,19 +48,19 @@
   </div>
   <div class="row">
     <form class="col s12">
-      <div class="row" formArrayName="nonAssociatedCompetences">
-        <div *ngFor="let competenceCtrl of nonAssociatedCompetencesArray.controls; let i = index" [formGroupName]="i" class="col s4">
+      <div class="row" formArrayName="competenceSecondaire">
+        <div *ngFor="let competenceCtrl of competenceSecondaireArray.controls; let i = index" [formGroupName]="i" class="col s4">
           <div class="row">
             <div class="col s2 center-align">
-              <button type="button" class="btn-floating btn-small yellow darken-4" (click)="decrementCompetence(i, 'nonAssociatedCompetences')" [disabled]="isDecrementDisabled(i, 'nonAssociatedCompetences')">
+              <button type="button" class="btn-floating btn-small yellow darken-4" (click)="decrementCompetence(i, 'competenceSecondaire')" [disabled]="isDecrementDisabled(i, 'competenceSecondaire')">
                 <i class="material-icons">remove</i>
               </button>
             </div>
             <div class="col s6">
               <label>
-                {{ competenceCtrl.value.competence.nom }} ({{ competenceCtrl.value.competence.caracteristique.code }})
-                <span *ngIf="competenceCtrl.value.competence.step && competenceCtrl.value.competence.step > 1" class="badge orange darken-3">
-                  {{ competenceCtrl.value.competence.step }}
+                {{ competenceCtrl.value.competence.nom }}
+                <span *ngIf="competenceCtrl.value.competence.step && competenceCtrl.value.competence.step > 1" class="badge teal lighten-2">
+                  coût {{ competenceCtrl.value.competence.step }}
                 </span>
               </label>
               <input type="text" formControlName="valeurMax" class="validate">
@@ -67,7 +68,7 @@
               </div>
             </div>
             <div class="col s2 center-align">
-              <button type="button" class="btn-floating btn-small yellow darken-4" (click)="incrementCompetence(i, 'nonAssociatedCompetences')" [disabled]="isIncrementDisabled(i, 'nonAssociatedCompetences')">
+              <button type="button" class="btn-floating btn-small yellow darken-4" (click)="incrementCompetence(i, 'competenceSecondaire')" [disabled]="isIncrementDisabled(i, 'competenceSecondaire')">
                 <i class="material-icons">add</i>
               </button>
             </div>

@@ -3,12 +3,14 @@
     <div class="input-field col s3">
       <label for="nomPersonnage">Nom du personnage</label>
       <input id="nomPersonnage" formControlName="nomPersonnage" type="text" required>
+      <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
       <app-form-control-error [control]="form.get('nomPersonnage')"></app-form-control-error>
     </div>
     
     <div class="input-field col s3">
       <label for="nomJoueur">Nom du joueur</label>
       <input id="nomJoueur" formControlName="nomJoueur" type="text">
+      <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
       <app-form-control-error [control]="form.get('nomJoueur')"></app-form-control-error>
     </div>
     
@@ -18,6 +20,7 @@
           <option *ngFor="let race of races" [value]="race.idRace">{{ race.nom }}</option>     
       </select>
       <label for="race" class="active">Race</label>
+      <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
       <app-form-control-error [control]="form.get('race')"></app-form-control-error>
     </div>
     
@@ -33,6 +36,7 @@
           <span>Féminin</span>
         </label>
       </div>
+      <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
       <app-form-control-error [control]="form.get('genre')"></app-form-control-error>
     </div>
   </div>
@@ -41,6 +45,7 @@
     <div class="input-field col s4">
       <label for="terreNatale">Terre natale</label>
       <input id="terreNatale" formControlName="terreNatale" type="text">
+      <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
       <app-form-control-error [control]="form.get('terreNatale')"></app-form-control-error>
     </div>
 
@@ -55,6 +60,7 @@
                 <i class="material-icons">add</i>
             </a>
         </div>
+        <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
         <app-form-control-error [control]="form.get('age')"></app-form-control-error>
     </div>
 
@@ -64,6 +70,7 @@
         <option *ngFor="let profession of filteredProfessions" [value]="profession.idProfession">{{ profession.nom }}</option>
       </select>
       <label for="profession" class="active">Profession</label>
+      <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
       <app-form-control-error [control]="form.get('profession')"></app-form-control-error>
     </div>
   </div>
@@ -74,6 +81,7 @@
         <div class="input-field col s12">
           <textarea id="historique" class="materialize-textarea" formControlName="historique"></textarea>
           <label for="historique">Historique</label>
+          <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
           <app-form-control-error [control]="form.get('historique')"></app-form-control-error>
         </div>
       </div>
