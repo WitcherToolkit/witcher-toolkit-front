@@ -1,3 +1,4 @@
+<div class="height-page">
 <h1 class="center-align">La magie</h1>
 
 <div class="container mb-5">
@@ -98,7 +99,7 @@
     </div>
   </div>
 </div>
-
+</div>
 <app-sorts-detail-modal [magie]="selectedMagie"></app-sorts-detail-modal>
 <app-sorts-update-modal [magie]="selectedMagie" [magies]="magie()" (magieUpdated)="onMagieUpdated($event)"></app-sorts-update-modal>
 <app-confirm-delete-modal-component #deleteModal *ngIf="magieToDelete" [itemName]="magieToDelete.nom" (confirm)="deleteMagie()" (cancel)="magieToDelete = null"></app-confirm-delete-modal-component>

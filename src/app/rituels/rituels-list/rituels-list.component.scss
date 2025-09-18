@@ -1,3 +1,6 @@
+/* Importation de _list-grids.scss pour les styles de grille */
+@use '../../../styles/list-grids';
+
 /* Centrage vertical et horizontal du bouton d'ajout dans la colonne avec Materialize */
 .add-btn-col {
 	display: flex;
