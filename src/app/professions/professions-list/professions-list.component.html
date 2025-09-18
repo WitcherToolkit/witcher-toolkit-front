@@ -1,3 +1,4 @@
+<div class="height-page">
 <h1 class="center-align">Les professions</h1>
 
 <div class="container mb-5">
@@ -33,7 +34,7 @@
 </div>
 
 <div class="container">
-  <div class="row">
+  <div class="cards-grid">
     <div *ngIf="professionsListFiltered().length === 0" class="col-12 text-center">
         <p>Aucun résultat</p>
     </div>
@@ -44,7 +45,9 @@
                 <div class="card-stacked">
                   <span class="card-title center-align">{{ profession.nom }}</span>
                   <div class="card-content">
+                    <div class="card-text">
                       <p> {{ truncateText(profession.description) }}</p>
+                    </div>
                   </div>
 
                   <div class="card-action">
@@ -59,6 +62,6 @@
 
   </div>
 </div>
-
+</div>
 <app-professions-detail-modal [profession]="selectedProfession"></app-professions-detail-modal>
 <app-confirm-delete-modal-component #deleteModal *ngIf="professionToDelete" [itemName]="professionToDelete.nom" (confirm)="deleteProfession()" (cancel)="professionToDelete = null"></app-confirm-delete-modal-component>

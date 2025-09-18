@@ -1,3 +1,4 @@
+<div class="height-page">
 <h1 class="center-align">Les compétences</h1>
 
 <div class="container mb-5">
@@ -32,7 +33,7 @@
 </div>
 
 <div class="container">
-  <div class="row">
+  <div class="cards-grid">
     
     <!-- Afficher le message "Aucun résultat" si la liste est vide -->
     <div *ngIf="competencesListFiltered().length === 0" class="col-12 text-center">
@@ -48,7 +49,9 @@
           <div class="card-stacked">
             <span class="card-title  center-align">{{ competence.nom }} <span *ngIf="competence.caracteristique">({{ competence.caracteristique.code }})</span></span>
             <div class="card-content">
-              <p>{{ truncateText(competence.description) }}</p>
+              <div class="card-text">
+                <p>{{ truncateText(competence.description) }}</p>
+              </div>
             </div>
 
             <div class="card-action">
@@ -62,7 +65,7 @@
     </div>    
   </div>
 </div>
-
+</div>
 <app-competences-detail-modal [competence]="selectedCompetence"></app-competences-detail-modal>
 <app-competences-update-modal [competence]="selectedCompetence" (competenceUpdated)="onCompetenceUpdated($event)"></app-competences-update-modal>
 <app-confirm-delete-modal-component #deleteModal *ngIf="competenceToDelete" [itemName]="competenceToDelete.nom" (confirm)="deleteCompetence()" (cancel)="competenceToDelete = null"></app-confirm-delete-modal-component>

@@ -1,5 +1,7 @@
+/* Importation de _list-grids.scss pour les styles de grille */
+@use '../../../styles/list-grids';
+
 .card-content {
-    min-height: 140px;//a adapter pas la suite en fonction du texte qu'il y aura.
     border: 2px solid transparent; // même épaisseur que le hover
     box-sizing: border-box;
 }
