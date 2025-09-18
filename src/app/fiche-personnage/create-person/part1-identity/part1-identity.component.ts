@@ -9,6 +9,8 @@ import { Race } from '../../../models/race';
 import { RequiredAsteriskDirective } from '../../../directives/required-asterisk.directive';
 import { FormControlErrorComponent } from '../../../form-validation/form-control-error.component';
 import { Subscription } from 'rxjs';
+import { Competence } from '../../../models/competence';
+import { CompetenceService } from '../../../competences/competence.service';
 
 @Component({
   selector: 'app-part1',
@@ -36,6 +38,14 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
   inventaireWikiList: any[] = [];
   selectedProfessionNbObjet: number | null = null;
 
+  // Liste des langues disponibles
+  competences: Competence[] = [];
+  languesList: Competence[] = [];
+  selectedLangues: Competence[] = [];
+
+  combatCompetences: Competence[] = [];
+  selectedCombatCompetences: Competence[] = [];
+
   // --- SUBSCRIPTIONS ---
   private subscriptions: Subscription[] = [];
 
@@ -44,7 +54,8 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private professionsService: ProfessionsService,
     private toolsService: ToolsService,
-    private racesService: RacesService
+    private racesService: RacesService,
+    private competenceService: CompetenceService
   ) {
     this.selectedInventaire = this.fb.array([]);
   }
@@ -52,6 +63,12 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
   // --- LIFECYCLE ---
   ngOnInit() {
     this.initializeForm();
+    this.competenceService.getCompetencesList().subscribe((competences: Competence[]) => {
+      this.competences = competences;
+      this.languesList = this.competences.filter(c => c.type === 'Langue');
+      this.combatCompetences = this.competences.filter(c => c.type === 'Combat');
+    });
+    console.log('Langues disponibles :', this.languesList);
 
     // Synchronise le FormArray selectedInventaire avec la valeur brute du FormGroup
     const selectedInventaireRaw = this.form.get('selectedInventaire')?.value;
@@ -201,18 +218,11 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
       this.removeInventaireItem(value);
     }
   }
-  /** Suppression d'un objet via la croix de la chip */
-  removeChip(item: string) {
-    this.removeInventaireItem(item);
-    // Décoche la checkbox correspondante si elle existe dans le DOM
-    const checkbox = document.querySelector('input[type="checkbox"][value="' + item.replace(/"/g, '\"') + '"]') as HTMLInputElement;
-    if (checkbox) {
-      checkbox.checked = false;
-    }
-  }
   /** Réinitialise les sélections d'inventaire et les checkboxes */
   resetSelections() {
     this.selectedInventaire.clear();
+    this.selectedLangues = [];
+    this.selectedCombatCompetences = [];
     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
     checkboxes.forEach((checkbox: any) => {
       checkbox.checked = false;
@@ -277,5 +287,75 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
   isItemChecked(item: any): boolean {
     const result = this.selectedInventaire.controls.some(ctrl => ctrl.value.nom === item.nom);
     return result;
+  }
+
+  getProfessionName(professionId: number): string {
+    const profession = this.professions.find(p => p.idProfession === +professionId);
+    return profession ? profession.nom : '';
+  }
+
+  onLangueCheckboxChange(event: any) {
+    const value = event.target.value;
+    const checked = event.target.checked;
+    const langueObj = this.languesList.find(l => l.nom === value);
+    if (!langueObj) return;
+    if (checked) {
+      if (this.selectedLangues.length < this.getMaxLangues()) {
+        this.selectedLangues.push(langueObj);
+      }
+    } else {
+      this.selectedLangues = this.selectedLangues.filter(l => l.nom !== value);
+    }
+  }
+
+  isLangueChecked(langue: Competence): boolean {
+    return this.selectedLangues.some(l => l.nom === langue.nom);
+  }
+
+  isLangueCheckboxDisabled(langue: Competence): boolean {
+    const isSelected = this.selectedLangues.some(l => l.nom === langue.nom);
+    const max = this.getMaxLangues();
+    // Désactive si non sélectionné et limite atteinte
+    return !isSelected && this.selectedLangues.length >= max;
+  }
+
+  getMaxLangues(): number {
+    const professionId = this.professionControl?.value;
+    const name = this.getProfessionName(professionId);
+    if (name === 'Barde') return 1;
+    if (name === 'Marchand') return 2;
+    return 0;
+  }
+
+  onCombatCheckboxChange(event: any) {
+    const value = event.target.value;
+    const checked = event.target.checked;
+    const compObj = this.combatCompetences.find(c => c.nom === value);
+    if (!compObj) return;
+    if (checked) {
+      if (this.selectedCombatCompetences.length < this.getMaxCombatCompetences()) {
+        this.selectedCombatCompetences.push(compObj);
+      }
+    } else {
+      this.selectedCombatCompetences = this.selectedCombatCompetences.filter(c => c.nom !== value);
+    }
+  }
+
+  isCombatChecked(comp: Competence): boolean {
+    return this.selectedCombatCompetences.some(c => c.nom === comp.nom);
+  }
+
+  isCombatCheckboxDisabled(comp: Competence): boolean {
+    const isSelected = this.selectedCombatCompetences.some(c => c.nom === comp.nom);
+    const max = this.getMaxCombatCompetences();
+    return !isSelected && this.selectedCombatCompetences.length >= max;
+  }
+
+  getMaxCombatCompetences(): number {
+    const professionId = this.professionControl?.value;
+    const name = this.getProfessionName(professionId);
+    if (name === "Homme d'arme") return 5;
+    if (name === 'Noble') return 1;
+    return 0;
   }
 }

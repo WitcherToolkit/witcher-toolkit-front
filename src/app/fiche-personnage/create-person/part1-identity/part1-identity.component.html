@@ -73,6 +73,47 @@
       <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
       <app-form-control-error [control]="form.get('profession')"></app-form-control-error>
     </div>
+
+  </div>
+
+  <div class="row" *ngIf="professionControl?.value && (getProfessionName(professionControl?.value) === 'Barde' || getProfessionName(professionControl?.value) === 'Marchand')">
+    <div class="col s12">
+      <label>Choisir {{ getProfessionName(professionControl?.value) === 'Barde' ? '1' : '2' }} langue(s)</label>
+      <div class="row">
+        <div *ngFor="let langue of languesList; let i = index" class="col s4">
+          <p>
+            <label>
+              <input type="checkbox"
+                     [value]="langue.nom"
+                     (change)="onLangueCheckboxChange($event)"
+                     [disabled]="isLangueCheckboxDisabled(langue)"
+                     [checked]="isLangueChecked(langue)">
+              <span>{{ langue.nom }}</span>
+            </label>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="professionControl?.value && (getProfessionName(professionControl?.value) === 'Homme d\'arme' || getProfessionName(professionControl?.value) === 'Noble')">
+    <div class="col s12">
+      <label>Choisir {{ getProfessionName(professionControl?.value) === "Homme d'arme" ? '5' : '1' }} compétence(s) de combat</label>
+      <div class="row">
+        <div *ngFor="let comp of combatCompetences; let i = index" class="col s4">
+          <p>
+            <label>
+              <input type="checkbox"
+                     [value]="comp.nom"
+                     (change)="onCombatCheckboxChange($event)"
+                     [disabled]="isCombatCheckboxDisabled(comp)"
+                     [checked]="isCombatChecked(comp)">
+              <span>{{ comp.nom }}</span>
+            </label>
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="row">
@@ -87,22 +128,10 @@
       </div>
     </form>
   </div>
-  
-  <div class="row">
-    <div class="col s12">
-      <label>Dans l'inventaire :</label>
-      <div class="row">
-        <div *ngFor="let item of selectedInventaire.controls" class="chip inventory-chip">
-          {{ item.value.nom }}
-          <i class="close material-icons" (click)="removeChip(item.value.nom)">close</i>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <div class="row">
     <div class="col s12">
-      <label>choisir {{ selectedProfessionNbObjet !== null ? selectedProfessionNbObjet : '?' }} objets</label>
+      <label *ngIf="selectedProfessionNbObjet !== null">choisir {{ selectedProfessionNbObjet !== null ? selectedProfessionNbObjet : '?' }} objets</label>
       <div class="row">
         <div *ngFor="let item of filteredInventaireWikiList; let i = index" class="col s4">
           <p>
