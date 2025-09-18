@@ -1,23 +1,24 @@
 <div [formGroup]="form">
   <div class="row">
-    <p class="flow-text center-align grey darken-1">Choisir le niveau de jeu :</p>
+    <p class="flow-text center-align grey darken-1">
+      Choisir le niveau de jeu : <span class="orange-text text-darken-2">{{ niveauJeu() }}</span>
+    </p>
   </div>
 
   <div class="row">
     <div class="card-content">
-      <div>
+      <div class="col s6">
         <label for="niveauJeu">Niveau de jeu :</label>
         <select id="niveauJeu" formControlName="niveauJeu" class="browser-default">
-          <option value="libre">Libre</option>
+          <option value="libre" selected>Libre</option>
           <option value="moyen">Moyen : 60 points</option>
           <option value="expérimenté">Expérimenté : 70 points</option>
           <option value="heroique">Héroïque : 75 points</option>
           <option value="legendaire">Légendaire : 80 points</option>
         </select>
       </div>
-      <div *ngIf="niveauJeu() !== 'libre' && pointsRestants() !== null">
-        <label>.</label>
-        <input class="active" type="text" value="Il vous reste {{ pointsRestants() }} points à dépenser." disabled/>
+      <div class="col s6" *ngIf="niveauJeu() !== 'libre' && pointsRestants() !== null">
+        <p>Il vous reste <b>{{ pointsRestants() }}</b> points à dépenser.</p>
       </div>
     </div>
   </div>
@@ -27,7 +28,7 @@
     <div formArrayName="caracteristiquePersonnage" class="carac-array">
       <div class="carac-col">
         <div *ngFor="let caracteristiqueCtrl of caracteristiquePersonnage.controls; let i = index" [formGroupName]="i">
-          <div class="carac-row" *ngIf="caracteristiqueCtrl.value.type === 'Principale'">
+          <div class="carac-item carac-row" *ngIf="caracteristiqueCtrl.value.type === 'Principale'">
             <button type="button" class="btn-floating btn-small" (click)="decrementCaracteristique(i)" [disabled]="isDecrementDisabled(caracteristiqueCtrl.value.code)">
               <i class="material-icons">remove</i>
             </button>
