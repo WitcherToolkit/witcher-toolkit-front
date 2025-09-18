@@ -1,3 +1,6 @@
+/* Importation de _list-grids.scss pour les styles de grille */
+@use '../../../styles/list-grids';
+
 .card {
    border: 1px solid transparent; // ou danger par défaut
     box-sizing: border-box; // pour que la bordure soit prise en compte dans la taille de la carte

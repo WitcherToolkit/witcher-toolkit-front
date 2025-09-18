@@ -1,3 +1,4 @@
+<div class="height-page">
 <h1 class="center-align">Les envoûtements</h1>
 
 <div class="container mb-5">
@@ -33,7 +34,7 @@
 
 
 <div class="container">
-  <div class="row">
+  <div class="cards-grid">
     
     <!-- Afficher le message "Aucun résultat" si la liste est vide -->
     <div *ngIf="envoutementsListFiltered().length === 0" class="col-12 text-center">
@@ -65,7 +66,7 @@
     </div>
   </div>
 </div>
-
+</div>
 <!-- Ajoute ceci à la fin de ton fichier HTML -->
 <app-envoutements-detail-modal [envoutement]="selectedEnvoutement"></app-envoutements-detail-modal>
 <app-envoutements-update-modal [envoutement]="selectedEnvoutement" (envoutementUpdated)="onEnvoutementUpdated($event)"></app-envoutements-update-modal>
