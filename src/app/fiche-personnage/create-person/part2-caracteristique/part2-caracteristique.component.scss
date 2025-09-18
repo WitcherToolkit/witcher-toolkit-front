@@ -53,6 +53,10 @@
   }
 }
 
+.carac-array {
+  display: contents;
+}
+
 @media (max-width: 900px) {
   .carac-grid {
     grid-template-columns: 1fr;

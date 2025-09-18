@@ -68,7 +68,6 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
       this.languesList = this.competences.filter(c => c.type === 'Langue');
       this.combatCompetences = this.competences.filter(c => c.type === 'Combat');
     });
-    console.log('Langues disponibles :', this.languesList);
 
     // Synchronise le FormArray selectedInventaire avec la valeur brute du FormGroup
     const selectedInventaireRaw = this.form.get('selectedInventaire')?.value;

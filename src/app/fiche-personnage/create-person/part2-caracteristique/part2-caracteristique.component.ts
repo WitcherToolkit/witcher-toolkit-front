@@ -34,9 +34,6 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     private toolsService: ToolsService,
     private racesService: RacesService
   ) {
-    if (this.form && !this.form.contains('niveauJeu')) {
-      this.form.addControl('niveauJeu', this.fb.control('libre'));
-    }
     // Met à jour les points restants à chaque changement
     effect(() => {
       this.updatePointsRestants();
@@ -45,6 +42,11 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     console.info(`Initialisation étape 2:`, this.form.value);
+    // Abonnement pour mettre à jour la vigueur si la profession change
+    if (this.form && !this.form.contains('niveauJeu')) {
+      this.form.addControl('niveauJeu', this.fb.control('libre'));
+    }
+
     // Abonnement pour mettre à jour la vigueur si la profession change
     this.subscriptions.push(
       this.form.get('profession')?.valueChanges.subscribe(() => {

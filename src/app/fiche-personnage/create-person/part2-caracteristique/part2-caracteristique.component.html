@@ -5,7 +5,7 @@
 
   <div class="row">
     <div class="card-content">
-      <div class="col s6">
+      <div>
         <label for="niveauJeu">Niveau de jeu :</label>
         <select id="niveauJeu" formControlName="niveauJeu" class="browser-default">
           <option value="libre">Libre</option>
@@ -15,77 +15,57 @@
           <option value="legendaire">Légendaire : 80 points</option>
         </select>
       </div>
-      <div class="col s6" *ngIf="niveauJeu() !== 'libre' && pointsRestants() !== null">
+      <div *ngIf="niveauJeu() !== 'libre' && pointsRestants() !== null">
         <label>.</label>
-        <input  class="active" type="text" value="Il vous reste {{ pointsRestants() }} points à dépenser." disabled/>
+        <input class="active" type="text" value="Il vous reste {{ pointsRestants() }} points à dépenser." disabled/>
       </div>
     </div>
   </div>
 
   <!-- Gestion des caractéristiques -->
-  <div class="row">
-    <div class="col s6 offset-s4"></div>
-
-    <div formArrayName="caracteristiquePersonnage">
-      <!-- Colonne 1 - Caractéristiques pincipales : -->
-      <div class="col s4">
-        <div *ngFor="let caracteristiqueCtrl of caracteristiquePersonnage.controls; let i = index" [formGroupName]="i" class="col s6"><!-- <= C'est ici que je gère la largeur de chaquue élément de la colonne 1 !!!!!-->
-          <div class="row" *ngIf="caracteristiqueCtrl.value.type === 'Principale'">
-            <div class="col s2 center-align">
-              <button type="button" class="btn-floating btn-small" (click)="decrementCaracteristique(i)" [disabled]="isDecrementDisabled(caracteristiqueCtrl.value.code)">
-                <i class="material-icons">remove</i>
-              </button>
-            </div>
-            <div *ngIf="caracteristiqueCtrl.value.type === 'Principale'" class="col s6">
-              <label>{{ caracteristiqueCtrl.value.code }}</label>
-              <input type="text" formControlName="valeurMax" [readonly]="!caracteristiqueCtrl.get('valeurMax')?.enabled">
-                <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.invalid && (caracteristiqueCtrl.get('valeurMax')?.dirty || caracteristiqueCtrl.get('valeurMax')?.touched)">
-                  <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['required']">Valeur requise.</div>
-                  <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['min']">Valeur minimale: 3.</div>
-                  <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['max']">Valeur maximale: 10.</div>
-                </div>
-            </div>
-            <div class="col s2 center-align">
-              <button type="button" class="btn-floating btn-small" (click)="incrementCaracteristique(i)" [disabled]="isIncrementDisabled(caracteristiqueCtrl.value.code)">
-                <i class="material-icons">add</i>
-              </button>
+  <div class="carac-grid">
+    <div formArrayName="caracteristiquePersonnage" class="carac-array">
+      <div class="carac-col">
+        <div *ngFor="let caracteristiqueCtrl of caracteristiquePersonnage.controls; let i = index" [formGroupName]="i">
+          <div class="carac-row" *ngIf="caracteristiqueCtrl.value.type === 'Principale'">
+            <button type="button" class="btn-floating btn-small" (click)="decrementCaracteristique(i)" [disabled]="isDecrementDisabled(caracteristiqueCtrl.value.code)">
+              <i class="material-icons">remove</i>
+            </button>
+            <label>{{ caracteristiqueCtrl.value.code }}</label>
+            <input type="text" formControlName="valeurMax" [readonly]="!caracteristiqueCtrl.get('valeurMax')?.enabled">
+            <button type="button" class="btn-floating btn-small" (click)="incrementCaracteristique(i)" [disabled]="isIncrementDisabled(caracteristiqueCtrl.value.code)">
+              <i class="material-icons">add</i>
+            </button>
+            <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.invalid && (caracteristiqueCtrl.get('valeurMax')?.dirty || caracteristiqueCtrl.get('valeurMax')?.touched)">
+              <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['required']">Valeur requise.</div>
+              <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['min']">Valeur minimale: 3.</div>
+              <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['max']">Valeur maximale: 10.</div>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- Colonne 2 - Caractéristiques secondaires : -->
-      <div class="col s3">
-        <div class="row">
-          <div *ngFor="let caracteristiqueCtrl of caracteristiquePersonnage.controls; let i = index" [formGroupName]="i">
-            <div *ngIf="caracteristiqueCtrl.value.type === 'Secondaire'" class="col s6">
-              <label>{{ caracteristiqueCtrl.value.code }}</label>
-              <input type="text" formControlName="valeurMax" readonly>
-            </div>
+      <div class="carac-col">
+        <div *ngFor="let caracteristiqueCtrl of caracteristiquePersonnage.controls; let i = index" [formGroupName]="i">
+          <div *ngIf="caracteristiqueCtrl.value.type === 'Secondaire'" class="carac-row">
+            <label>{{ caracteristiqueCtrl.value.code }}</label>
+            <input type="text" formControlName="valeurMax" readonly>
           </div>
-        </div>
-      </div>
-
-    </div><!-- Fin formArrayName="caracteristiquePersonnage" -->
-
-    <div class="col s1"></div>
-    <!-- Colonne 3 - Caractéristiques autre : -->
-    <div class="col s3">
-      <div class="row">
-        <div class="col s6">
-          <label>Poings</label>
-          <input type="text" formControlName="poings" readonly>
-        </div>
-        <div class="col s6">
-          <label>Pieds</label>
-          <input type="text" formControlName="pieds" readonly>
-        </div>
-        <div class="col s6">
-          <label>Vigueur</label>
-          <input type="text" formControlName="vigueur" readonly>
         </div>
       </div>
     </div>
+    <div class="carac-col">
+      <div class="carac-row">
+        <label>Poings</label>
+        <input type="text" formControlName="poings" readonly>
+      </div>
+      <div class="carac-row">
+        <label>Pieds</label>
+        <input type="text" formControlName="pieds" readonly>
+      </div>
+      <div class="carac-row">
+        <label>Vigueur</label>
+        <input type="text" formControlName="vigueur" readonly>
+      </div>
+    </div>
   </div>
-
 </div>
