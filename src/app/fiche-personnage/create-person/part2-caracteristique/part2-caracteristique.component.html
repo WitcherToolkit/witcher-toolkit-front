@@ -26,25 +26,33 @@
   <!-- Gestion des caractéristiques -->
   <div class="carac-grid">
     <div formArrayName="caracteristiquePersonnage" class="carac-array">
+
+      <!-- Caractéristiques principales -->
       <div class="carac-col">
-        <div *ngFor="let caracteristiqueCtrl of caracteristiquePersonnage.controls; let i = index" [formGroupName]="i">
-          <div class="carac-item carac-row" *ngIf="caracteristiqueCtrl.value.type === 'Principale'">
-            <button type="button" class="btn-floating btn-small" (click)="decrementCaracteristique(i)" [disabled]="isDecrementDisabled(caracteristiqueCtrl.value.code)">
-              <i class="material-icons">remove</i>
-            </button>
-            <label>{{ caracteristiqueCtrl.value.code }}</label>
-            <input type="text" formControlName="valeurMax" [readonly]="!caracteristiqueCtrl.get('valeurMax')?.enabled">
-            <button type="button" class="btn-floating btn-small" (click)="incrementCaracteristique(i)" [disabled]="isIncrementDisabled(caracteristiqueCtrl.value.code)">
-              <i class="material-icons">add</i>
-            </button>
-            <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.invalid && (caracteristiqueCtrl.get('valeurMax')?.dirty || caracteristiqueCtrl.get('valeurMax')?.touched)">
-              <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['required']">Valeur requise.</div>
-              <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['min']">Valeur minimale: 3.</div>
-              <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['max']">Valeur maximale: 10.</div>
+        <div class="carac-principales-grid">
+          <div *ngFor="let caracteristiqueCtrl of caracteristiquePersonnage.controls; let i = index" [formGroupName]="i">
+            <div class="carac-row" *ngIf="caracteristiqueCtrl.value.type === 'Principale'">
+              <label class="active">{{ caracteristiqueCtrl.value.code }}</label>
+              <div class="buton-input-group">
+                <button type="button" class="btn-floating yellow darken-3 btn-small" (click)="decrementCaracteristique(i)" [disabled]="isDecrementDisabled(caracteristiqueCtrl.value.code)">
+                  <i class="material-icons">remove</i>
+                </button>
+                <input type="text" formControlName="valeurMax" [readonly]="!caracteristiqueCtrl.get('valeurMax')?.enabled">
+                <button type="button" class="btn-floating yellow darken-3 btn-small" (click)="incrementCaracteristique(i)" [disabled]="isIncrementDisabled(caracteristiqueCtrl.value.code)">
+                  <i class="material-icons">add</i>
+                </button>
+              </div>
+              <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.invalid && (caracteristiqueCtrl.get('valeurMax')?.dirty || caracteristiqueCtrl.get('valeurMax')?.touched)">
+                <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['required']">Valeur requise.</div>
+                <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['min']">Valeur minimale: 3.</div>
+                <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['max']">Valeur maximale: 10.</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </div><!-- Fin caractéristiques principales -->
+      
+      <!-- Caractéristiques secondaires-->
       <div class="carac-col">
         <div *ngFor="let caracteristiqueCtrl of caracteristiquePersonnage.controls; let i = index" [formGroupName]="i">
           <div *ngIf="caracteristiqueCtrl.value.type === 'Secondaire'" class="carac-row">
@@ -53,7 +61,9 @@
           </div>
         </div>
       </div>
-    </div>
+    </div><!-- Fin caractéristiques secondaires -->
+
+    <!--Autres caractéristiques-->
     <div class="carac-col">
       <div class="carac-row">
         <label>Poings</label>
@@ -67,6 +77,6 @@
         <label>Vigueur</label>
         <input type="text" formControlName="vigueur" readonly>
       </div>
-    </div>
+    </div><!-- Fin autres caractéristiques -->
   </div>
 </div>
