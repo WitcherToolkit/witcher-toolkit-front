@@ -7,6 +7,32 @@
 	min-height: 140px; /* Ajuster si besoin selon la hauteur de la card */
 }
 
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  align-items: stretch; // Toutes les cards auront la même hauteur
+}
+
+.card {
+  height: 100%; // La card prend toute la hauteur de la cellule
+  display: flex;
+  flex-direction: column;
+}
+
 .card-text {
 	min-height: 90px; 
+}
+
+.container {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.row:last-child {
+  margin-bottom: 0 !important;
+}
+
+h1 {
+  margin-top: 0 !important;
 }
