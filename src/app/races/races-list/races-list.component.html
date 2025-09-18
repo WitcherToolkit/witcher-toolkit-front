@@ -1,3 +1,4 @@
+<div class="height-page">
 <h1 class="center-align">Les races</h1>
 
 <div class="container mb-5">
@@ -33,7 +34,7 @@
 </div>
 
 <div class="container">
-  <div class="row">
+  <div class="cards-grid">
       <div *ngIf="racesListFiltered().length === 0" class="col-12 text-center">
           <p>Aucun résultat</p>
       </div>
@@ -44,23 +45,26 @@
                   <div class="card-stacked">
                     <span class="card-title center-align">{{ race.nom }}</span>
                     <div class="card-content">
+                      <div class="card-text">
                         <p>{{ getParticularitesAsLine(race) }}</p>
-                    </div>
-                    <table class="highlight">
-                        <thead>
-                            <tr>
-                                <th>Territoire</th>
-                                <th>Réputation</th>
-                            </tr>
-                        </thead>
+                    
+                        <table class="highlight">
+                          <thead>
+                              <tr>
+                                  <th>Territoire</th>
+                                  <th>Réputation</th>
+                              </tr>
+                          </thead>
 
-                        <tbody>
-                            <tr *ngFor="let reputation of race.reputationWikiList">
-                                <td>{{ reputation.territoire }}</td>
-                                <td>{{ reputation.valeur }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                          <tbody>
+                              <tr *ngFor="let reputation of race.reputationWikiList">
+                                  <td>{{ reputation.territoire }}</td>
+                                  <td>{{ reputation.valeur }}</td>
+                              </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
 
                     <div class="card-action">
                       <a *ngIf="auth.isLoggedIn()" (click)="openModal(race)" href="javascript:void(0)">Voir</a>
@@ -73,6 +77,6 @@
       </div>
   </div>
 </div>
-
+</div>
 <app-races-detail-modal [race]="selectedRace"></app-races-detail-modal>
 <app-confirm-delete-modal-component #deleteModal *ngIf="raceToDelete" [itemName]="raceToDelete.nom" (confirm)="deleteRace()" (cancel)="raceToDelete = null"></app-confirm-delete-modal-component>
