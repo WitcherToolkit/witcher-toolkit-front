@@ -1,10 +1,9 @@
+/* Importation de _list-grids.scss pour les styles de grille */
+@use '../../../styles/list-grids';
+
 .card {
     border: 2px solid transparent; // même épaisseur que le hover
     box-sizing: border-box;
-
-    .card-content {
-        min-height: 120px;//a adapter pas la suite en fonction du texte qu'il y aura.
-    }
 }
 
 /* Centrage vertical et horizontal du bouton d'ajout dans la colonne avec Materialize */

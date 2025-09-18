@@ -1,3 +1,4 @@
+<div class="height-page">
 <h1 class="center-align">Les caractéristiques</h1>
 
 <div class="container mb-5">
@@ -32,7 +33,7 @@
 </div>
 
 <div class="container">
-  <div class="row">
+  <div class="cards-grid">
     
     <!-- Afficher le message "Aucun résultat" si la liste est vide -->
     <div *ngIf="caracteristiquesListFiltered().length === 0" class="col-12 text-center">
@@ -48,7 +49,9 @@
           <div class="card-stacked">
             <span class="card-title center-align">{{ caracteristique.nom }} ({{ caracteristique.code }})</span>
             <div class="card-content">
-              <p>{{ truncateText(caracteristique.description) }}</p>
+              <div class="card-text">
+                <p>{{ truncateText(caracteristique.description) }}</p>
+              </div>
             </div>
             
             <div class="card-action">
@@ -63,7 +66,7 @@
     </div>    
   </div>
 </div>
-
+</div>
 <app-caracteristiques-detail-modal [caracteristique]="selectedCaracteristique"></app-caracteristiques-detail-modal>
 <app-caracteristiques-update-modal [caracteristique]="selectedCaracteristique" (caracteristiqueUpdated)="onCaracteristiqueUpdated($event)"></app-caracteristiques-update-modal>
 <app-confirm-delete-modal-component #deleteModal *ngIf="caracteristiqueToDelete" [itemName]="caracteristiqueToDelete.nom" (confirm)="deleteCaracteristique()" (cancel)="caracteristiqueToDelete = null"></app-confirm-delete-modal-component>
