@@ -1,5 +1,6 @@
-/* Importation de _list-grids.scss pour les styles de grille */
+/* Importation de _list-grids.scss et de _page-layout.scss pour les styles de grille */
 @use '../../../styles/list-grids';
+@use '../../../styles/page-layout';
 
 .size-card {
     min-height: 500px;//a adapter pas la suite en fonction du texte qu'il y aura.

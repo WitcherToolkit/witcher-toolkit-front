@@ -5,7 +5,7 @@ import { Location } from '@angular/common';
 @Component({
   selector: 'app-page-not-found',
   templateUrl: './page-not-found.component.html',
-  styles: ``
+  styleUrls: ['./page-not-found.component.scss']
 })
 export class PageNotFoundComponent {
   constructor(private location: Location) {}
