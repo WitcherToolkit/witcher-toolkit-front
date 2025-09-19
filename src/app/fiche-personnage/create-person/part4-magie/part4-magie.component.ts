@@ -23,6 +23,10 @@ export class Part4MagieComponent implements OnInit {
   selectedMagies!: FormArray;
   magieDisponible: Magie[] = [];
   magieNom: string = '';
+  // -- Invocation --
+  selectedInvocations!: FormArray;
+  invocationDisponible: Magie[] = [];
+  invocationNom: string = '';
   // -- Rituel --
   selectedRituels!: FormArray;
   rituelDisponible: any[] = [];
@@ -56,6 +60,11 @@ export class Part4MagieComponent implements OnInit {
     this.form.addControl('selectedMagies', this.selectedMagies);
     this.form.addControl('magiePersonnage', this.fb.control([]));
 
+    // -- Initialisation des invocations --
+    this.selectedInvocations = this.fb.array([]);
+    this.form.addControl('selectedInvocations', this.selectedInvocations);
+    this.form.addControl('invocationPersonnage', this.fb.control([]));
+
     this.selectedRituels = this.fb.array([]);
     this.form.addControl('selectedRituels', this.selectedRituels);
     this.form.addControl('rituelPersonnage', this.fb.control([]));
@@ -88,7 +97,7 @@ export class Part4MagieComponent implements OnInit {
     this.selectedEnvoutement.valueChanges.subscribe(() => this.convertEnvoutementToObject());
   }
 
-  // -- Magie --
+  // -- Magie (Sort) --
 
   updateMagieDisponible() {
     const selectedProfessionId = this.form.get('profession')?.value;
@@ -104,6 +113,11 @@ export class Part4MagieComponent implements OnInit {
     // Affiche uniquement les magies de type "Sort"
     this.magieService.getMagiesNoviceList().subscribe(magies => {
       this.magieDisponible = magies.filter(magie => magie.type === 'Sort');
+    });
+    // -- Invocation --
+    this.invocationNom = 'Invocations';
+    this.magieService.getMagiesNoviceList().subscribe(magies => {
+      this.invocationDisponible = magies.filter(magie => magie.type === 'Invocation');
     });
   }
 
@@ -134,7 +148,7 @@ export class Part4MagieComponent implements OnInit {
 
   convertMagieToObject() {
     const magieList = this.selectedMagies.controls
-      .map(control => this.magieDisponible.find(m => m.nom === control.value))
+      .map(control => this.magieDisponible.find(m => m.nom === control.value && m.type === 'Sort'))
       .filter(Boolean) as Magie[];
     this.form.get('magiePersonnage')?.patchValue(magieList);
   }
@@ -151,6 +165,49 @@ export class Part4MagieComponent implements OnInit {
     const max = this.selectedProfession?.maxSort ?? 0;
     const alreadySelected = this.selectedMagies.controls.some(ctrl => ctrl.value === nom);
     return this.selectedMagies.length >= max && !alreadySelected;
+  }
+
+  // -- Invocation --
+  onCheckboxChangeInvocation(e: any) {
+    const value = e.target.value;
+    const checked = e.target.checked;
+    const max = this.selectedProfession?.maxInvocation ?? 0;
+
+    if (checked) {
+      if (
+        this.selectedInvocations.length < max &&
+        !this.selectedInvocations.controls.some(ctrl => ctrl.value === value)
+      ) {
+        this.selectedInvocations.push(new FormControl(value));
+      }
+    } else {
+      const idx = this.selectedInvocations.controls.findIndex(ctrl => ctrl.value === value);
+      if (idx > -1) {
+        this.selectedInvocations.removeAt(idx);
+      }
+    }
+    this.convertInvocationToObject();
+  }
+
+  convertInvocationToObject() {
+    const invocationList = this.selectedInvocations.controls
+      .map(control => this.invocationDisponible.find(m => m.nom === control.value && m.type === 'Invocation'))
+      .filter(Boolean) as Magie[];
+    this.form.get('invocationPersonnage')?.patchValue(invocationList);
+  }
+
+  removeChipInvocation(nom: string) {
+    const idx = this.selectedInvocations.controls.findIndex(ctrl => ctrl.value === nom);
+    if (idx > -1) {
+      this.selectedInvocations.removeAt(idx);
+      this.convertInvocationToObject();
+    }
+  }
+
+  isInvocationDisabled(nom: string) {
+    const max = this.selectedProfession?.maxInvocation ?? 0;
+    const alreadySelected = this.selectedInvocations.controls.some(ctrl => ctrl.value === nom);
+    return this.selectedInvocations.length >= max && !alreadySelected;
   }
 
   // -- Rituel --

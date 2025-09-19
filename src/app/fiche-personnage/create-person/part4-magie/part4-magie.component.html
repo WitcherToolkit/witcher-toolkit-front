@@ -1,5 +1,5 @@
 <div [formGroup]="form">
-  <!-- Magies sélectionnées -->
+  <!-- Sorts sélectionnés -->
   <div class="row" *ngIf="selectedProfession?.maxSort">
     <div class="col s12">
       <label>{{ magieNom }} sélectionnés :</label>
@@ -12,7 +12,7 @@
     </div>
   </div>
 
-  <!-- Magies disponibles -->
+  <!-- Sorts disponibles -->
   <div class="row" *ngIf="selectedProfession?.maxSort">
     <div class="col s12">
       <label>Choisir {{ selectedProfession?.maxSort }} sorts</label>
@@ -33,6 +33,49 @@
                 materializeTooltip
                 data-position="right"
                 [attr.data-tooltip]="magie.effet"
+                style="cursor:pointer; margin-left:4px;"
+              >info_outline</i>
+            </label>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Invocations sélectionnées -->
+  <div class="row" *ngIf="selectedProfession?.maxInvocation">
+    <div class="col s12">
+      <label>{{ invocationNom }} sélectionnés :</label>
+      <div class="row">
+        <div *ngFor="let item of selectedInvocations.controls" class="chip special-chip">
+          {{ item.value }}
+          <i class="close material-icons" (click)="removeChipMagie(item.value)">close</i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Invocations disponibles -->
+  <div class="row" *ngIf="selectedProfession?.maxInvocation">
+    <div class="col s12">
+      <label>Choisir {{ selectedProfession?.maxInvocation }} invocations</label>
+      <div class="row">
+        <div *ngFor="let invocation of invocationDisponible; let i = index" class="col s4">
+          <p>
+            <label>
+              <input
+                type="checkbox"
+                [value]="invocation.nom"
+                (change)="onCheckboxChangeInvocation($event)"
+                [checked]="selectedInvocations.value.includes(invocation.nom)"
+                [disabled]="isInvocationDisabled(invocation.nom)"
+              />
+              <span>{{ invocation.nom }}</span>
+              <i
+                class="material-icons tooltipped"
+                materializeTooltip
+                data-position="right"
+                [attr.data-tooltip]="invocation.effet"
                 style="cursor:pointer; margin-left:4px;"
               >info_outline</i>
             </label>
