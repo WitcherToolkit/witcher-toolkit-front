@@ -9,10 +9,10 @@ import { ToolsService } from '../../../tools/tools.service';
   selector: 'app-part4',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './part4.component.html',
+  templateUrl: './part4-magie.component.html',
   styles: ``
 })
-export class Part4Component implements OnInit {
+export class Part4MagieComponent implements OnInit {
   @Input() form!: FormGroup;
   // Magie
   selectedMagies!: FormArray;

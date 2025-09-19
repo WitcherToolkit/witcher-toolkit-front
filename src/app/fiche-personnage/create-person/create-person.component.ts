@@ -5,10 +5,10 @@ import { Part1IdentityComponent } from "./part1-identity/part1-identity.componen
 import { Part3CompetenceComponent } from './part3-competence/part3-competence.component';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { HighlightDirective } from '../../highlight.directive';
-import { Part4Component } from './part4/part4.component';
 import { Router } from '@angular/router';
 import { Part2CaracteristiqueComponent } from './part2-caracteristique/part2-caracteristique.component';
 import { Profession } from '../../models/profession';
+import { Part4MagieComponent } from './part4-magie/part4-magie.component';
 
 @Component({
   selector: 'app-create-person',
@@ -17,7 +17,7 @@ import { Profession } from '../../models/profession';
     Part1IdentityComponent,
     Part2CaracteristiqueComponent,
     Part3CompetenceComponent,
-    Part4Component,
+    Part4MagieComponent,
     HighlightDirective
   ],
   templateUrl: './create-person.component.html',
