@@ -4,7 +4,7 @@
     <div class="col s12">
       <label>{{ magieNom }} sélectionnés :</label>
       <div class="row">
-        <div *ngFor="let item of selectedMagies.controls" class="chip">
+        <div *ngFor="let item of selectedMagies.controls" class="chip special-chip">
           {{ item.value }}
           <i class="close material-icons" (click)="removeChipMagie(item.value)">close</i>
         </div>
@@ -47,7 +47,7 @@
     <div class="col s12">
       <label>{{ rituelNom }} sélectionnés :</label>
       <div class="row">
-        <div *ngFor="let item of selectedRituels.controls" class="chip">
+        <div *ngFor="let item of selectedRituels.controls" class="chip special-chip">
           {{ item.value }}
           <i class="close material-icons" (click)="removeChipRituel(item.value)">close</i>
         </div>
@@ -90,7 +90,7 @@
     <div class="col s12">
       <label>{{ envoutementNom }} sélectionnés :</label>
       <div class="row">
-        <div *ngFor="let item of selectedEnvoutement.controls" class="chip">
+        <div *ngFor="let item of selectedEnvoutement.controls" class="chip special-chip">
           {{ item.value }}
           <i class="close material-icons" (click)="removeChipEnvoutement(item.value)">close</i>
         </div>

@@ -15,7 +15,7 @@ import { MaterializeTooltipDirective } from '../../../directives/materialize-too
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, MaterializeTooltipDirective],
   templateUrl: './part4-magie.component.html',
-  styles: ``
+  styleUrls: ['./part4-magie.component.scss'],
 })
 export class Part4MagieComponent implements OnInit {
   @Input() form!: FormGroup;
