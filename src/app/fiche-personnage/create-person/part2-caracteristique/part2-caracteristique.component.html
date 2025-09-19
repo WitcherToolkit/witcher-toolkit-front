@@ -18,7 +18,7 @@
         </select>
       </div>
       <div class="col s6" *ngIf="niveauJeu() !== 'libre' && pointsRestants() !== null">
-        <p>Il vous reste <b>{{ pointsRestants() }}</b> points à dépenser.</p>
+        <p><b>Points restant : {{ pointsRestants() }}/{{ getTotalPoints() }}</b></p>
       </div>
     </div>
   </div>
@@ -30,25 +30,35 @@
       <!-- Caractéristiques principales -->
       <div class="carac-col">
         <div class="carac-principales-grid">
-          <div *ngFor="let caracteristiqueCtrl of caracteristiquePersonnage.controls; let i = index" [formGroupName]="i">
-            <div class="carac-row" *ngIf="caracteristiqueCtrl.value.type === 'Principale'">
-              <label class="active">{{ caracteristiqueCtrl.value.code }}</label>
-              <div class="buton-input-group">
-                <button type="button" class="btn-floating yellow darken-3 btn-small" (click)="decrementCaracteristique(i)" [disabled]="isDecrementDisabled(caracteristiqueCtrl.value.code)">
-                  <i class="material-icons">remove</i>
-                </button>
-                <input type="text" formControlName="valeurMax" [readonly]="!caracteristiqueCtrl.get('valeurMax')?.enabled">
-                <button type="button" class="btn-floating yellow darken-3 btn-small" (click)="incrementCaracteristique(i)" [disabled]="isIncrementDisabled(caracteristiqueCtrl.value.code)">
-                  <i class="material-icons">add</i>
-                </button>
-              </div>
-              <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.invalid && (caracteristiqueCtrl.get('valeurMax')?.dirty || caracteristiqueCtrl.get('valeurMax')?.touched)">
-                <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['required']">Valeur requise.</div>
-                <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['min']">Valeur minimale: 3.</div>
-                <div *ngIf="caracteristiqueCtrl.get('valeurMax')?.errors?.['max']">Valeur maximale: 10.</div>
-              </div>
+          <ng-container *ngFor="let row of getPrincipalesRows()">
+            <div class="carac-row">
+              <ng-container *ngFor="let col of row">
+                <ng-container *ngIf="col">
+                  <div [formGroupName]="getFormArrayIndexByCode(col.value.code)" class="carac-item">
+                    <label class="active">{{ col.value.code }}</label>
+                    <div class="buton-input-group">
+                      <button type="button" class="btn-floating yellow darken-3 btn-small"
+                        (click)="decrementCaracteristique(getFormArrayIndexByCode(col.value.code))"
+                        [disabled]="isDecrementDisabled(col.value.code)">
+                        <i class="material-icons">remove</i>
+                      </button>
+                      <input type="text" formControlName="valeurMax" [readonly]="!col.get('valeurMax')?.enabled">
+                      <button type="button" class="btn-floating yellow darken-3 btn-small"
+                        (click)="incrementCaracteristique(getFormArrayIndexByCode(col.value.code))"
+                        [disabled]="isIncrementDisabled(col.value.code)">
+                        <i class="material-icons">add</i>
+                      </button>
+                    </div>
+                    <div *ngIf="col.get('valeurMax')?.invalid && (col.get('valeurMax')?.dirty || col.get('valeurMax')?.touched)">
+                      <div *ngIf="col.get('valeurMax')?.errors?.['required']">Valeur requise.</div>
+                      <div *ngIf="col.get('valeurMax')?.errors?.['min']">Valeur minimale: 1.</div>
+                      <div *ngIf="col.get('valeurMax')?.errors?.['max']">Valeur maximale: 10.</div>
+                    </div>
+                  </div>
+                </ng-container>
+              </ng-container>
             </div>
-          </div>
+          </ng-container>
         </div>
       </div><!-- Fin caractéristiques principales -->
       

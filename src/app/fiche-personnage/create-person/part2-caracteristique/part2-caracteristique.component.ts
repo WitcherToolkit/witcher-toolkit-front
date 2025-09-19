@@ -83,6 +83,16 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     });
   }
 
+  // Nouvelle méthode pour grouper les principales par 2
+  getPrincipalesRows() {
+    const principales = this.getCaracteristiquesPrincipalesList;
+    const rows = [];
+    for (let i = 0; i < principales.length; i += 2) {
+      rows.push([principales[i], principales[i + 1]]);
+    }
+    return rows;
+  }
+
   get getCaracteristiquesSecondairesList() {
     return this.caracteristiquePersonnage.controls.filter((ctrl) => {
       const code = ctrl.get('code')?.value;
@@ -122,9 +132,9 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
   private createCaracteristiqueControl(code: string): FormGroup {
     const carac = this.caracteristiques.find(c => c.code === code);
     const isPrincipale = carac?.type === 'Principale';
-    const initialValue = isPrincipale ? 3 : 0;
+    const initialValue = isPrincipale ? 1 : 0;
     const valeurMaxValidators = isPrincipale
-      ? [Validators.required, Validators.min(3), Validators.max(10)]
+      ? [Validators.required, Validators.min(1), Validators.max(10)]
       : [Validators.required];
     const control = this.fb.group({
       valeurMax: [initialValue, valeurMaxValidators],
@@ -174,15 +184,15 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
   }
 
   private resetCaracteristiques(): void {
-  this.caracteristiquePersonnage.controls.forEach(control => {
-    // On récupère le type directement depuis le contrôle (stocké lors de la création)
-    if (control.get('type')?.value === 'Principale') {
-      control.get('valeurMax')?.setValue(3);
-      control.get('valeurActuelle')?.setValue(3);
-    }
-  });
-  this.updatePointsRestants();
-}
+    this.caracteristiquePersonnage.controls.forEach(control => {
+      // On récupère le type directement depuis le contrôle (stocké lors de la création)
+      if (control.get('type')?.value === 'Principale') {
+        control.get('valeurMax')?.setValue(1);
+        control.get('valeurActuelle')?.setValue(1);
+      }
+    });
+    this.updatePointsRestants();
+  }
 
   // --- Calculs et mises à jour des valeurs ---
   updatePointsRestants() {
@@ -319,7 +329,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     const ctrl = this.caracteristiquePersonnage.at(index);
     if (!ctrl) return;
     const control = ctrl.get('valeurMax');
-    if (control && control.value > 3) {
+    if (control && control.value > 1) {
       control.setValue(control.value - 1);
       this.calculateValuesSecondaires();
     }
@@ -328,7 +338,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
   isDecrementDisabled(code: string): boolean {
     const index = this.getFormArrayIndexByCode(code);
     const control = this.caracteristiquePersonnage.at(index)?.get('valeurMax');
-    return control ? control.value <= 3 : true;
+    return control ? control.value <= 1 : true;
   }
 
   isIncrementDisabled(code: string): boolean {
@@ -339,5 +349,15 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
 
   getFormArrayIndexByCode(code: string): number {
     return this.caracteristiquePersonnage.controls.findIndex(ctrl => ctrl.get('code')?.value === code);
+  }
+
+  getTotalPoints(): number {
+    switch (this.niveauJeu()) {
+      case 'moyen': return 60;
+      case 'expérimenté': return 70;
+      case 'heroique': return 75;
+      case 'legendaire': return 80;
+      default: return 0;
+    }
   }
 }
