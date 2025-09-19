@@ -19,7 +19,7 @@ import { RacesService } from '../../../races/races.service';
   styleUrls: ['./part2-caracteristique.component.scss'],
 })
 export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
-  // --- Inputs et propriétés principales ---
+  // -- Inputs et propriétés principales --
   @Input() form!: FormGroup;
   @Input() professions: Profession[] = [];
   caracteristiques: Caracteristique[] = [];
@@ -27,7 +27,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
   pointsRestants = signal<number>(0);
   niveauJeu = signal<string>('libre');
 
-  // --- Cycle de vie ---
+  // -- Cycle de vie --
   constructor(
     private fb: FormBuilder,
     private caracteristiqueService: CaracteristiqueService,
@@ -70,7 +70,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  // --- Getters pour le template et la logique ---
+  // -- Getters pour le template et la logique --
   get caracteristiquePersonnage(): FormArray {
     return this.form.get('caracteristiquePersonnage') as FormArray;
   }
@@ -105,7 +105,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     return this.caracteristiquePersonnage.controls;
   }
 
-  // --- Initialisation et gestion du formulaire ---
+  // -- Initialisation et gestion du formulaire --
   private initializeFormControls() {
     // Nettoyage des abonnements précédents
     this.subscriptions.forEach(sub => sub.unsubscribe());
@@ -159,7 +159,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     return control;
   }
 
-  // --- Abonnements et réinitialisation ---
+  // -- Abonnements et réinitialisation --
   private subscribeToNiveauJeuChanges() {
     this.subscriptions.push(
       this.form.get('niveauJeu')!.valueChanges.subscribe((niveau) => {
@@ -194,7 +194,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     this.updatePointsRestants();
   }
 
-  // --- Calculs et mises à jour des valeurs ---
+  // -- Calculs et mises à jour des valeurs --
   updatePointsRestants() {
     const niveau = this.niveauJeu();
     let totalPoints = 0;
@@ -310,7 +310,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     }
   }
 
-  // --- Handlers pour le template ---
+  // -- Méthodes utilitaires pour le template (handlers) --
   setNiveauJeu(niveau: string) {
     this.niveauJeu.set(niveau);
   }
@@ -351,6 +351,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     return this.caracteristiquePersonnage.controls.findIndex(ctrl => ctrl.get('code')?.value === code);
   }
 
+  // -- Méthodes d'affichage (rows principales/secondaires, total points) --
   getTotalPoints(): number {
     switch (this.niveauJeu()) {
       case 'moyen': return 60;
