@@ -1,6 +1,6 @@
 <div [formGroup]="form">
   <!-- Magies sélectionnées -->
-  <div class="row">
+  <div class="row" *ngIf="selectedProfession?.maxSort">
     <div class="col s12">
       <label>{{ magieNom }} sélectionnés :</label>
       <div class="row">
@@ -13,9 +13,9 @@
   </div>
 
   <!-- Magies disponibles -->
-  <div class="row">
+  <div class="row" *ngIf="selectedProfession?.maxSort">
     <div class="col s12">
-      <label>{{ magieInstruction }}</label>
+      <label>Choisir {{ selectedProfession?.maxSort }} sorts</label>
       <div class="row">
         <div *ngFor="let magie of magieDisponible; let i = index" class="col s4">
           <p>
@@ -28,6 +28,13 @@
                 [disabled]="isMagieDisabled(magie.nom)"
               />
               <span>{{ magie.nom }}</span>
+              <i
+                class="material-icons tooltipped"
+                materializeTooltip
+                data-position="right"
+                [attr.data-tooltip]="magie.effet"
+                style="cursor:pointer; margin-left:4px;"
+              >info_outline</i>
             </label>
           </p>
         </div>
@@ -36,7 +43,7 @@
   </div>
 
   <!-- Rituels sélectionnés -->
-  <div class="row">
+  <div class="row" *ngIf="selectedProfession?.maxRituel">
     <div class="col s12">
       <label>{{ rituelNom }} sélectionnés :</label>
       <div class="row">
@@ -49,9 +56,9 @@
   </div>
 
   <!-- Rituels disponibles -->
-  <div class="row">
+  <div class="row" *ngIf="selectedProfession?.maxRituel">
     <div class="col s12">
-      <label>{{ rituelInstruction }}</label>
+      <label>Choisir {{ selectedProfession?.maxRituel }} rituels</label>
       <div class="row">
         <div *ngFor="let rituel of rituelDisponible; let i = index" class="col s4">
           <p>
@@ -64,6 +71,13 @@
                 [disabled]="isRituelDisabled(rituel.nom)"
               />
               <span>{{ rituel.nom }}</span>
+              <i
+                class="material-icons tooltipped"
+                materializeTooltip
+                data-position="right"
+                [attr.data-tooltip]="rituel.effet"
+                style="cursor:pointer; margin-left:4px;"
+              >info_outline</i>
             </label>
           </p>
         </div>
@@ -72,7 +86,7 @@
   </div>
 
   <!-- Envoutements sélectionnés -->
-  <div class="row">
+  <div class="row" *ngIf="selectedProfession?.maxEnvoutement">
     <div class="col s12">
       <label>{{ envoutementNom }} sélectionnés :</label>
       <div class="row">
@@ -82,11 +96,12 @@
         </div>
       </div>
     </div>
+  </div>
 
   <!-- Envoutements disponibles -->
-  <div class="row">
+  <div class="row" *ngIf="selectedProfession?.maxEnvoutement">
     <div class="col s12">
-      <label>{{ envoutementInstruction }}</label>
+      <label>Choisir {{ selectedProfession?.maxEnvoutement }} envoûtements</label>
       <div class="row">
         <div *ngFor="let envoutement of envoutementDisponible; let i = index" class="col s4">
           <p>
@@ -99,9 +114,17 @@
                 [disabled]="isEnvoutementDisabled(envoutement.nom)"
               />
               <span>{{ envoutement.nom }}</span>
+              <i
+                class="material-icons tooltipped"
+                materializeTooltip
+                data-position="right"
+                [attr.data-tooltip]="envoutement.effet"
+                style="cursor:pointer; margin-left:4px;"
+              >info_outline</i>
             </label>
           </p>
         </div>
       </div>
     </div>
+  </div>
 </div>

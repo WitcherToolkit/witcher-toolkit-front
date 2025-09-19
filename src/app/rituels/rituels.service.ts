@@ -39,4 +39,9 @@ export class RituelsService {
     console.log('Deleting rituel with id:', id);
     return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
   }
+
+  // --- Récupérer la liste des rituels de niveau "Novice" ---
+  getRituelsNoviceList(): Observable<Rituel[]> {
+    return this.http.get<Rituel[]>(`${this.apiUrl}?niveau=Novice`);
+  }
 }
