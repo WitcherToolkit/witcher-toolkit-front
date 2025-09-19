@@ -37,6 +37,15 @@ export class Part3CompetenceComponent implements OnInit {
       this.competences = allCompetences;
       const selectedProfessionId = this.form.get('profession')?.value;
       this.loadProfessionCompetences(selectedProfessionId);
+
+      // Synchronisation dynamique avec les sélections de la partie 1
+      this.form.get('languesSelectionnees')?.valueChanges.subscribe(() => {
+        this.loadProfessionCompetences(this.form.get('profession')?.value);
+      });
+      this.form.get('combatSelectionnees')?.valueChanges.subscribe(() => {
+        this.loadProfessionCompetences(this.form.get('profession')?.value);
+      });
+
       this.form.get('profession')?.valueChanges.subscribe(professionId => {
         this.loadProfessionCompetences(professionId);
       });
@@ -68,12 +77,17 @@ export class Part3CompetenceComponent implements OnInit {
     }
     this.professionsService.getProfessionCompetences(+professionId).subscribe(selectedProfession => {
       const associatedIds = selectedProfession.competenceList?.map((c: any) => c.idCompetence) || [];
-      console.log('IDs attendus :', associatedIds, associatedIds.map(id => typeof id));
-      console.log('IDs dans competences :', this.competences.map(c => c.idCompetence), this.competences.map(c => typeof c.idCompetence));
-      this.competencesAssociees = this.competences.filter(c => associatedIds.map(String).includes(String(c.idCompetence)));
-      this.competencesNonAssociees = this.competences.filter(c => !associatedIds.map(String).includes(String(c.idCompetence)));
-      console.log('Compétences associées :', this.competencesAssociees);
-      console.log('Compétences non associées :', this.competencesNonAssociees);
+      // Ajout des compétences de langue et de combat sélectionnées en partie 1
+      const languesIds = this.form.get('languesSelectionnees')?.value || [];
+      const combatIds = this.form.get('combatSelectionnees')?.value || [];
+      const extraIds = [...languesIds, ...combatIds];
+      // Fusionner sans doublons
+      const allAssocIds = Array.from(new Set([...associatedIds, ...extraIds]));
+      this.competencesAssociees = this.competences.filter(c => allAssocIds.map(String).includes(String(c.idCompetence)));
+      // Exclure les compétences de langue et de combat sélectionnées des secondaires
+      this.competencesNonAssociees = this.competences.filter(c =>
+        !allAssocIds.map(String).includes(String(c.idCompetence))
+      );
       // Réinitialiser le tableau des compétences associées dans le formulaire
       this.competencesArray.clear();
       this.competencesAssociees.forEach(competence => {

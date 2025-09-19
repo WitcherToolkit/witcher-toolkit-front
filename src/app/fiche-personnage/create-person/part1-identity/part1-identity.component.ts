@@ -108,6 +108,7 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.professionControl?.valueChanges.subscribe((professionId) => {
         this.professionSignal.set(professionId);
+        // Reset langues et combat à chaque changement de profession
         this.resetSelections();
         if (professionId) {
           this.subscriptions.push(
@@ -193,6 +194,8 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
     this.form.addControl('race', this.fb.control('', [Validators.required]));
     this.form.addControl('inventaires', this.fb.control([], [Validators.required]));
     this.form.addControl('selectedInventaire', this.selectedInventaire);
+    this.form.addControl('languesSelectionnees', this.fb.control([]));
+    this.form.addControl('combatSelectionnees', this.fb.control([]));
   }
 
   // --- INVENTAIRE : CHECKBOX, CHIPS, RESET ---
@@ -222,6 +225,9 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
     this.selectedInventaire.clear();
     this.selectedLangues = [];
     this.selectedCombatCompetences = [];
+    // Reset les contrôles du formulaire principal pour langues et combat
+    this.form.get('languesSelectionnees')?.setValue([]);
+    this.form.get('combatSelectionnees')?.setValue([]);
     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
     checkboxes.forEach((checkbox: any) => {
       checkbox.checked = false;
@@ -305,6 +311,8 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
     } else {
       this.selectedLangues = this.selectedLangues.filter(l => l.nom !== value);
     }
+    // Synchronise avec le formulaire principal
+    this.form.get('languesSelectionnees')?.setValue(this.selectedLangues.map(l => l.idCompetence));
   }
 
   isLangueChecked(langue: Competence): boolean {
@@ -338,6 +346,8 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
     } else {
       this.selectedCombatCompetences = this.selectedCombatCompetences.filter(c => c.nom !== value);
     }
+    // Synchronise avec le formulaire principal
+    this.form.get('combatSelectionnees')?.setValue(this.selectedCombatCompetences.map(c => c.idCompetence));
   }
 
   isCombatChecked(comp: Competence): boolean {
