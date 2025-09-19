@@ -18,7 +18,7 @@
         </select>
       </div>
       <div class="col s6" *ngIf="niveauJeu() !== 'libre' && pointsRestants() !== null">
-        <p><b>Points restant : {{ pointsRestants() }}/{{ getTotalPoints() }}</b></p>
+        <p>Points restant : <b>{{ pointsRestants() }}</b>/{{ getTotalPoints() }}</p>
       </div>
     </div>
   </div>
@@ -64,11 +64,19 @@
       
       <!-- Caractéristiques secondaires-->
       <div class="carac-col">
-        <div *ngFor="let caracteristiqueCtrl of caracteristiquePersonnage.controls; let i = index" [formGroupName]="i">
-          <div *ngIf="caracteristiqueCtrl.value.type === 'Secondaire'" class="carac-row">
-            <label>{{ caracteristiqueCtrl.value.code }}</label>
-            <input type="text" formControlName="valeurMax" readonly>
-          </div>
+        <div class="carac-principales-grid">
+          <ng-container *ngFor="let row of getSecondairesRows()">
+            <div class="carac-row">
+              <ng-container *ngFor="let col of row">
+                <ng-container *ngIf="col">
+                  <div [formGroupName]="getFormArrayIndexByCode(col.value.code)" class="carac-item">
+                    <label>{{ col.value.code }}</label>
+                    <input type="text" formControlName="valeurMax" readonly>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+          </ng-container>
         </div>
       </div>
     </div><!-- Fin caractéristiques secondaires -->

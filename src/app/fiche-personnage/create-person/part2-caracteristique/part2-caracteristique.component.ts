@@ -360,4 +360,13 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
       default: return 0;
     }
   }
+
+  getSecondairesRows() {
+    const secondaires = this.getCaracteristiquesSecondairesList;
+    const rows = [];
+    for (let i = 0; i < secondaires.length; i += 2) {
+      rows.push([secondaires[i], secondaires[i + 1]]);
+    }
+    return rows;
+  }
 }
