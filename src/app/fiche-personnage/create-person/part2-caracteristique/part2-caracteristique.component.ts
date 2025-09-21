@@ -26,7 +26,6 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   pointsRestants = signal<number>(0);
   niveauJeu = signal<string>('libre');
-  races: any[] = []; // Ajout d'une propriété pour stocker les races
 
   // -- Cycle de vie --
   constructor(
@@ -66,14 +65,10 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
       );
     }
 
-    // Charger les races une seule fois
-    this.racesService.getRacesList().subscribe(races => {
-      this.races = races;
-    });
-
     // Charger les caractéristiques depuis le service
     this.caracteristiqueService.getCaracteristiquesList().subscribe((caracteristiques: Caracteristique[]) => {
-      this.caracteristiques = caracteristiques;
+      // Filtrer ici pour exclure les "Autre"
+      this.caracteristiques = caracteristiques.filter(carac => carac.type !== 'Autre');
       this.initializeFormControls();
       this.subscribeToNiveauJeuChanges();
       this.calculateValuesSecondaires();
@@ -93,16 +88,12 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     return this.form.get('caracteristiquePersonnage') as FormArray;
   }
 
-  // Nouvelle méthode utilitaire pour obtenir les indices des caractéristiques par type
-  private getIndicesByType(type: string): number[] {
-    return this.caracteristiques
-      .map((carac, idx) => carac.type === type ? idx : -1)
-      .filter(idx => idx !== -1);
-  }
-
   get getCaracteristiquesPrincipalesList() {
-    // Retourne les contrôles principales en utilisant les indices
-    return this.getIndicesByType('Principale').map(idx => this.caracteristiquePersonnage.at(idx));
+    return this.caracteristiquePersonnage.controls.filter((ctrl) => {
+      const code = ctrl.get('code')?.value;
+      const carac = this.caracteristiques.find(c => c.code === code);
+      return carac && carac.type === 'Principale';
+    });
   }
 
   // Nouvelle méthode pour grouper les principales par 2
@@ -116,16 +107,15 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
   }
 
   get getCaracteristiquesSecondairesList() {
-    // Retourne les contrôles secondaires en utilisant les indices
-    return this.getIndicesByType('Secondaire').map(idx => this.caracteristiquePersonnage.at(idx));
+    return this.caracteristiquePersonnage.controls.filter((ctrl) => {
+      const code = ctrl.get('code')?.value;
+      const carac = this.caracteristiques.find(c => c.code === code);
+      return carac && carac.type === 'Secondaire';
+    });
   }
 
   get getCaracteristiquesList() {
-    // Retourne tous les contrôles sauf ceux de type "Autre"
-    const indices = this.caracteristiques
-      .map((carac, idx) => carac.type !== 'Autre' ? idx : -1)
-      .filter(idx => idx !== -1);
-    return indices.map(idx => this.caracteristiquePersonnage.at(idx));
+    return this.caracteristiquePersonnage.controls;
   }
 
   // -- Initialisation et gestion du formulaire --
@@ -134,8 +124,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
     this.subscriptions = [];
     const caracteristiquePersonnageArray = this.fb.array(
-      this.caracteristiques
-      .map(caracteristique => this.createCaracteristiqueControl(caracteristique.code))
+      this.caracteristiques.map(caracteristique => this.createCaracteristiqueControl(caracteristique.code))
     );
 
     this.form.addControl('caracteristiquePersonnage', caracteristiquePersonnageArray);
@@ -197,7 +186,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     // Nettoyage des abonnements précédents
     this.subscriptions.forEach(sub => sub.unsubscribe());
     this.subscriptions = [];
-    this.caracteristiques = caracs;
+    this.caracteristiques = caracs.filter(carac => carac.type !== 'Autre');
     if (this.form.contains('caracteristiquePersonnage')) {
       this.form.removeControl('caracteristiquePersonnage');
     }
@@ -304,23 +293,25 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
 
     // --- Valeurs calculées par formule ---
     const raceId = this.form.get('race')?.value;
-    const race = this.races.find(r => String(r.idRace) === String(raceId));
-    const raceName = race?.nom;
-    let encValue = corValue * 10;
-    if (raceName === 'Nain') encValue += 25;
-    const couValue = vitValue * 3;
-    const sautValue = Math.ceil(couValue / 5);
-    [
-      { code: 'ENC', value: encValue },
-      { code: 'COU', value: couValue },
-      { code: 'SAUT', value: sautValue }
-    ].forEach(({ code, value }) => {
-      this.setSecondaireValue(code, value);
+    this.racesService.getRacesList().subscribe(races => {
+      const race = races.find(r => String(r.idRace) === String(raceId));
+      const raceName = race?.nom;
+      let encValue = corValue * 10;
+      if (raceName === 'Nain') encValue += 25;
+      const couValue = vitValue * 3;
+      const sautValue = Math.ceil(couValue / 5);
+      [
+        { code: 'ENC', value: encValue },
+        { code: 'COU', value: couValue },
+        { code: 'SAUT', value: sautValue }
+      ].forEach(({ code, value }) => {
+        this.setSecondaireValue(code, value);
+      });
+      // --- Poings et pieds ---
+      const { poings, pieds } = POINGS_PIEDS_TABLE[corValue] || { poings: '', pieds: '' };
+      this.form.get('poings')?.setValue(poings);
+      this.form.get('pieds')?.setValue(pieds);
     });
-    // --- Poings et pieds ---
-    const { poings, pieds } = POINGS_PIEDS_TABLE[corValue] || { poings: '', pieds: '' };
-    this.form.get('poings')?.setValue(poings);
-    this.form.get('pieds')?.setValue(pieds);
   }
 
   private calculateValuesAutres() {
