@@ -24,7 +24,9 @@ export const PROFESSION_LIST_PATH = `${PROFESSION_BASE_PATH}/profession`;       
 export const PROFESSION_UPDATE_PATH = `${PROFESSION_BASE_PATH}/profession/update`;  // 'classe/profession/update'
 export const PROFESSION_CREATE_PATH = `${PROFESSION_BASE_PATH}/profession/create`;  // 'classe/profession/create'
 
-export const PERSONNAGE_BASE_PATH = 'personnage';
+export const PERSONNAGE_BASE_PATH = 'personnage'; // 'personnage'
+export const PERSONNAGE_CREATE_PATH = `${PERSONNAGE_BASE_PATH}/create`; // 'personnage/create'
+export const PERSONNAGE_CONSULT_PATH = `${PERSONNAGE_BASE_PATH}/consult`; // 'personnage/consult'
 
 export const HOME_PATH = 'home';
 export const ERROR_404_PATH = '**';

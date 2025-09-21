@@ -26,7 +26,7 @@
       <li *ngIf="isLoggedIn"><a class="dropdown-trigger" data-target="dropdown1">Grimoire<i class="material-icons right">arrow_drop_down</i></a></li>
       <li *ngIf="isLoggedIn"><a class="dropdown-trigger" data-target="dropdown2">Aptitudes<i class="material-icons right">arrow_drop_down</i></a></li>
       <li *ngIf="isLoggedIn"><a class="dropdown-trigger" data-target="dropdown2">Classes<i class="material-icons right">arrow_drop_down</i></a></li>
-      <li *ngIf="isLoggedIn"><a [routerLink]="['/' + personnageBasePath + '/nouveau']">Créer</a></li>
+      <li *ngIf="isLoggedIn"><a [routerLink]="['/' + createPersonnageBasePath]">Créer</a></li>
       <li *ngIf="!isLoggedIn"><a [routerLink]="['/login']">Connexion</a></li>
     </ul>
     <div class="nav-actions">

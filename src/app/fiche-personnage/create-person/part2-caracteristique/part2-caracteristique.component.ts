@@ -26,6 +26,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   pointsRestants = signal<number>(0);
   niveauJeu = signal<string>('libre');
+  races: any[] = []; // Ajout d'une propriété pour stocker les races
 
   // -- Cycle de vie --
   constructor(
@@ -47,12 +48,28 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
       this.form.addControl('niveauJeu', this.fb.control('libre'));
     }
 
-    // Abonnement pour mettre à jour la vigueur si la profession change
+     // Appel lors du changement de profession
     this.subscriptions.push(
       this.form.get('profession')?.valueChanges.subscribe(() => {
         this.updateVigueur();
+        this.calculateValuesAutres(); // Ajout ici
       }) || new Subscription()
     );
+
+    // Appel lors du changement de COR
+    const corIndex = this.caracteristiques.findIndex(c => c.code === 'COR');
+    if (corIndex !== -1) {
+      this.subscriptions.push(
+        this.caracteristiquePersonnage.at(corIndex).get('valeurMax')!.valueChanges.subscribe(() => {
+          this.calculateValuesAutres(); // Ajout ici
+        })
+      );
+    }
+
+    // Charger les races une seule fois
+    this.racesService.getRacesList().subscribe(races => {
+      this.races = races;
+    });
 
     // Charger les caractéristiques depuis le service
     this.caracteristiqueService.getCaracteristiquesList().subscribe((caracteristiques: Caracteristique[]) => {
@@ -60,6 +77,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
       this.initializeFormControls();
       this.subscribeToNiveauJeuChanges();
       this.calculateValuesSecondaires();
+      this.calculateValuesAutres();
       this.updateVigueur();
     });
 
@@ -75,12 +93,16 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     return this.form.get('caracteristiquePersonnage') as FormArray;
   }
 
+  // Nouvelle méthode utilitaire pour obtenir les indices des caractéristiques par type
+  private getIndicesByType(type: string): number[] {
+    return this.caracteristiques
+      .map((carac, idx) => carac.type === type ? idx : -1)
+      .filter(idx => idx !== -1);
+  }
+
   get getCaracteristiquesPrincipalesList() {
-    return this.caracteristiquePersonnage.controls.filter((ctrl) => {
-      const code = ctrl.get('code')?.value;
-      const carac = this.caracteristiques.find(c => c.code === code);
-      return carac && carac.type === 'Principale';
-    });
+    // Retourne les contrôles principales en utilisant les indices
+    return this.getIndicesByType('Principale').map(idx => this.caracteristiquePersonnage.at(idx));
   }
 
   // Nouvelle méthode pour grouper les principales par 2
@@ -94,15 +116,16 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
   }
 
   get getCaracteristiquesSecondairesList() {
-    return this.caracteristiquePersonnage.controls.filter((ctrl) => {
-      const code = ctrl.get('code')?.value;
-      const carac = this.caracteristiques.find(c => c.code === code);
-      return carac && carac.type === 'Secondaire';
-    });
+    // Retourne les contrôles secondaires en utilisant les indices
+    return this.getIndicesByType('Secondaire').map(idx => this.caracteristiquePersonnage.at(idx));
   }
 
   get getCaracteristiquesList() {
-    return this.caracteristiquePersonnage.controls;
+    // Retourne tous les contrôles sauf ceux de type "Autre"
+    const indices = this.caracteristiques
+      .map((carac, idx) => carac.type !== 'Autre' ? idx : -1)
+      .filter(idx => idx !== -1);
+    return indices.map(idx => this.caracteristiquePersonnage.at(idx));
   }
 
   // -- Initialisation et gestion du formulaire --
@@ -111,7 +134,8 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
     this.subscriptions = [];
     const caracteristiquePersonnageArray = this.fb.array(
-      this.caracteristiques.map(caracteristique => this.createCaracteristiqueControl(caracteristique.code))
+      this.caracteristiques
+      .map(caracteristique => this.createCaracteristiqueControl(caracteristique.code))
     );
 
     this.form.addControl('caracteristiquePersonnage', caracteristiquePersonnageArray);
@@ -280,26 +304,38 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
 
     // --- Valeurs calculées par formule ---
     const raceId = this.form.get('race')?.value;
-    this.racesService.getRacesList().subscribe(races => {
-      const race = races.find(r => String(r.idRace) === String(raceId));
-      const raceName = race?.nom;
-      let encValue = corValue * 10;
-      if (raceName === 'Nain') encValue += 25;
-      const couValue = vitValue * 3;
-      const sautValue = Math.ceil(couValue / 5);
-      [
-        { code: 'ENC', value: encValue },
-        { code: 'COU', value: couValue },
-        { code: 'SAUT', value: sautValue }
-      ].forEach(({ code, value }) => {
-        this.setSecondaireValue(code, value);
-      });
-      // --- Poings et pieds ---
-      const { poings, pieds } = POINGS_PIEDS_TABLE[corValue] || { poings: '', pieds: '' };
-      this.form.get('poings')?.setValue(poings);
-      this.form.get('pieds')?.setValue(pieds);
+    const race = this.races.find(r => String(r.idRace) === String(raceId));
+    const raceName = race?.nom;
+    let encValue = corValue * 10;
+    if (raceName === 'Nain') encValue += 25;
+    const couValue = vitValue * 3;
+    const sautValue = Math.ceil(couValue / 5);
+    [
+      { code: 'ENC', value: encValue },
+      { code: 'COU', value: couValue },
+      { code: 'SAUT', value: sautValue }
+    ].forEach(({ code, value }) => {
+      this.setSecondaireValue(code, value);
     });
+    // --- Poings et pieds ---
+    const { poings, pieds } = POINGS_PIEDS_TABLE[corValue] || { poings: '', pieds: '' };
+    this.form.get('poings')?.setValue(poings);
+    this.form.get('pieds')?.setValue(pieds);
   }
+
+  private calculateValuesAutres() {
+  // Calcule et met à jour uniquement les champs du modèle principal
+  const corIndex = this.caracteristiques.findIndex(c => c.code === 'COR');
+  const corValue = this.caracteristiquePersonnage.at(corIndex)?.get('valeurMax')?.value;
+
+  // Table de correspondance pour poings/pieds
+  const { poings, pieds } = POINGS_PIEDS_TABLE[corValue] || { poings: '', pieds: '' };
+  this.form.get('poings')?.setValue(poings);
+  this.form.get('pieds')?.setValue(pieds);
+
+  // Calcul de la vigueur selon la profession
+  this.updateVigueur();
+}
 
   private setSecondaireValue(code: string, value: number): void {
     const index = this.caracteristiques.findIndex(c => c.code === code);
@@ -322,6 +358,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     if (control && control.value < 10 && (this.niveauJeu() === 'libre' || this.pointsRestants() > 0)) {
       control.setValue(control.value + 1);
       this.calculateValuesSecondaires();
+      this.updatePointsRestants();
     }
   }
 
@@ -332,6 +369,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     if (control && control.value > 1) {
       control.setValue(control.value - 1);
       this.calculateValuesSecondaires();
+      this.updatePointsRestants();
     }
   }
 

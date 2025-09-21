@@ -12,7 +12,7 @@ import { ProfessionsListComponent } from '../professions/professions-list/profes
 import { ConsultCharacterComponent } from '../fiche-personnage/consult-person/consult-character.component';
 import { RacesUpdateComponent } from '../races/races-update/races-update.component';
 import { ProfessionsUpdateComponent } from '../professions/professions-update/professions-update.component';
-import { CARACTERISTIQUE_LIST_PATH, COMPTETENCE_LIST_PATH, ENVOUTEMENT_LIST_PATH, ERROR_404_PATH, HOME_PATH, MAGIE_LIST_PATH, PROFESSION_CREATE_PATH, PROFESSION_LIST_PATH, PROFESSION_UPDATE_PATH, RACE_CREATE_PATH, RACE_LIST_PATH, RACE_UPDATE_PATH, RITUEL_LIST_PATH } from './app-routing-constants';
+import { CARACTERISTIQUE_LIST_PATH, COMPTETENCE_LIST_PATH, ENVOUTEMENT_LIST_PATH, ERROR_404_PATH, HOME_PATH, MAGIE_LIST_PATH, PERSONNAGE_CONSULT_PATH, PERSONNAGE_CREATE_PATH, PROFESSION_CREATE_PATH, PROFESSION_LIST_PATH, PROFESSION_UPDATE_PATH, RACE_CREATE_PATH, RACE_LIST_PATH, RACE_UPDATE_PATH, RITUEL_LIST_PATH } from './app-routing-constants';
 import { LoginComponent } from '../auth/login/login.component';
 import { authGuard } from '../shared/shared-services/auth.guard';
 
@@ -46,8 +46,9 @@ export const routes: Routes = [
             { path: `${PROFESSION_UPDATE_PATH}/:id`, component: ProfessionsUpdateComponent },
             { path: PROFESSION_CREATE_PATH, component: ProfessionsUpdateComponent },
             //Partie fiche personnage
-            { path: `${PERSONNAGE_BASE_PATH}/nouveau`, component: CreatePersonComponent },
-            { path: `${PERSONNAGE_BASE_PATH}/consult`, component: ConsultCharacterComponent },
+            { path: PERSONNAGE_CREATE_PATH, component: CreatePersonComponent },
+            { path: `${PERSONNAGE_CONSULT_PATH}/:id`, component: ConsultCharacterComponent },
+            //Page d'accueil
             { path: HOME_PATH, component: HomePageComponent },
             { path: '', redirectTo: HOME_PATH, pathMatch: 'full' },
             // PageNotFound protégée

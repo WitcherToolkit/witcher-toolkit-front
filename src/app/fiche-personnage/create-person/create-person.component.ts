@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { Part2CaracteristiqueComponent } from './part2-caracteristique/part2-caracteristique.component';
 import { Profession } from '../../models/profession';
 import { Part4MagieComponent } from './part4-magie/part4-magie.component';
+import { FichePersonnageService } from '../fiche-personnage.service';
 
 @Component({
   selector: 'app-create-person',
@@ -30,7 +31,7 @@ export class CreatePersonComponent {
   form: FormGroup;
   professions: Profession[] = [];
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(private fb: FormBuilder, private router: Router, private personnageService: FichePersonnageService) {
     this.form = this.fb.group({});
 
     // Ajout d'un écouteur pour mettre à jour selectedProfession
@@ -61,10 +62,33 @@ export class CreatePersonComponent {
   }
 
   submitForm() {
-    console.log('Form Data:', this.form.value);
-    
-    this.router.navigate(['/personnage/consult'], { state: { data: this.form.value } });
+  console.log('Form Data:', this.form.value);
+
+  // Vérifie la validité du formulaire
+  if (this.form.invalid) {
+    this.form.markAllAsTouched();
+    console.error('Le formulaire est invalide. Veuillez corriger les erreurs avant de soumettre.');
+    return;
   }
+
+  // Envoi des données au backend
+  this.personnageService.createFichePersonnage(this.form.value).subscribe({
+    next: (response: any) => {
+      console.log('Fiche personnage créée avec succès:', response);
+      // Supposons que le backend retourne l'id dans response.id ou response.idFichePersonnage
+      const id = response.id ?? response.idFichePersonnage;
+      if (id) {
+        // Redirige vers la page de consultation avec l'id
+        this.router.navigate(['/personnage/consult', id]);
+      } else {
+        console.error('ID de fiche personnage non retourné par le backend.');
+      }
+    },
+    error: (error) => {
+      console.error('Erreur lors de la création de la fiche personnage:', error);
+    }
+  });
+}
 
   getProgressWidth(): string {
     switch (this.currentStep) {

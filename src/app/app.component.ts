@@ -7,6 +7,7 @@ import {
   ENVOUTEMENT_LIST_PATH, 
   MAGIE_LIST_PATH, 
   PERSONNAGE_BASE_PATH, 
+  PERSONNAGE_CREATE_PATH, 
   PROFESSION_LIST_PATH, 
   RACE_LIST_PATH, 
   RITUEL_LIST_PATH } from './app-routing/app-routing-constants';
@@ -37,7 +38,7 @@ export class AppComponent implements AfterViewInit {
   readonly raceListPath = RACE_LIST_PATH;
   readonly professionListPath = PROFESSION_LIST_PATH;
 
-  readonly personnageBasePath = PERSONNAGE_BASE_PATH;
+  readonly createPersonnageBasePath = PERSONNAGE_CREATE_PATH;
 
   constructor(private renderer: Renderer2, private authService: AuthService, private router: Router) {}
 
