@@ -186,19 +186,19 @@ export class Part3CompetenceComponent implements OnInit {
   
   // Griser le bouton si le maximum est atteind
   isIncrementDisabled(index: number, listType: 'competences' | 'competenceSecondaire'): boolean {
-  const control = this.getArrayByType(listType).at(index).get('valeurMax');
-  const competence = this.getArrayByType(listType).at(index).get('competence')?.value;
-  const step = competence?.step || 1;
-  if (listType === 'competences') {
-    return control
-      ? control.value >= 6 || this.pointsRestants() < step
-      : true;
-  } else {
-    return control
-      ? control.value >= 6 || this.pointsDispo < step
-      : true;
+    const control = this.getArrayByType(listType).at(index).get('valeurMax');
+    const competence = this.getArrayByType(listType).at(index).get('competence')?.value;
+    const step = competence?.step || 1;
+    if (listType === 'competences') {
+      return control
+        ? control.value >= 6 || this.pointsRestants() < step
+        : true;
+    } else {
+      return control
+        ? control.value >= 6 || this.pointsDispo < step
+        : true;
+    }
   }
-}
 
   private getArrayByType(listType: 'competences' | 'competenceSecondaire'): FormArray {
     return listType === 'competences' ? this.competencesArray : this.competenceSecondaireArray;
