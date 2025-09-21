@@ -145,12 +145,11 @@ export class Part3CompetenceComponent implements OnInit {
 
   // Mise à jour des point restant
   private updatePointsRestants() {
-    // Calcule la dépense totale en fonction du step de chaque compétence
+    // Calcule la dépense totale de chaque compétence
     const totalDepenses = this.competencesArray?.controls.reduce((sum, control) => {
       const competence = control.get('competence')?.value;
       const valeur = control.get('valeurMax')?.value || 0;
-      const step = competence?.step || 1;
-      return sum + (valeur * step);
+      return sum + (valeur);
     }, 0) || 0;
     const pointsTotal = 44; // Total de points disponibles
     this.pointsRestants.set(pointsTotal - totalDepenses);
@@ -158,21 +157,25 @@ export class Part3CompetenceComponent implements OnInit {
 
   // Ajout de points de caractéristique
   incrementCompetence(index: number, listType: 'competences' | 'competenceSecondaire'): void {
-    const formArray = this.getArrayByType(listType);
-    const control = formArray.at(index).get('valeurMax');
-    if (control && control.value < 6) {
-      control.setValue(Math.min(control.value + 1, 6));
-    }
+  const formArray = this.getArrayByType(listType);
+  const control = formArray.at(index).get('valeurMax');
+  const competence = formArray.at(index).get('competence')?.value;
+  const step = competence?.step || 1;
+  if (control && control.value < 6) {
+    control.setValue(Math.min(control.value + step, 6));
   }
+}
 
   // Suppression de points de caractéristique
   decrementCompetence(index: number, listType: 'competences' | 'competenceSecondaire'): void {
-    const formArray = this.getArrayByType(listType);
-    const control = formArray.at(index).get('valeurMax');
-    const minValue = 0;
-    if (control && control.value > minValue) {
-      control.setValue(Math.max(control.value - 1, minValue));
-    }
+  const formArray = this.getArrayByType(listType);
+  const control = formArray.at(index).get('valeurMax');
+  const competence = formArray.at(index).get('competence')?.value;
+  const step = competence?.step || 1;
+  const minValue = 0;
+  if (control && control.value > minValue) {
+    control.setValue(Math.max(control.value - step, minValue));
+  }
   }
   
   // Griser le bouton si le minimum est atteind
@@ -183,13 +186,19 @@ export class Part3CompetenceComponent implements OnInit {
   
   // Griser le bouton si le maximum est atteind
   isIncrementDisabled(index: number, listType: 'competences' | 'competenceSecondaire'): boolean {
-    const control = this.getArrayByType(listType).at(index).get('valeurMax');
-    //si listeType est 'competences'
-    if (listType === 'competences') {
-      return control ? control.value >= 6 || this.pointsRestants() <= 0 : true;
-    } else 
-      return control ? control.value >= 6 || this.pointsDispo <= 0 : true; // Désactive si valeur ≥ 6 ou si les points disponibles sont insuffisants
+  const control = this.getArrayByType(listType).at(index).get('valeurMax');
+  const competence = this.getArrayByType(listType).at(index).get('competence')?.value;
+  const step = competence?.step || 1;
+  if (listType === 'competences') {
+    return control
+      ? control.value >= 6 || this.pointsRestants() < step
+      : true;
+  } else {
+    return control
+      ? control.value >= 6 || this.pointsDispo < step
+      : true;
   }
+}
 
   private getArrayByType(listType: 'competences' | 'competenceSecondaire'): FormArray {
     return listType === 'competences' ? this.competencesArray : this.competenceSecondaireArray;

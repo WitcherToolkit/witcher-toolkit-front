@@ -24,7 +24,7 @@ export class MagieService {
 
   // --- Récupérer la liste des magies de niveau "Novice" ---
   getMagiesNoviceList(): Observable<Magie[]> {
-    return this.http.get<Magie[]>(`${this.apiUrl}?niveau=Novice`);
+    return this.http.get<Magie[]>(`${this.apiUrl}?niveauContains=novice`);
   }
 
   // --- Mettre à jour une magie existante ---
