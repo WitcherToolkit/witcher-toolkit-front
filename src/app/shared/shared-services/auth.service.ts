@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, catchError, map, of } from 'rxjs';
 import { EnvironmentConfig } from '../../environment.config';
 
 @Injectable({
@@ -8,6 +8,7 @@ import { EnvironmentConfig } from '../../environment.config';
 })
 export class AuthService {
   private apiUrl = `${EnvironmentConfig.apiBaseUrl}/auth/login`;
+  private checkUrl = `${EnvironmentConfig.apiBaseUrl}/auth/me`;
 
   constructor(private http: HttpClient) {}
 
@@ -15,6 +16,22 @@ export class AuthService {
     return this.http.post<{ token: string }>(this.apiUrl, { email, password }).pipe(
       tap(res => {
         localStorage.setItem('jwt', res.token);
+      })
+    );
+  }
+
+  /**
+   * Vérifie la validité du token auprès du backend (endpoint protégé)
+   * Retourne un Observable<boolean> : true si valide, false sinon
+   */
+  checkTokenValidity(): Observable<boolean> {
+    const token = this.getToken();
+    if (!token) return of(false);
+    return this.http.get(this.checkUrl).pipe(
+      map(() => true),
+      catchError(() => {
+        this.logout();
+        return of(false);
       })
     );
   }
