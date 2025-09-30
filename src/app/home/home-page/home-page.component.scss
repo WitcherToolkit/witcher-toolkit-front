@@ -33,7 +33,7 @@ $card-min-height: 215px;
 }
 
 .home-center {
-  min-height: calc(100vh - 64px); // 64px pour la barre de navigation
+  min-height: calc(100vh - 128px); // 64px par barre de navigation soit 128px
   display: flex;
   align-items: center;
   justify-content: center;
