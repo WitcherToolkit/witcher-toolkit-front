@@ -1,6 +1,22 @@
+@use '../../../styles/list-grids';
+@use '../../../styles/page-layout';
+
+// Wrapper principal pour centrer tout le contenu sur la page
+.login-wrapper {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 // Centrage vertical et horizontal de la card
+.login-titles {
+  padding-top: 3rem;
+  margin-bottom: 2rem;
+  background: transparent;
+}
+
 .row {
-  min-height: 100vh;
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -8,6 +24,7 @@
   .card {
     margin: auto;
     max-width: 400px;
+    height: auto;
 
     .card-image {
       img {
