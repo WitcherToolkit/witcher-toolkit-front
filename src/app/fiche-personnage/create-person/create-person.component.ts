@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Personnage } from '../../models/personnage';
 import { CommonModule } from '@angular/common';
 import { Part1IdentityComponent } from "./part1-identity/part1-identity.component";
@@ -10,6 +10,7 @@ import { Part2CaracteristiqueComponent } from './part2-caracteristique/part2-car
 import { Profession } from '../../models/profession';
 import { Part4MagieComponent } from './part4-magie/part4-magie.component';
 import { FichePersonnageService } from '../fiche-personnage.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-create-person',
@@ -24,101 +25,125 @@ import { FichePersonnageService } from '../fiche-personnage.service';
   templateUrl: './create-person.component.html',
   styleUrls: ['./create-person.component.scss'],
 })
-export class CreatePersonComponent {
+export class CreatePersonComponent implements OnDestroy {
   currentStep = 1;
-  //formData: Personnage = new Personnage();
-  selectedProfession: any = null;
+  selectedProfession: Profession | undefined = undefined;
   form: FormGroup;
   professions: Profession[] = [];
+  
+  // Gestion des subscriptions
+  private subscriptions: Subscription[] = [];
 
-  constructor(private fb: FormBuilder, private router: Router, private personnageService: FichePersonnageService) {
+  constructor(
+    private fb: FormBuilder, 
+    private router: Router, 
+    private personnageService: FichePersonnageService
+  ) {
     this.form = this.fb.group({});
-
-    // Ajout d'un écouteur pour mettre à jour selectedProfession
-    this.form.valueChanges.subscribe(() => {
-      const professionId = this.form.get('profession')?.value;
-      this.selectedProfession = this.professions.find(p => p.idProfession === +professionId);
-    });
+    this.setupFormSubscriptions();
   }
 
-  goToStep(step: number) {
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  // Configuration des subscriptions
+  private setupFormSubscriptions(): void {
+    // Écoute les changements du formulaire pour mettre à jour selectedProfession
+    this.subscriptions.push(
+      this.form.valueChanges.subscribe(() => {
+        const professionId = this.form.get('profession')?.value;
+        this.selectedProfession = this.professions.find(p => p.idProfession === +professionId);
+      })
+    );
+  }
+
+  // Méthode appelée par Part1 via @Output pour recevoir les professions
+  onProfessionsLoaded(professions: Profession[]): void {
+    this.professions = professions;
+  }
+
+  goToStep(step: number): void {
     this.currentStep = step;
   }
 
-  nextStep() {
+  nextStep(): void {
     if (this.currentStep < 4) {
-      console.log(`Etape ${this.currentStep} :`, this.form.value);
+      console.log(`Étape ${this.currentStep} :`, this.form.value);
       this.currentStep++;
     }
   }
 
-  previousStep() {
+  previousStep(): void {
     if (this.currentStep > 1) {
-      console.log(`Etape ${this.currentStep} :`, this.form.value);
-      // Ajout du log détaillé pour debug
+      console.log(`Étape ${this.currentStep} :`, this.form.value);
       console.log('Formulaire complet au retour arrière :', JSON.stringify(this.form.value, null, 2));
       this.currentStep--;
     }
   }
 
-  submitForm() {
-  console.log('Form Data:', this.form.value);
+  submitForm(): void {
+    console.log('Form Data:', this.form.value);
 
-  // Vérifie la validité du formulaire
-  if (this.form.invalid) {
-    this.form.markAllAsTouched();
-    console.error('Le formulaire est invalide. Veuillez corriger les erreurs avant de soumettre.');
-    return;
-  }
-
-  // Envoi des données au backend
-  this.personnageService.createFichePersonnage(this.form.value).subscribe({
-    next: (response: any) => {
-      console.log('Fiche personnage créée avec succès:', response);
-      // Supposons que le backend retourne l'id dans response.id ou response.idFichePersonnage
-      const id = response.id ?? response.idFichePersonnage;
-      if (id) {
-        // Redirige vers la page de consultation avec l'id
-        this.router.navigate(['/personnage/consult', id]);
-      } else {
-        console.error('ID de fiche personnage non retourné par le backend.');
-      }
-    },
-    error: (error) => {
-      console.error('Erreur lors de la création de la fiche personnage:', error);
+    // Vérifie la validité du formulaire
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      console.error('Le formulaire est invalide. Veuillez corriger les erreurs avant de soumettre.');
+      return;
     }
-  });
-}
+
+    // Envoi des données au backend
+    this.subscriptions.push(
+      this.personnageService.createFichePersonnage(this.form.value).subscribe({
+        next: (response: any) => {
+          console.log('Fiche personnage créée avec succès:', response);
+          const id = response.id ?? response.idFichePersonnage;
+          
+          if (id) {
+            this.router.navigate(['/personnage/consult', id]);
+          } else {
+            console.error('ID de fiche personnage non retourné par le backend.');
+          }
+        },
+        error: (error) => {
+          console.error('Erreur lors de la création de la fiche personnage:', error);
+        }
+      })
+    );
+  }
 
   getProgressWidth(): string {
     switch (this.currentStep) {
-      case 1:
-        return '25%';
-      case 2:
-        return '50%';
-      case 3:
-        return '75%';
-      case 4:
-        return '100%';
-      default:
-        return '0%';
+      case 1: return '25%';
+      case 2: return '50%';
+      case 3: return '75%';
+      case 4: return '100%';
+      default: return '0%';
     }
   }
 
   isSubmitAvailableOnPart3(): boolean {
     const professionId = this.form.get('profession')?.value;
     const selectedProfession = this.professions.find(p => p.idProfession === +professionId);
-    return !!(this.currentStep === 3 && selectedProfession && selectedProfession.nom !== 'Mage' && selectedProfession.nom !== 'Prêtre');
+    return !!(
+      this.currentStep === 3 && 
+      selectedProfession && 
+      selectedProfession.nom !== 'Mage' && 
+      selectedProfession.nom !== 'Prêtre'
+    );
   }
 
   isCurrentStepValid(): boolean {
     if (this.currentStep === 1) {
-      return (this.form.get('nomPersonnage')?.valid ?? false) &&
-             (this.form.get('genre')?.valid ?? false) &&
-             (this.form.get('race')?.valid ?? false) &&
-             (this.form.get('profession')?.valid ?? false) &&
-             (this.form.get('inventaires')?.valid ?? false);
+      return (
+        (this.form.get('nomPersonnage')?.valid ?? false) &&
+        (this.form.get('genre')?.valid ?? false) &&
+        (this.form.get('race')?.valid ?? false) &&
+        (this.form.get('profession')?.valid ?? false) &&
+        (this.form.get('inventaires')?.valid ?? false)
+      );
     }
+    
     if (this.currentStep === 2) {
       const caracsValid = this.form.get('caracteristiquePersonnageList')?.valid ?? false;
       const poingsExists = this.form.get('poings') !== null;
@@ -127,8 +152,8 @@ export class CreatePersonComponent {
       const niveauJeuValid = this.form.get('niveauJeu')?.valid ?? false;
       return caracsValid && poingsExists && piedsExists && vigueurExists && niveauJeuValid;
     }
-    // Pour les autres étapes, tu peux affiner selon les besoins
+    
+    // Pour les autres étapes
     return this.form.valid;
   }
-
 }

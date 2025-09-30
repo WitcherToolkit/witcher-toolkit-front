@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { Magie } from '../../../models/magie';
 import { Envoutement } from '../../../models/envoutement';
+import { Profession } from '../../../models/profession';
 import { ToolsService } from '../../../tools/tools.service';
 import { MagieService } from '../../../sorts/magie.service';
 import { RituelsService } from '../../../rituels/rituels.service';
@@ -17,27 +19,33 @@ import { MaterializeTooltipDirective } from '../../../directives/materialize-too
   templateUrl: './part4-magie.component.html',
   styleUrls: ['./part4-magie.component.scss'],
 })
-export class Part4MagieComponent implements OnInit {
+export class Part4MagieComponent implements OnInit, OnDestroy {
   @Input() form!: FormGroup;
-  // -- Magie --
+  
+  // FormArrays
   selectedMagies!: FormArray;
-  magieDisponible: Magie[] = [];
-  magieNom: string = '';
-  // -- Invocation --
   selectedInvocations!: FormArray;
-  invocationDisponible: Magie[] = [];
-  invocationNom: string = '';
-  // -- Rituel --
   selectedRituels!: FormArray;
-  rituelDisponible: any[] = [];
-  rituelNom: string = '';
-  // -- Envoûtement --
   selectedEnvoutement!: FormArray;
+  
+  // Données disponibles
+  magieDisponible: Magie[] = [];
+  invocationDisponible: Magie[] = [];
+  rituelDisponible: any[] = [];
   envoutementDisponible: Envoutement[] = [];
+  professions: Profession[] = [];
+  
+  // Labels
+  magieNom: string = '';
+  invocationNom: string = '';
+  rituelNom: string = '';
   envoutementNom: string = '';
-  // -- Professions --
-  professions: any[] = [];
+  
+  // UI
   showMagieDesc: number | null = null;
+  
+  // Gestion des subscriptions
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -48,84 +56,127 @@ export class Part4MagieComponent implements OnInit {
     private envoutementService: EnvoutementService
   ) {}
 
-  // -- Utilitaire pour récupérer la profession sélectionnée --
-  get selectedProfession() {
-    const selectedProfessionId = this.form.get('profession')?.value;
-    return this.professions.find(p => p.idProfession === +selectedProfessionId);
+  ngOnInit(): void {
+    this.initializeFormControls();
+    this.loadProfessionsAndSetupSubscriptions();
   }
 
-  ngOnInit(): void {
-    // -- Initialisation des FormArray et des propriétés du formulaire --
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  // Initialisation des contrôles du formulaire
+  private initializeFormControls(): void {
+    // Magies (Sorts)
     this.selectedMagies = this.fb.array([]);
     this.form.addControl('selectedMagies', this.selectedMagies);
     this.form.addControl('magiePersonnage', this.fb.control([]));
 
-    // -- Initialisation des invocations --
+    // Invocations
     this.selectedInvocations = this.fb.array([]);
     this.form.addControl('selectedInvocations', this.selectedInvocations);
     this.form.addControl('invocationPersonnage', this.fb.control([]));
 
+    // Rituels
     this.selectedRituels = this.fb.array([]);
     this.form.addControl('selectedRituels', this.selectedRituels);
     this.form.addControl('rituelPersonnage', this.fb.control([]));
 
+    // Envoûtements
     this.selectedEnvoutement = this.fb.array([]);
     this.form.addControl('selectedEnvoutement', this.selectedEnvoutement);
     this.form.addControl('envoutementPersonnage', this.fb.control([]));
-
-    // -- Chargement des professions --
-    this.professionsService.getProfessionsList().subscribe(professions => {
-      this.professions = professions;
-      this.updateMagieDisponible();
-      this.updateRituelDisponible();
-      this.updateEnvoutementDisponible();
-    });
-
-    // -- Réagir au changement de profession --
-    this.form.get('profession')?.valueChanges.subscribe(() => {
-      this.updateMagieDisponible();
-      this.clearInvalidMagies();
-      this.updateRituelDisponible();
-      this.clearInvalidRituels();
-      this.updateEnvoutementDisponible();
-      this.clearInvalidEnvoutements();
-    });
-
-    // -- Synchronisation des objets sélectionnés --
-    this.selectedMagies.valueChanges.subscribe(() => this.convertMagieToObject());
-    this.selectedRituels.valueChanges.subscribe(() => this.convertRituelToObject());
-    this.selectedEnvoutement.valueChanges.subscribe(() => this.convertEnvoutementToObject());
   }
 
-  // -- Magie (Sort) --
+  // Chargement des professions et configuration des subscriptions
+  private loadProfessionsAndSetupSubscriptions(): void {
+    this.subscriptions.push(
+      this.professionsService.getProfessionsList().subscribe(professions => {
+        this.professions = professions;
+        this.updateAllDisponibles();
+        this.setupFormSubscriptions();
+      })
+    );
+  }
 
-  updateMagieDisponible() {
+  // Configuration des subscriptions
+  private setupFormSubscriptions(): void {
+    // Changement de profession
+    this.subscriptions.push(
+      this.form.get('profession')?.valueChanges.subscribe(() => {
+        this.updateAllDisponibles();
+        this.clearAllInvalid();
+      }) || new Subscription()
+    );
+
+    // Synchronisation des sélections
+    this.subscriptions.push(
+      this.selectedMagies.valueChanges.subscribe(() => this.convertMagieToObject())
+    );
+    this.subscriptions.push(
+      this.selectedInvocations.valueChanges.subscribe(() => this.convertInvocationToObject())
+    );
+    this.subscriptions.push(
+      this.selectedRituels.valueChanges.subscribe(() => this.convertRituelToObject())
+    );
+    this.subscriptions.push(
+      this.selectedEnvoutement.valueChanges.subscribe(() => this.convertEnvoutementToObject())
+    );
+  }
+
+  // Mise à jour de tous les disponibles
+  private updateAllDisponibles(): void {
+    this.updateMagieDisponible();
+    this.updateRituelDisponible();
+    this.updateEnvoutementDisponible();
+  }
+
+  // Nettoyage de tous les invalides
+  private clearAllInvalid(): void {
+    this.clearInvalidMagies();
+    this.clearInvalidRituels();
+    this.clearInvalidEnvoutements();
+  }
+
+  // Getter pour la profession sélectionnée
+  get selectedProfession(): Profession | undefined {
     const selectedProfessionId = this.form.get('profession')?.value;
-    const selectedProfession = this.professions.find(p => p.idProfession === +selectedProfessionId);
+    return this.professions.find(p => p.idProfession === +selectedProfessionId);
+  }
+
+  // ========== MAGIE (SORTS) ==========
+
+  updateMagieDisponible(): void {
+    const selectedProfession = this.selectedProfession;
 
     if (!selectedProfession) {
       this.magieDisponible = [];
+      this.invocationDisponible = [];
       this.magieNom = '';
+      this.invocationNom = '';
       return;
     }
+
     this.magieNom = 'Sorts';
-
-    // Affiche uniquement les magies de type "Sort"
-    this.magieService.getMagiesNoviceList().subscribe(magies => {
-      this.magieDisponible = magies.filter(magie => magie.type === 'Sort');
-    });
-    // -- Invocation --
     this.invocationNom = 'Invocations';
-    this.magieService.getMagiesNoviceList().subscribe(magies => {
-      this.invocationDisponible = magies.filter(magie => magie.type === 'Invocation');
-    });
+
+    this.subscriptions.push(
+      this.magieService.getMagiesNoviceList().subscribe(magies => {
+        this.magieDisponible = magies.filter(magie => magie.type === 'Sort');
+        this.invocationDisponible = magies.filter(magie => magie.type === 'Invocation');
+      })
+    );
   }
 
-  clearInvalidMagies() {
-    this.toolsService.clearInvalidItems(this.selectedMagies, this.magieDisponible, () => this.convertMagieToObject());
+  clearInvalidMagies(): void {
+    this.toolsService.clearInvalidItems(
+      this.selectedMagies, 
+      this.magieDisponible, 
+      () => this.convertMagieToObject()
+    );
   }
 
-  onCheckboxChangeMagie(e: any) {
+  onCheckboxChangeMagie(e: any): void {
     const value = e.target.value;
     const checked = e.target.checked;
     const max = this.selectedProfession?.maxSort ?? 0;
@@ -146,14 +197,14 @@ export class Part4MagieComponent implements OnInit {
     this.convertMagieToObject();
   }
 
-  convertMagieToObject() {
+  convertMagieToObject(): void {
     const magieList = this.selectedMagies.controls
       .map(control => this.magieDisponible.find(m => m.nom === control.value && m.type === 'Sort'))
       .filter(Boolean) as Magie[];
     this.form.get('magiePersonnage')?.patchValue(magieList);
   }
 
-  removeChipMagie(nom: string) {
+  removeChipMagie(nom: string): void {
     const idx = this.selectedMagies.controls.findIndex(ctrl => ctrl.value === nom);
     if (idx > -1) {
       this.selectedMagies.removeAt(idx);
@@ -161,14 +212,15 @@ export class Part4MagieComponent implements OnInit {
     }
   }
 
-  isMagieDisabled(nom: string) {
+  isMagieDisabled(nom: string): boolean {
     const max = this.selectedProfession?.maxSort ?? 0;
     const alreadySelected = this.selectedMagies.controls.some(ctrl => ctrl.value === nom);
     return this.selectedMagies.length >= max && !alreadySelected;
   }
 
-  // -- Invocation --
-  onCheckboxChangeInvocation(e: any) {
+  // ========== INVOCATION ==========
+
+  onCheckboxChangeInvocation(e: any): void {
     const value = e.target.value;
     const checked = e.target.checked;
     const max = this.selectedProfession?.maxInvocation ?? 0;
@@ -189,14 +241,14 @@ export class Part4MagieComponent implements OnInit {
     this.convertInvocationToObject();
   }
 
-  convertInvocationToObject() {
+  convertInvocationToObject(): void {
     const invocationList = this.selectedInvocations.controls
       .map(control => this.invocationDisponible.find(m => m.nom === control.value && m.type === 'Invocation'))
       .filter(Boolean) as Magie[];
     this.form.get('invocationPersonnage')?.patchValue(invocationList);
   }
 
-  removeChipInvocation(nom: string) {
+  removeChipInvocation(nom: string): void {
     const idx = this.selectedInvocations.controls.findIndex(ctrl => ctrl.value === nom);
     if (idx > -1) {
       this.selectedInvocations.removeAt(idx);
@@ -204,35 +256,41 @@ export class Part4MagieComponent implements OnInit {
     }
   }
 
-  isInvocationDisabled(nom: string) {
+  isInvocationDisabled(nom: string): boolean {
     const max = this.selectedProfession?.maxInvocation ?? 0;
     const alreadySelected = this.selectedInvocations.controls.some(ctrl => ctrl.value === nom);
     return this.selectedInvocations.length >= max && !alreadySelected;
   }
 
-  // -- Rituel --
+  // ========== RITUEL ==========
 
-  updateRituelDisponible() {
-    const selectedProfessionId = this.form.get('profession')?.value;
-    const selectedProfession = this.professions.find(p => p.idProfession === +selectedProfessionId);
+  updateRituelDisponible(): void {
+    const selectedProfession = this.selectedProfession;
 
     if (!selectedProfession) {
       this.rituelDisponible = [];
       this.rituelNom = '';
       return;
     }
+
     this.rituelNom = 'Rituels';
 
-    this.rituelsService.getRituelsNoviceList().subscribe(rituels => {
-      this.rituelDisponible = rituels;
-    });
+    this.subscriptions.push(
+      this.rituelsService.getRituelsNoviceList().subscribe(rituels => {
+        this.rituelDisponible = rituels;
+      })
+    );
   }
 
-  clearInvalidRituels() {
-    this.toolsService.clearInvalidItems(this.selectedRituels, this.rituelDisponible, () => this.convertRituelToObject());
+  clearInvalidRituels(): void {
+    this.toolsService.clearInvalidItems(
+      this.selectedRituels, 
+      this.rituelDisponible, 
+      () => this.convertRituelToObject()
+    );
   }
 
-  onCheckboxChangeRituel(e: any) {
+  onCheckboxChangeRituel(e: any): void {
     const value = e.target.value;
     const checked = e.target.checked;
     const max = this.selectedProfession?.maxRituel ?? 0;
@@ -253,46 +311,56 @@ export class Part4MagieComponent implements OnInit {
     this.convertRituelToObject();
   }
 
-  convertRituelToObject() {
+  convertRituelToObject(): void {
     const rituelList = this.selectedRituels.controls
       .map(control => this.rituelDisponible.find(r => r.nom === control.value))
       .filter(Boolean);
     this.form.get('rituelPersonnage')?.patchValue(rituelList);
   }
 
-  removeChipRituel(nom: string) {
-    this.toolsService.removeItemFromFormArray(this.selectedRituels, nom, () => this.convertRituelToObject());
+  removeChipRituel(nom: string): void {
+    this.toolsService.removeItemFromFormArray(
+      this.selectedRituels, 
+      nom, 
+      () => this.convertRituelToObject()
+    );
   }
 
-  isRituelDisabled(nom: string) {
+  isRituelDisabled(nom: string): boolean {
     const max = this.selectedProfession?.maxRituel ?? 0;
     const alreadySelected = this.selectedRituels.controls.some(ctrl => ctrl.value === nom);
     return this.selectedRituels.length >= max && !alreadySelected;
   }
 
-  // -- Envoûtement --
+  // ========== ENVOÛTEMENT ==========
 
-  updateEnvoutementDisponible() {
-    const selectedProfessionId = this.form.get('profession')?.value;
-    const selectedProfession = this.professions.find(p => p.idProfession === +selectedProfessionId);
+  updateEnvoutementDisponible(): void {
+    const selectedProfession = this.selectedProfession;
 
     if (!selectedProfession) {
       this.envoutementDisponible = [];
       this.envoutementNom = '';
       return;
     }
+
     this.envoutementNom = 'Envoûtements';
 
-    this.envoutementService.getEnvoutementList().subscribe(envoutements => {
-      this.envoutementDisponible = envoutements.filter(env => env.danger === 'Faible');
-    });
+    this.subscriptions.push(
+      this.envoutementService.getEnvoutementList().subscribe(envoutements => {
+        this.envoutementDisponible = envoutements.filter(env => env.danger === 'Faible');
+      })
+    );
   }
 
-  clearInvalidEnvoutements() {
-    this.toolsService.clearInvalidItems(this.selectedEnvoutement, this.envoutementDisponible, () => this.convertEnvoutementToObject());
+  clearInvalidEnvoutements(): void {
+    this.toolsService.clearInvalidItems(
+      this.selectedEnvoutement, 
+      this.envoutementDisponible, 
+      () => this.convertEnvoutementToObject()
+    );
   }
 
-  onCheckboxChangeEnvoutement(e: any) {
+  onCheckboxChangeEnvoutement(e: any): void {
     const value = e.target.value;
     const checked = e.target.checked;
     const max = this.selectedProfession?.maxEnvoutement ?? 0;
@@ -313,21 +381,24 @@ export class Part4MagieComponent implements OnInit {
     this.convertEnvoutementToObject();
   }
 
-  convertEnvoutementToObject() {
+  convertEnvoutementToObject(): void {
     const envoutementList = this.selectedEnvoutement.controls
       .map(control => this.envoutementDisponible.find(e => e.nom === control.value))
       .filter(Boolean) as Envoutement[];
     this.form.get('envoutementPersonnage')?.patchValue(envoutementList);
   }
 
-  removeChipEnvoutement(nom: string) {
-    this.toolsService.removeItemFromFormArray(this.selectedEnvoutement, nom, () => this.convertEnvoutementToObject());
+  removeChipEnvoutement(nom: string): void {
+    this.toolsService.removeItemFromFormArray(
+      this.selectedEnvoutement, 
+      nom, 
+      () => this.convertEnvoutementToObject()
+    );
   }
 
-  isEnvoutementDisabled(nom: string) {
+  isEnvoutementDisabled(nom: string): boolean {
     const max = this.selectedProfession?.maxEnvoutement ?? 0;
     const alreadySelected = this.selectedEnvoutement.controls.some(ctrl => ctrl.value === nom);
     return this.selectedEnvoutement.length >= max && !alreadySelected;
   }
-
 }

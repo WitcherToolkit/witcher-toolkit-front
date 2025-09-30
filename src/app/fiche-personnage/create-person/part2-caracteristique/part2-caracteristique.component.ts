@@ -6,6 +6,7 @@ import { switchMap, tap } from 'rxjs/operators';
 import { Caracteristique } from '../../../models/caracteristique';
 import { CaracteristiquePersonnage } from '../../../models/caracteristique-personnage';
 import { Profession } from '../../../models/profession';
+import { Race } from '../../../models/race';
 import { CaracteristiqueService } from '../../../caracteristiques/caracteristique.service';
 import { ToolsService } from '../../../tools/tools.service';
 import { POINGS_PIEDS_TABLE, SECONDARY_STATS_TABLE } from '../../../shared/shared-constants/caracteristique-tables.constants';
@@ -23,6 +24,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
   @Input() form!: FormGroup;
   @Input() professions: Profession[] = [];
   caracteristiques: Caracteristique[] = [];
+  races: Race[] = []; // Stockage des races en local
   subscriptions: Subscription[] = [];
   pointsRestants = signal<number>(0);
   niveauJeu = signal<string>('libre');
@@ -54,7 +56,6 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
       this.caracteristiques = caracteristiques.filter(carac => carac.type !== 'Autre');
       this.initializeFormControls();
       this.setupFormSubscriptions();
-      this.calculateValuesSecondaires();
       this.calculateValuesAutres();
       this.updateVigueur();
     });
@@ -67,6 +68,15 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
 
   // -- Configuration des subscriptions (SANS imbrication) --
   private setupFormSubscriptions(): void {
+    // Charger les races une seule fois au démarrage
+    this.subscriptions.push(
+      this.racesService.getRacesList().subscribe(races => {
+        this.races = races;
+        // Calculer les valeurs secondaires après le chargement des races
+        this.calculateValuesSecondaires();
+      })
+    );
+
     // Changement de profession
     this.subscriptions.push(
       this.form.get('profession')?.valueChanges.subscribe(() => {
@@ -81,6 +91,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
       this.subscriptions.push(
         this.caracteristiquePersonnage.at(corIndex).get('valeurMax')!.valueChanges.subscribe(() => {
           this.calculateValuesAutres();
+          this.calculateValuesSecondaires();
         })
       );
     }
@@ -93,16 +104,10 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
       })
     );
 
-    // Changement de race (OPTIMISÉ - sans subscription imbriquée)
+    // Changement de race
     this.subscriptions.push(
-      this.form.get('race')?.valueChanges.pipe(
-        tap(raceId => console.log('Race changée, recalcul des secondaires pour race ID:', raceId)),
-        switchMap(raceId => {
-          // Récupère les races depuis le service
-          return this.racesService.getRacesList();
-        })
-      ).subscribe(() => {
-        // Recalcule les valeurs secondaires après avoir reçu les races
+      this.form.get('race')?.valueChanges.subscribe(raceId => {
+        console.log('Race changée, recalcul des secondaires pour race ID:', raceId);
         this.calculateValuesSecondaires();
       }) || new Subscription()
     );
@@ -309,35 +314,35 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
       this.setSecondaireValue(code, value);
     });
 
-    // Valeurs calculées avec la race (OPTIMISÉ - utilise le cache du service)
+    // Valeurs calculées avec la race (SANS subscription - utilise les races en local)
     const raceId = this.form.get('race')?.value;
-    this.racesService.getRacesList().subscribe(races => {
-      const race = races.find(r => Number(r.idRace) === Number(raceId));
-      const raceName = race?.nom;
-      
-      let encValue = corValue * 10;
-      if (raceName === 'Nain') encValue += 25;
-      
-      const couValue = vitValue * 3;
-      const sautValue = Math.ceil(couValue / 5);
-      
-      [
-        { code: 'ENC', value: encValue },
-        { code: 'COU', value: couValue },
-        { code: 'SAUT', value: sautValue }
-      ].forEach(({ code, value }) => {
-        this.setSecondaireValue(code, value);
-      });
-      
-      // Poings et pieds
-      const { poings, pieds } = POINGS_PIEDS_TABLE[corValue] || { poings: '', pieds: '' };
-      this.form.get('poings')?.setValue(poings);
-      this.form.get('pieds')?.setValue(pieds);
+    const race = this.races.find(r => Number(r.idRace) === Number(raceId));
+    const raceName = race?.nom;
+    
+    let encValue = corValue * 10;
+    if (raceName === 'Nain') encValue += 25;
+    
+    const couValue = vitValue * 3;
+    const sautValue = Math.ceil(couValue / 5);
+    
+    [
+      { code: 'ENC', value: encValue },
+      { code: 'COU', value: couValue },
+      { code: 'SAUT', value: sautValue }
+    ].forEach(({ code, value }) => {
+      this.setSecondaireValue(code, value);
     });
+    
+    // Poings et pieds
+    const { poings, pieds } = POINGS_PIEDS_TABLE[corValue] || { poings: '', pieds: '' };
+    this.form.get('poings')?.setValue(poings);
+    this.form.get('pieds')?.setValue(pieds);
   }
 
   private calculateValuesAutres() {
     const corIndex = this.caracteristiques.findIndex(c => c.code === 'COR');
+    if (corIndex === -1) return;
+    
     const corValue = this.caracteristiquePersonnage.at(corIndex)?.get('valeurMax')?.value;
 
     // Table de correspondance pour poings/pieds
