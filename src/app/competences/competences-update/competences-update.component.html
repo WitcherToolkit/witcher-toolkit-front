@@ -60,12 +60,12 @@
             <div class="row" *ngIf="competenceForm.get('exclusive')?.value">
                 <div class="input-field col s6">
                     <label class="active" for="prerequis">Prerequis</label>
-                    <input id="prerequis" type="text" formControlName="prerequis" (input)="onUpperCase($event)">
+                    <input id="prerequis" type="text" formControlName="prerequis">
                     <app-form-control-error [control]="competenceForm.get('prerequis')"></app-form-control-error>
                 </div>
                 <div class="input-field col s6">
                     <label class="active" for="specialisation">Spécialisation</label>
-                    <input id="specialisation" type="text" formControlName="specialisation" (input)="onUpperCase($event)">
+                    <input id="specialisation" type="text" formControlName="specialisation">
                     <app-form-control-error [control]="competenceForm.get('specialisation')"></app-form-control-error>
                 </div>
             </div>

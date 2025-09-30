@@ -199,17 +199,6 @@ export class CompetencesUpdateComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  // --- Met le texte saisi en majuscules ---
-  onUpperCase(event: Event) {
-    const input = event.target as HTMLInputElement;
-    input.value = input.value.toUpperCase();
-    // Met à jour le contrôle du formulaire si besoin
-    const controlName = input.getAttribute('formControlName');
-    if (controlName && this.competenceForm) {
-      this.competenceForm.get(controlName)?.setValue(input.value, { emitEvent: false });
-    }
-  }
-
   // --- Outils UI ---
   /** Incrémente/décrémente un champ numérique du formulaire principal */
   updateField(field: string, delta: number, min: number = 0) {
