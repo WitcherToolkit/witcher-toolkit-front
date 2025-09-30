@@ -21,7 +21,7 @@
                 
               </div>
               <div class="col s2 add-btn-col">
-                <a class="btn-floating btn-large waves-light teal lighten-2" *ngIf="auth.hasRole('ADMIN')" (click)="openCreateModal()"><i class="material-icons">add</i></a>
+                <a class="btn-floating btn-large waves-light teal lighten-2" *ngIf="auth.hasRole('ROLE_ADMIN')" (click)="openCreateModal()"><i class="material-icons">add</i></a>
               </div>
             </div>
             
@@ -55,8 +55,8 @@
 
             <div class="card-action">
               <a *ngIf="auth.isLoggedIn()" (click)="openModal(rituel)" href="javascript:void(0)">Voir</a>
-              <a *ngIf="auth.hasRole('ADMIN')" (click)="openUpdateModal(rituel)" href="javascript:void(0)">Modifier</a>
-              <a *ngIf="auth.hasRole('ADMIN')" (click)="openDeleteModal(rituel)" href="javascript:void(0)">Supprimer</a>
+              <a *ngIf="auth.hasRole('ROLE_ADMIN')" (click)="openUpdateModal(rituel)" href="javascript:void(0)">Modifier</a>
+              <a *ngIf="auth.hasRole('ROLE_ADMIN')" (click)="openDeleteModal(rituel)" href="javascript:void(0)">Supprimer</a>
             </div>
 
           </div>
