@@ -13,7 +13,7 @@
   <li><a [routerLink]="['/' + competenceListPath]">Compétences</a></li>
 </ul>
 
-<ul id="dropdown2" class="dropdown-content grey darken-3">
+<ul id="dropdown3" class="dropdown-content grey darken-3">
   <li><a >Classes</a></li>
   <li class="divider"></li>
   <li><a [routerLink]="['/' + raceListPath]">Races</a></li>
@@ -23,13 +23,13 @@
 <nav  *ngIf="isLoggedIn">
   <div class="nav-wrapper grey darken-3">
     <ul id="nav-mobile" class="left hide-on-med-and-down">
-      <li><a class="dropdown-trigger" data-target="dropdown1">Grimoire<i class="material-icons right">arrow_drop_down</i></a></li>
-      <li><a class="dropdown-trigger" data-target="dropdown2">Aptitudes<i class="material-icons right">arrow_drop_down</i></a></li>
-      <li><a class="dropdown-trigger" data-target="dropdown2">Classes<i class="material-icons right">arrow_drop_down</i></a></li>
-      <li><a [routerLink]="['/' + createPersonnageBasePath]">Créer</a></li>
+      <li *ngIf="isLoggedIn"><a class="dropdown-trigger" data-target="dropdown1">Grimoire<i class="material-icons right">arrow_drop_down</i></a></li>
+      <li *ngIf="isLoggedIn"><a class="dropdown-trigger" data-target="dropdown2">Aptitudes<i class="material-icons right">arrow_drop_down</i></a></li>
+      <li *ngIf="isLoggedIn"><a class="dropdown-trigger" data-target="dropdown3">Classes<i class="material-icons right">arrow_drop_down</i></a></li>
+      <li *ngIf="isLoggedIn"><a [routerLink]="['/' + createPersonnageBasePath]">Créer</a></li>
     </ul>
     <div class="nav-actions">
-      <a (click)="logout()" class="logout-btn" href="javascript:void(0)">Déconnexion</a>
+      <a *ngIf="isLoggedIn" (click)="logout()" class="logout-btn" href="javascript:void(0)">Déconnexion</a>
       <a [routerLink]="['/home']" class="brand-logo">
         <img src="img/logo-site.png" alt="" class="circle responsive-img">
       </a>
