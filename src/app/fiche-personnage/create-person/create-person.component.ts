@@ -11,6 +11,7 @@ import { Profession } from '../../models/profession';
 import { Part4MagieComponent } from './part4-magie/part4-magie.component';
 import { FichePersonnageService } from '../fiche-personnage.service';
 import { Subscription } from 'rxjs';
+import { PERSONNAGE_CONSULT_PATH } from '../../app-routing/app-routing-constants';
 
 @Component({
   selector: 'app-create-person',
@@ -106,7 +107,7 @@ export class CreatePersonComponent implements OnDestroy {
           const id = response.id ?? response.idFichePersonnage;
           
           if (id) {
-            this.router.navigate(['/personnage/consult', id]);
+            this.router.navigate([`/${PERSONNAGE_CONSULT_PATH}`, id]);
           } else {
             console.error('ID de fiche personnage non retourné par le backend.');
           }
