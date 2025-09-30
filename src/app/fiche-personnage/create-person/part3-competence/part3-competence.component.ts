@@ -149,7 +149,8 @@ export class Part3CompetenceComponent implements OnInit {
     const totalDepenses = this.competencesArray?.controls.reduce((sum, control) => {
       const competence = control.get('competence')?.value;
       const valeur = control.get('valeurMax')?.value || 0;
-      return sum + (valeur);
+      const step = competence?.step || 1;
+      return sum + (valeur * step);
     }, 0) || 0;
     const pointsTotal = 44; // Total de points disponibles
     this.pointsRestants.set(pointsTotal - totalDepenses);
@@ -157,25 +158,21 @@ export class Part3CompetenceComponent implements OnInit {
 
   // Ajout de points de caractéristique
   incrementCompetence(index: number, listType: 'competences' | 'competenceSecondaire'): void {
-  const formArray = this.getArrayByType(listType);
-  const control = formArray.at(index).get('valeurMax');
-  const competence = formArray.at(index).get('competence')?.value;
-  const step = competence?.step || 1;
-  if (control && control.value < 6) {
-    control.setValue(Math.min(control.value + step, 6));
+    const formArray = this.getArrayByType(listType);
+    const control = formArray.at(index).get('valeurMax');
+    if (control && control.value < 6) {
+      control.setValue(Math.min(control.value + 1, 6));
+    }
   }
-}
 
   // Suppression de points de caractéristique
   decrementCompetence(index: number, listType: 'competences' | 'competenceSecondaire'): void {
-  const formArray = this.getArrayByType(listType);
-  const control = formArray.at(index).get('valeurMax');
-  const competence = formArray.at(index).get('competence')?.value;
-  const step = competence?.step || 1;
-  const minValue = 0;
-  if (control && control.value > minValue) {
-    control.setValue(Math.max(control.value - step, minValue));
-  }
+    const formArray = this.getArrayByType(listType);
+    const control = formArray.at(index).get('valeurMax');
+    const minValue = 0;
+    if (control && control.value > minValue) {
+      control.setValue(Math.max(control.value - 1, minValue));
+    }
   }
   
   // Griser le bouton si le minimum est atteind
