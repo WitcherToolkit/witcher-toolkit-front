@@ -85,7 +85,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
 
   // -- Getters pour le template et la logique --
   get caracteristiquePersonnage(): FormArray {
-    return this.form.get('caracteristiquePersonnage') as FormArray;
+    return this.form.get('caracteristiquePersonnageList') as FormArray;
   }
 
   get getCaracteristiquesPrincipalesList() {
@@ -127,7 +127,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
       this.caracteristiques.map(caracteristique => this.createCaracteristiqueControl(caracteristique.code))
     );
 
-    this.form.addControl('caracteristiquePersonnage', caracteristiquePersonnageArray);
+    this.form.addControl('caracteristiquePersonnageList', caracteristiquePersonnageArray);
     if (!this.form.contains('poings')) {
       this.form.addControl('poings', this.fb.control(''));
     }
@@ -187,13 +187,13 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
     this.subscriptions = [];
     this.caracteristiques = caracs.filter(carac => carac.type !== 'Autre');
-    if (this.form.contains('caracteristiquePersonnage')) {
-      this.form.removeControl('caracteristiquePersonnage');
+    if (this.form.contains('caracteristiquePersonnageList')) {
+      this.form.removeControl('caracteristiquePersonnageList');
     }
     const caracteristiquePersonnageArray = this.fb.array(
       this.caracteristiques.map(caracteristique => this.createCaracteristiqueControl(caracteristique.code))
     );
-    this.form.addControl('caracteristiquePersonnage', caracteristiquePersonnageArray);
+    this.form.addControl('caracteristiquePersonnageList', caracteristiquePersonnageArray);
   }
 
   private resetCaracteristiques(): void {

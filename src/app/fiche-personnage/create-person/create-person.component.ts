@@ -120,7 +120,7 @@ export class CreatePersonComponent {
              (this.form.get('inventaires')?.valid ?? false);
     }
     if (this.currentStep === 2) {
-      const caracsValid = this.form.get('caracteristiquePersonnage')?.valid ?? false;
+      const caracsValid = this.form.get('caracteristiquePersonnageList')?.valid ?? false;
       const poingsExists = this.form.get('poings') !== null;
       const piedsExists = this.form.get('pieds') !== null;
       const vigueurExists = this.form.get('vigueur') !== null;

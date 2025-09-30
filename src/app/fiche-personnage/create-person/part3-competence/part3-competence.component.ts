@@ -30,7 +30,7 @@ export class Part3CompetenceComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.form.addControl('competencePersonnage', this.fb.array([]));
+    this.form.addControl('competencePersonnageList', this.fb.array([]));
     this.form.addControl('competences', this.fb.array([]));
     this.form.addControl('competenceSecondaire', this.fb.array([]));
     this.competenceService.getCompetencesList().subscribe((allCompetences: Competence[]) => {
@@ -72,7 +72,7 @@ export class Part3CompetenceComponent implements OnInit {
       this.competencesNonAssociees = [];
       this.competenceSecondaireArray.clear();
       this.competencesArray.clear();
-      this.form.get('competencePersonnage')?.reset();
+      this.form.get('competencePersonnageList')?.reset();
       return;
     }
     this.professionsService.getProfessionCompetences(+professionId).subscribe(selectedProfession => {
@@ -132,7 +132,7 @@ export class Part3CompetenceComponent implements OnInit {
     const competenceSecondaire = this.competenceSecondaireArray.value; // Récupère les compétences non associées
   
     // Concaténer les deux listes
-    const competencePersonnageArray = this.form.get('competencePersonnage') as FormArray;// Récupère le FormArray competencePersonnage
+    const competencePersonnageArray = this.form.get('competencePersonnageList') as FormArray;// Récupère le FormArray competencePersonnage
     competencePersonnageArray.clear();// Vide le FormArray avant de le remplir
   
     [...competences, ...competenceSecondaire].forEach((c: any) => {
@@ -203,7 +203,7 @@ export class Part3CompetenceComponent implements OnInit {
 
   // Calcule la somme de INT + RÉF
   private calculerPointsDispo() {
-    const caracteristiques = this.form.get('caracteristiquePersonnage')?.value || [];
+    const caracteristiques = this.form.get('caracteristiquePersonnageList')?.value || [];
     const intelligence = caracteristiques.find((c: any) => c.code === 'INT')?.valeurActuelle || 0;
     const reflexe = caracteristiques.find((c: any) => c.code === 'RÉF')?.valeurActuelle || 0;
     const total = intelligence + reflexe;
