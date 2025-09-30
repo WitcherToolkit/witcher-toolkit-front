@@ -280,8 +280,7 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
   }
 
   private getVigueur(): number {
-    const professionId = this.form.get('profession')?.value;
-    const profession = this.professions.find((p: any) => p.idProfession === +professionId);
+    const profession = this.form.get('profession')?.value;
     const professionName = profession?.nom;
     
     if (professionName === 'Mage') {
@@ -315,9 +314,12 @@ export class Part2CaracteristiqueComponent implements OnInit, OnDestroy {
     });
 
     // Valeurs calculées avec la race (SANS subscription - utilise les races en local)
-    const raceId = this.form.get('race')?.value;
-    const race = this.races.find(r => Number(r.idRace) === Number(raceId));
-    const raceName = race?.nom;
+    //const raceId = this.form.get('race')?.value;
+    const race = this.form.get('race')?.value;
+    const raceId = race?.idRace;
+
+    const raceFromList = this.races.find(r => Number(r.idRace) === Number(raceId));
+  const raceName = raceFromList?.nom;
     
     let encValue = corValue * 10;
     if (raceName === 'Nain') encValue += 25;

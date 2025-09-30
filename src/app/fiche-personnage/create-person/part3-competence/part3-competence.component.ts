@@ -107,7 +107,12 @@ export class Part3CompetenceComponent implements OnInit, OnDestroy {
   }
 
   // Chargement des compétences d'une profession
-  private loadProfessionCompetences(professionId: number | string): void {
+  private loadProfessionCompetences(professionValue: any): void {
+    // Extraire l'ID si c'est un objet, sinon utiliser la valeur directement
+    const professionId = typeof professionValue === 'object' && professionValue !== null
+      ? professionValue.idProfession
+      : professionValue;
+
     if (!professionId) {
       this.resetCompetences();
       return;

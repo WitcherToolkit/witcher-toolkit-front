@@ -140,8 +140,13 @@ export class Part4MagieComponent implements OnInit, OnDestroy {
 
   // Getter pour la profession sélectionnée
   get selectedProfession(): Profession | undefined {
-    const selectedProfessionId = this.form.get('profession')?.value;
-    return this.professions.find(p => p.idProfession === +selectedProfessionId);
+    const professionValue = this.form.get('profession')?.value;
+    // Si c'est déjà un objet, le retourner directement
+    if (typeof professionValue === 'object' && professionValue !== null) {
+      return professionValue;
+    }
+    // Sinon, chercher par ID
+    return this.professions.find(p => p.idProfession === +professionValue);
   }
 
   // ========== MAGIE (SORTS) ==========

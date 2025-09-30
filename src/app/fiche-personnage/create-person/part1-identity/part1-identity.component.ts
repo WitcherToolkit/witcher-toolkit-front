@@ -1,7 +1,3 @@
-// ============================================
-// COMPOSANT OPTIMISÉ - Part1IdentityComponent
-// ============================================
-
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -111,11 +107,13 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
     // Gestion des changements de profession (SANS subscription imbriquée)
     this.subscriptions.push(
       this.professionControl?.valueChanges.pipe(
-        tap(professionId => {
+        tap(profession => {
+          const professionId = profession?.idProfession;
           this.professionSignal.set(professionId);
           this.resetSelections();
         }),
-        switchMap(professionId => {
+        switchMap(profession => {
+          const professionId = profession?.idProfession;
           if (!professionId) {
             this.resetInventaireState();
             return of(null);
@@ -131,25 +129,22 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
       }) || new Subscription()
     );
 
-    // Gestion des changements de race (SANS subscription imbriquée)
+    // Gestion des changements de race (objet Race complet)
     this.subscriptions.push(
-    this.raceControl?.valueChanges.pipe(
-      tap(raceId => {
-        // raceId est un NUMBER, pas un objet Race
-        const race = this.races.find(r => r.idRace === Number(raceId));
-        console.log('Race sélectionnée :', race?.nom, 'id:', raceId);
-      }),
-      switchMap(raceId => {
-        // Convertir en nombre et utiliser directement l'ID
-        const raceIdNum = Number(raceId) || 0;
-        return this.professionsService.filterProfessions(raceIdNum);
-      })
-    ).subscribe(filtered => {
-      console.log('Professions filtrées:', filtered.map(p => p.nom));
-      this.filteredProfessions = filtered;
-      this.validateCurrentProfession();
-    }) || new Subscription()
-  );
+      this.raceControl?.valueChanges.pipe(
+        tap(race => {
+          console.log('Race sélectionnée :', race?.nom, 'id:', race?.idRace);
+        }),
+        switchMap(race => {
+          const raceId = race?.idRace ?? 0;
+          return this.professionsService.filterProfessions(raceId);
+        })
+      ).subscribe(filtered => {
+        console.log('Professions filtrées:', filtered.map(p => p.nom));
+        this.filteredProfessions = filtered;
+        this.validateCurrentProfession();
+      }) || new Subscription()
+    );
 
     // Synchronisation du FormArray inventaire
     this.subscriptions.push(
@@ -176,7 +171,8 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
 
   /** Synchronise les données de profession si déjà sélectionnée */
   private syncProfessionDataIfPresent(): void {
-    const professionId = this.professionControl?.value;
+    const profession = this.professionControl?.value;
+    const professionId = profession?.idProfession;
     if (professionId) {
       this.professionSignal.set(professionId);
       this.subscriptions.push(
@@ -197,12 +193,13 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
 
   /** Valide que la profession actuelle est toujours compatible avec la race */
   private validateCurrentProfession(): void {
-    const currentProfessionId = this.professionControl?.value;
+    const currentProfession = this.professionControl?.value;
+    const currentProfessionId = currentProfession?.idProfession;
     const isProfessionStillValid = this.filteredProfessions.some(
-      prof => prof.idProfession === +currentProfessionId
+      prof => prof.idProfession === currentProfessionId
     );
     if (!isProfessionStillValid) {
-      this.professionControl?.setValue('', { emitEvent: false });
+      this.professionControl?.setValue(null, { emitEvent: false });
     }
   }
 
@@ -236,8 +233,8 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
     this.form.addControl('age', this.fb.control(0, [Validators.min(0)]));
     this.form.addControl('bestiaire', this.fb.control(false));
     this.form.addControl('historique', this.fb.control(''));
-    this.form.addControl('profession', this.fb.control('', [Validators.required]));
-    this.form.addControl('race', this.fb.control('', [Validators.required]));
+    this.form.addControl('profession', this.fb.control(null, [Validators.required]));
+    this.form.addControl('race', this.fb.control(null, [Validators.required]));
     this.form.addControl('inventaires', this.fb.control([], [Validators.required]));
     this.form.addControl('selectedInventaire', this.selectedInventaire);
     this.form.addControl('languesSelectionnees', this.fb.control([]));
@@ -344,11 +341,6 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
     return this.selectedInventaire.controls.some(ctrl => ctrl.value.nom === item.nom);
   }
 
-  getProfessionName(professionId: number): string {
-    const profession = this.professions.find(p => p.idProfession === +professionId);
-    return profession ? profession.nom : '';
-  }
-
   // --- GESTION DES LANGUES ---
   onLangueCheckboxChange(event: any) {
     const value = event.target.value;
@@ -380,8 +372,8 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
   }
 
   getMaxLangues(): number {
-    const professionId = this.professionControl?.value;
-    const name = this.getProfessionName(professionId);
+    const profession = this.professionControl?.value;
+    const name = profession?.nom;
     if (name === 'Barde') return 1;
     if (name === 'Marchand') return 2;
     return 0;
@@ -418,10 +410,11 @@ export class Part1IdentityComponent implements OnInit, OnDestroy {
   }
 
   getMaxCombatCompetences(): number {
-    const professionId = this.professionControl?.value;
-    const name = this.getProfessionName(professionId);
+    const profession = this.professionControl?.value;
+    const name = profession?.nom;
     if (name === "Homme d'arme") return 5;
     if (name === 'Noble') return 1;
     return 0;
   }
+
 }

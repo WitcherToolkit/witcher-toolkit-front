@@ -15,9 +15,9 @@
     </div>
     
     <div class="input-field col s3">
-        <select id="race" formControlName="race" class="browser-default" required>
-          <option value="" disabled selected>Choisir race</option>
-          <option *ngFor="let race of races" [value]="race.idRace">{{ race.nom }}</option>     
+      <select id="race" formControlName="race" class="browser-default" required>
+        <option [ngValue]="null" disabled selected>Choisir race</option>
+        <option *ngFor="let race of races" [ngValue]="race">{{ race.nom }}</option>
       </select>
       <label for="race" class="active">Race</label>
       <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
@@ -66,8 +66,10 @@
 
     <div class="input-field col s4">
       <select id="profession" formControlName="profession" class="browser-default" required>
-        <option value="" disabled selected>Choisir profession</option>
-        <option *ngFor="let profession of filteredProfessions" [value]="profession.idProfession">{{ profession.nom }}</option>
+        <option [ngValue]="null" disabled selected>Choisir profession</option>
+        <option *ngFor="let profession of filteredProfessions" [ngValue]="profession">
+          {{ profession.nom }}
+        </option>
       </select>
       <label for="profession" class="active">Profession</label>
       <!-- Affiche le message d'erreur uniquement si le contrôle est invalide et a été touché ou modifié -->
@@ -76,18 +78,18 @@
 
   </div>
 
-  <div class="row" *ngIf="professionControl?.value && (getProfessionName(professionControl?.value) === 'Barde' || getProfessionName(professionControl?.value) === 'Marchand')">
-    <div class="col s12">
-      <label>Choisir {{ getProfessionName(professionControl?.value) === 'Barde' ? '1' : '2' }} langue(s)</label>
+  <div class="row" *ngIf="professionControl?.value && (professionControl?.value?.nom === 'Barde' || professionControl?.value?.nom === 'Marchand')">
+  <div class="col s12">
+    <label>Choisir {{ professionControl?.value?.nom === 'Barde' ? '1' : '2' }} langue(s)</label>
       <div class="row">
         <div *ngFor="let langue of languesList; let i = index" class="col s4">
           <p>
             <label>
               <input type="checkbox"
-                     [value]="langue.nom"
-                     (change)="onLangueCheckboxChange($event)"
-                     [disabled]="isLangueCheckboxDisabled(langue)"
-                     [checked]="isLangueChecked(langue)">
+                    [value]="langue.nom"
+                    (change)="onLangueCheckboxChange($event)"
+                    [disabled]="isLangueCheckboxDisabled(langue)"
+                    [checked]="isLangueChecked(langue)">
               <span>{{ langue.nom }}</span>
             </label>
           </p>
@@ -96,9 +98,9 @@
     </div>
   </div>
 
-  <div class="row" *ngIf="professionControl?.value && (getProfessionName(professionControl?.value) === 'Homme d\'arme' || getProfessionName(professionControl?.value) === 'Noble')">
+  <div class="row" *ngIf="professionControl?.value && (professionControl?.value?.nom === 'Homme d\'arme' || professionControl?.value?.nom === 'Noble')">
     <div class="col s12">
-      <label>Choisir {{ getProfessionName(professionControl?.value) === "Homme d'arme" ? '5' : '1' }} compétence(s) de combat</label>
+      <label>Choisir {{ professionControl?.value?.nom === "Homme d'arme" ? '5' : '1' }} compétence(s) de combat</label>
       <div class="row">
         <div *ngFor="let comp of combatCompetences; let i = index" class="col s4">
           <p>

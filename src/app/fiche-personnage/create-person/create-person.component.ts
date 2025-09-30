@@ -83,6 +83,12 @@ export class CreatePersonComponent implements OnDestroy {
   }
 
   submitForm(): void {
+
+    console.log('=== DONNÉES ENVOYÉES ===');
+    console.log('Race:', this.form.get('race')?.value);
+    console.log('Profession:', this.form.get('profession')?.value);
+    console.log('Form complet:', JSON.stringify(this.form.value, null, 2));
+
     console.log('Form Data:', this.form.value);
 
     // Vérifie la validité du formulaire
