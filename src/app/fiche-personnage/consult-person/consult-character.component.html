@@ -7,22 +7,29 @@
 <div class="row">
   <div class="col s2"></div>
   <div class="col s2">
-    <table class="striped">
-      <thead>
-        <tr>
-          <th>Nom</th>
-          <th>Valeur</th>
-          <th>Max</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let cateristique of isPrincipaleCaracteristiques()">
-          <td>{{ cateristique.code }}</td>
-          <td>{{ cateristique.valeurActuelle }}</td>
-          <td>{{ cateristique.valeurMax }}</td>
-        </tr>
-      </tbody>
-    </table>
+    
+    <div class="card">
+      <div class="card-content">
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>Valeur</th>
+              <th>Max</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let cateristique of isPrincipaleCaracteristiques()">
+              <td>{{ cateristique.code }}</td>
+              <td>{{ cateristique.valeurActuelle }}</td>
+              <td>{{ cateristique.valeurMax }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    
   </div>
 
   <div class="col s4">
@@ -36,8 +43,8 @@
           <p><b>Joueur :</b> {{ characterData.nomJoueur }}</p>
           <p><b>Genre :</b> {{ characterData.genre }}</p>
           <p><b>Âge :</b> {{ characterData.age }} ans</p>
-          <p><b>Race :</b> {{ characterData.race }}</p>
-          <p><b>Profession :</b> {{ characterData.profession }}</p>
+          <p><b>Race :</b> {{ characterData.race.nom }}</p>
+          <p><b>Profession :</b> {{ characterData.profession.nom }}</p>
           <p><b>Origine :</b> {{ characterData.terreNatale }}</p>
         </div>
       </div>
@@ -46,21 +53,25 @@
     <div class="row">
       <div class="col s4"></div>
 
-      <div class="col s4">
-        <table class="striped">
-          <tr>
-            <th>Poings</th>
-            <td>{{ characterData.poings }}</td>
-          </tr>
-          <tr>
-            <th>Pieds</th>
-            <td>{{ characterData.pieds }}</td>
-          </tr>
-          <tr>
-            <th>Vigueur</th>
-            <td>{{ characterData.vigueur }}</td>
-          </tr>
-        </table>
+      <div class="col s12">
+        <div class="card">
+          <div class="card-content">
+            <table class="striped">
+              <tr>
+                <th>Poings</th>
+                <td>{{ characterData.poings }}</td>
+              </tr>
+              <tr>
+                <th>Pieds</th>
+                <td>{{ characterData.pieds }}</td>
+              </tr>
+              <tr>
+                <th>Vigueur</th>
+                <td>{{ characterData.vigueur }}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
       </div>
 
       <div class="col s4"></div>
@@ -69,22 +80,29 @@
   </div>
 
   <div class="col s2">
-    <table class="striped">
-      <thead>
-        <tr>
-          <th>Nom</th>
-          <th>Valeur</th>
-          <th>Max</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let cateristique of nonPrincipaleCaracteristiques()">
-          <td>{{ cateristique.code }}</td>
-          <td>{{ cateristique.valeurActuelle }}</td>
-          <td>{{ cateristique.valeurMax }}</td>
-        </tr>
-      </tbody>
-    </table>
+
+    <div class="card">
+      <div class="card-content">
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>Valeur</th>
+              <th>Max</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let cateristique of nonPrincipaleCaracteristiques()">
+              <td>{{ cateristique.code }}</td>
+              <td>{{ cateristique.valeurActuelle }}</td>
+              <td>{{ cateristique.valeurMax }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    
   </div>
 </div>
 
@@ -96,17 +114,17 @@
   <div class="col s8">
     <div class="card-tabs">
       <ul class="tabs tabs-fixed-width">
-        <li class="tab"><a class="active" href="#inventaire">Inventaire</a></li>
-        <li class="tab"><a href="#competences">Compétences</a></li>
-        <li class="tab"><a href="#sorts">Sorts</a></li>
-        <li class="tab"><a href="#signes">Signes</a></li>
-        <li class="tab"><a href="#rituels">Rituels</a></li>
-        <li class="tab"><a href="#envoutements">Envoûtements</a></li>
+        <li class="tab"><a class="active" href="#inventaireList">Inventaire</a></li>
+        <li class="tab" *ngIf="characterData.competencePersonnageList && characterData.competencePersonnageList.length > 0"><a href="#competenceList">Compétences</a></li>
+        <li class="tab" *ngIf="characterData.magiePersonnage && characterData.magiePersonnage.length > 0"><a href="#sortList">Sorts</a></li>
+        <li class="tab" *ngIf="characterData.signePersonnage && characterData.signePersonnage.length > 0"><a href="#signeList">Signes</a></li>
+        <li class="tab" *ngIf="characterData.rituelList && characterData.rituelList.length > 0"><a href="#rituelList">Rituels</a></li>
+  <li class="tab" *ngIf="characterData.envoutementList && characterData.envoutementList.length > 0"><a href="#envoutementList">Envoûtements</a></li>
       </ul>
     </div>
 
     <div class="card-content grey lighten-4">
-      <div id="inventaire">
+      <div id="inventaireList">
         <table class="striped">
           <thead>
             <tr>
@@ -117,7 +135,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let inventaire of characterData.inventaires">
+            <tr *ngFor="let inventaire of characterData.inventaireList">
               <td>{{ inventaire.nom }}</td>
               <td>{{ inventaire.type }}</td>
               <td>{{ inventaire.effet }}</td>
@@ -127,7 +145,7 @@
         </table>
       </div>
 
-      <div id="competences">
+      <div id="competenceList" *ngIf="characterData.competencePersonnageList && characterData.competencePersonnageList.length > 0">
         <table class="striped">
           <thead>
             <tr>
@@ -136,27 +154,52 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let comp of characterData.competencePersonnage">
+            <tr *ngFor="let comp of characterData.competencePersonnageList">
               <td>{{ comp.competence.nom }} ({{ comp.competence.caracteristique.code }})</td>
-              <td>{{ comp.valeurActuel }}</td>
+              <td>{{ comp.valeurActuelle }}</td>
             </tr>
           </tbody>
-        </table>
+        </table><!-- Fin compétence -->
       </div>
 
-      <div id="sorts">
+      <div id="sortList" *ngIf="characterData.magiePersonnage && characterData.magiePersonnage.length > 0">
+        <div class="card"  *ngFor="let magie of characterData.magieList">
+          <div class="card-content">
+            <span class="card-title">{{ magie.nom }} - {{ magie.cout }} END</span>
+            <p><b>Portée : </b>{{ magie.portee }}</p>
+            <p><b>Description : </b>{{ magie.effet }}</p>
+            <p><b>Contre : </b>{{ magie.contre }}</p>
+          </div>
+        </div><!-- Fin sort -->
         <li *ngFor="let magie of characterData.magiePersonnage">{{ magie.nom }}</li>
       </div>
 
-      <div id="signes">Ici la liste des Signes si la personne est un sorceleur.</div>
-      
-      <div id="rituels">
-        <li *ngFor="let rituel of characterData.rituelPersonnage">{{ rituel.nom }}</li>
+      <div id="signeList" *ngIf="characterData.signePersonnage && characterData.signePersonnage.length > 0">
+        <li *ngFor="let signe of characterData.signePersonnage">{{ signe.nom }}</li>
       </div>
 
-      <div id="envoutements">
-        <li *ngFor="let envoutement of characterData.envoutementPersonnage">{{ envoutement.nom }}</li>
+      <div id="rituelList" *ngIf="characterData.rituelList && characterData.rituelList.length > 0">
+        <div class="card"  *ngFor="let rituel of characterData.rituelList">
+          <div class="card-content">
+            <span class="card-title">{{ rituel.nom }} - {{ rituel.cout }} END</span>
+            <p><b>Préparation : </b>{{ rituel.tempsPreparation }}</p>
+            <p><b>Durée : </b>{{ rituel.duree }}</p>
+            <p><b>Effet : </b>{{ rituel.effet }}</p>
+            <p><b>Composant : </b>{{ rituel.composant }}</p>
+          </div>
+        </div><!-- Fin rituel -->
       </div>
+
+      <div id="envoutementList" *ngIf="characterData.envoutementList && characterData.envoutementList.length > 0">
+        <div class="card"  *ngFor="let envoutement of characterData.envoutementList">
+          <div class="card-content">
+            <span class="card-title">{{ envoutement.nom }} - {{ envoutement.cout }} END</span>
+            <p><b>Danger : </b>{{ envoutement.danger }}</p>
+            <p><b>Effet : </b>{{ envoutement.effet }}</p>
+            <p><b>Prérequis pour lever l'envoutement : </b>{{ envoutement.prerequis }}</p>
+          </div>
+        </div>
+      </div><!-- Fin envoutement -->
     </div>
   </div>
 
@@ -175,4 +218,17 @@
   </div>
 </div>
 
+</div>
+
+<div class="card">
+  <div class="card-content">
+    <p>Contenu de la carte</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-content">
+    <span class="card-title">Card Title</span>
+    <p>Contenu de la carte.</p>
+  </div>
 </div>
