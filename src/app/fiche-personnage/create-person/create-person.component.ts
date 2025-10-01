@@ -53,8 +53,12 @@ export class CreatePersonComponent implements OnDestroy {
     // Écoute les changements du formulaire pour mettre à jour selectedProfession
     this.subscriptions.push(
       this.form.valueChanges.subscribe(() => {
-        const professionId = this.form.get('profession')?.value;
-        this.selectedProfession = this.professions.find(p => p.idProfession === +professionId);
+        const professionValue = this.form.get('profession')?.value;
+        if (professionValue && typeof professionValue === 'object') {
+          this.selectedProfession = professionValue;
+        } else {
+          this.selectedProfession = this.professions.find(p => p.idProfession === +professionValue);
+        }
       })
     );
   }
