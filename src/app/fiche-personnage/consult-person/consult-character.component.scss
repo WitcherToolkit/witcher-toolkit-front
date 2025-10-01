@@ -1,7 +1,7 @@
-//@use '../../../styles/page-layout';
+@use '../../../styles/page-layout';
 
  .card-image {
   max-width: 200px; // ou la taille souhaitée
-  width: 100%;
+  width: 75%!important; // pour s'assurer que l'image ne dépasse pas
   margin: 0 auto; // centre la card horizontalement si besoin
 } 

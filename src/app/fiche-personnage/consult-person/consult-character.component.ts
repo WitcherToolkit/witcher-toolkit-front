@@ -1,14 +1,13 @@
-import { CommonModule, JsonPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { AfterViewInit, AfterViewChecked, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FichePersonnageService } from '../fiche-personnage.service';
 import { CaracteristiqueService } from '../../caracteristiques/caracteristique.service';
 
-
 @Component({
   selector: 'app-consult-character',
   standalone: true,
-  imports: [CommonModule, JsonPipe],
+  imports: [CommonModule],
   templateUrl: './consult-character.component.html',
   styleUrls: ['./consult-character.component.scss']
 })
