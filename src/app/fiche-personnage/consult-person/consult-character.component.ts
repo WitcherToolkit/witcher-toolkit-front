@@ -47,17 +47,19 @@ export class ConsultCharacterComponent implements OnInit, AfterViewInit, AfterVi
   }
 
   isPrincipaleCaracteristiques() {
-    if (!this.characterData || !this.characterData.caracteristiquePersonnage) {
+    if (!this.characterData || !this.characterData.caracteristiquePersonnageList) {
       return [];
     }
-    return this.characterData.caracteristiquePersonnage.filter((carac: any) => carac.type === 'Principale');
+    return this.characterData.caracteristiquePersonnageList
+    .filter((carac: any) => carac.caracteristique && carac.caracteristique.type === 'Principale');
   }
 
   nonPrincipaleCaracteristiques() {
-    if (!this.characterData || !this.characterData.caracteristiquePersonnage) {
+    if (!this.characterData || !this.characterData.caracteristiquePersonnageList) {
       return [];
     }
-    return this.characterData.caracteristiquePersonnage.filter((carac: any) => carac.type === 'Secondaire');
+    return this.characterData.caracteristiquePersonnageList
+    .filter((carac: any) => carac.caracteristique && carac.caracteristique.type === 'Secondaire');
   }
 
   ngOnInit() {

@@ -19,10 +19,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let cateristique of isPrincipaleCaracteristiques()">
-              <td>{{ cateristique.code }}</td>
-              <td>{{ cateristique.valeurActuelle }}</td>
-              <td>{{ cateristique.valeurMax }}</td>
+            <tr *ngFor="let cateristiques of isPrincipaleCaracteristiques()">
+              <td>{{ cateristiques.caracteristique.code }}</td>
+              <td>{{ cateristiques.valeurActuelle }}</td>
+              <td>{{ cateristiques.valeurMax }}</td>
             </tr>
           </tbody>
         </table>
@@ -92,10 +92,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let cateristique of nonPrincipaleCaracteristiques()">
-              <td>{{ cateristique.code }}</td>
-              <td>{{ cateristique.valeurActuelle }}</td>
-              <td>{{ cateristique.valeurMax }}</td>
+            <tr *ngFor="let cateristiques of nonPrincipaleCaracteristiques()">
+              <td>{{ cateristiques.caracteristique.code }}</td>
+              <td>{{ cateristiques.valeurActuelle }}</td>
+              <td>{{ cateristiques.valeurMax }}</td>
             </tr>
           </tbody>
         </table>
