@@ -1,5 +1,5 @@
 import { CommonModule, JsonPipe } from '@angular/common';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, AfterViewChecked, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FichePersonnageService } from '../fiche-personnage.service';
 import { CaracteristiqueService } from '../../caracteristiques/caracteristique.service';
@@ -12,7 +12,7 @@ import { CaracteristiqueService } from '../../caracteristiques/caracteristique.s
   templateUrl: './consult-character.component.html',
   styleUrls: ['./consult-character.component.scss']
 })
-export class ConsultCharacterComponent implements OnInit, AfterViewInit {
+export class ConsultCharacterComponent implements OnInit, AfterViewInit, AfterViewChecked {
   characterData: any;
   loading = false;
   error: string | null = null;
@@ -23,6 +23,27 @@ export class ConsultCharacterComponent implements OnInit, AfterViewInit {
     private fichePersonnageService: FichePersonnageService
   ) {
     this.characterData = history.state.data;
+  }
+
+    getSorts() {
+    if (!this.characterData || !this.characterData.magieList) {
+      return [];
+    }
+    return this.characterData.magieList.filter((magie: any) => magie.type === 'Sort');
+  }
+
+  getSignes() {
+    if (!this.characterData || !this.characterData.magieList) {
+      return [];
+    }
+    return this.characterData.magieList.filter((magie: any) => magie.type === 'Signe');
+  }
+
+  getInvocations() {
+    if (!this.characterData || !this.characterData.magieList) {
+      return [];
+    }
+    return this.characterData.magieList.filter((magie: any) => magie.type === 'Invocation');
   }
 
   isPrincipaleCaracteristiques() {
@@ -60,8 +81,16 @@ export class ConsultCharacterComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.initTabs();
+  }
+
+  ngAfterViewChecked() {
+    this.initTabs();
+  }
+
+  private initTabs() {
     const tabs = document.querySelectorAll('.tabs');
-    if (window['M'] && window['M'].Tabs) {
+    if (window['M'] && window['M'].Tabs && tabs.length > 0) {
       window['M'].Tabs.init(tabs);
     }
   }

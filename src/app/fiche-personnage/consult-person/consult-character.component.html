@@ -116,8 +116,9 @@
       <ul class="tabs tabs-fixed-width">
         <li class="tab"><a class="active" href="#inventaireList">Inventaire</a></li>
         <li class="tab" *ngIf="characterData.competencePersonnageList && characterData.competencePersonnageList.length > 0"><a href="#competenceList">Compétences</a></li>
-        <li class="tab" *ngIf="characterData.magiePersonnage && characterData.magiePersonnage.length > 0"><a href="#sortList">Sorts</a></li>
-        <li class="tab" *ngIf="characterData.signePersonnage && characterData.signePersonnage.length > 0"><a href="#signeList">Signes</a></li>
+  <li class="tab" *ngIf="getSorts().length > 0"><a href="#sortList">Sorts</a></li>
+  <li class="tab" *ngIf="getSignes().length > 0"><a href="#signeList">Signes</a></li>
+  <li class="tab" *ngIf="getInvocations().length > 0"><a href="#invocationList">Invocations</a></li>
         <li class="tab" *ngIf="characterData.rituelList && characterData.rituelList.length > 0"><a href="#rituelList">Rituels</a></li>
   <li class="tab" *ngIf="characterData.envoutementList && characterData.envoutementList.length > 0"><a href="#envoutementList">Envoûtements</a></li>
       </ul>
@@ -162,8 +163,8 @@
         </table><!-- Fin compétence -->
       </div>
 
-      <div id="sortList" *ngIf="characterData.magiePersonnage && characterData.magiePersonnage.length > 0">
-        <div class="card"  *ngFor="let magie of characterData.magieList">
+      <div id="sortList" *ngIf="getSorts().length > 0">
+        <div class="card"  *ngFor="let magie of getSorts()">
           <div class="card-content">
             <span class="card-title">{{ magie.nom }} - {{ magie.cout }} END</span>
             <p><b>Portée : </b>{{ magie.portee }}</p>
@@ -171,11 +172,28 @@
             <p><b>Contre : </b>{{ magie.contre }}</p>
           </div>
         </div><!-- Fin sort -->
-        <li *ngFor="let magie of characterData.magiePersonnage">{{ magie.nom }}</li>
       </div>
 
-      <div id="signeList" *ngIf="characterData.signePersonnage && characterData.signePersonnage.length > 0">
-        <li *ngFor="let signe of characterData.signePersonnage">{{ signe.nom }}</li>
+      <div id="signeList" *ngIf="getSignes().length > 0">
+        <div class="card"  *ngFor="let magie of getSignes()">
+          <div class="card-content">
+            <span class="card-title">{{ magie.nom }} - {{ magie.cout }} END</span>
+            <p><b>Portée : </b>{{ magie.portee }}</p>
+            <p><b>Description : </b>{{ magie.effet }}</p>
+            <p><b>Contre : </b>{{ magie.contre }}</p>
+          </div>
+        </div><!-- Fin signe -->
+      </div>
+
+      <div id="invocationList" *ngIf="getInvocations().length > 0">
+        <div class="card"  *ngFor="let magie of getInvocations()">
+          <div class="card-content">
+            <span class="card-title">{{ magie.nom }} - {{ magie.cout }} END</span>
+            <p><b>Portée : </b>{{ magie.portee }}</p>
+            <p><b>Description : </b>{{ magie.effet }}</p>
+            <p><b>Contre : </b>{{ magie.contre }}</p>
+          </div>
+        </div><!-- Fin invocation -->
       </div>
 
       <div id="rituelList" *ngIf="characterData.rituelList && characterData.rituelList.length > 0">
