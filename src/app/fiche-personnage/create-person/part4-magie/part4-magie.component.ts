@@ -54,12 +54,9 @@ export class Part4MagieComponent implements OnInit, OnDestroy {
     private rituelsService: RituelsService,
     private professionsService: ProfessionsService,
     private envoutementService: EnvoutementService
-  ) {
-    console.log('[Part4MagieComponent] Constructeur appelé');
-  }
+  ) {   }
 
   ngOnInit(): void {
-    console.log('[Part4MagieComponent] ngOnInit appelé, form:', this.form);
     this.initializeFormControls();
     this.loadProfessionsAndSetupSubscriptions();
   }
@@ -93,7 +90,6 @@ export class Part4MagieComponent implements OnInit, OnDestroy {
 
   // Chargement des professions et configuration des subscriptions
   private loadProfessionsAndSetupSubscriptions(): void {
-    console.log('Loading professions and setting up subscriptions');
     this.subscriptions.push(
       this.professionsService.getProfessionsList().subscribe(professions => {
         this.professions = professions;
@@ -130,7 +126,6 @@ export class Part4MagieComponent implements OnInit, OnDestroy {
 
   // Mise à jour de tous les disponibles
   private updateAllDisponibles(): void {
-    console.log('Updating all available magic, rituals, and enchantments based on selected profession');
     this.updateMagieDisponible();
     this.updateRituelDisponible();
     this.updateEnvoutementDisponible();
@@ -157,7 +152,6 @@ export class Part4MagieComponent implements OnInit, OnDestroy {
   // ========== MAGIE (SORTS) ==========
 
   updateMagieDisponible(): void {
-    console.log('Updating available magies based on selected profession');
     const selectedProfession = this.selectedProfession;
 
     if (!selectedProfession) {
@@ -294,7 +288,6 @@ export class Part4MagieComponent implements OnInit, OnDestroy {
   }
 
   clearInvalidRituels(): void {
-    console.log('Clearing invalid rituals based on available rituals');
     this.toolsService.clearInvalidItems(
       this.selectedRituels, 
       this.rituelDisponible, 
@@ -365,7 +358,6 @@ export class Part4MagieComponent implements OnInit, OnDestroy {
   }
 
   clearInvalidEnvoutements(): void {
-    console.log('Clearing invalid enchantments based on available enchantments');
     this.toolsService.clearInvalidItems(
       this.selectedEnvoutement, 
       this.envoutementDisponible, 
