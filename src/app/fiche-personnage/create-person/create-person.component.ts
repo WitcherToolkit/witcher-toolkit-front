@@ -130,8 +130,13 @@ export class CreatePersonComponent implements OnDestroy {
   }
 
   isSubmitAvailableOnPart3(): boolean {
-    const professionId = this.form.get('profession')?.value;
-    const selectedProfession = this.professions.find(p => p.idProfession === +professionId);
+    const professionValue = this.form.get('profession')?.value;
+    let selectedProfession: Profession | undefined;
+    if (professionValue && typeof professionValue === 'object') {
+      selectedProfession = professionValue;
+    } else {
+      selectedProfession = this.professions.find(p => p.idProfession === +professionValue);
+    }
     return !!(
       this.currentStep === 3 && 
       selectedProfession && 

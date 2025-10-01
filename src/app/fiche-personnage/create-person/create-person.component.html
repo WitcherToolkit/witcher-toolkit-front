@@ -53,8 +53,10 @@
         </div>
         <div class="fixed-action-buttons">
           <button *ngIf="currentStep !== 1" class="waves-light btn grey darken-3" (click)="previousStep()" [disabled]="currentStep === 1">Précédent</button>
-          <button *ngIf="currentStep !== 4 && !isSubmitAvailableOnPart3()" class="waves-light btn yellow darken-3" (click)="nextStep()" [disabled]="!isCurrentStepValid()">Suivant</button>
-          <button *ngIf="currentStep === 4 || isSubmitAvailableOnPart3()" class="waves-light btn teal lighten-2" (click)="submitForm()" [disabled]="!isCurrentStepValid()">Soumettre</button>
+          <!-- Bouton Suivant : affiché si on n'est pas à la dernière étape ET que le bouton Soumettre ne doit pas apparaître en partie 3 -->
+          <button *ngIf="(currentStep === 1 || currentStep === 2) || (currentStep === 3 && !isSubmitAvailableOnPart3())" class="waves-light btn yellow darken-3" (click)="nextStep()" [disabled]="!isCurrentStepValid()">Suivant</button>
+          <!-- Bouton Soumettre : affiché en partie 3 si la profession n'est ni Mage ni Prêtre, ou en partie 4 -->
+          <button *ngIf="(currentStep === 3 && isSubmitAvailableOnPart3()) || currentStep === 4" class="waves-light btn teal lighten-2" (click)="submitForm()" [disabled]="!isCurrentStepValid()">Soumettre</button>
         </div>
       </div>
     </div>
