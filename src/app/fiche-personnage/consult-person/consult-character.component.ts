@@ -15,6 +15,19 @@ export class ConsultCharacterComponent implements OnInit, AfterViewInit, AfterVi
   characterData: any;
   loading = false;
   error: string | null = null;
+  leftCompetences: any[] = [];
+  rightCompetences: any[] = [];
+  private splitCompetences() {
+    if (!this.characterData || !this.characterData.competencePersonnageList) {
+      this.leftCompetences = [];
+      this.rightCompetences = [];
+      return;
+    }
+    const all = this.characterData.competencePersonnageList;
+    const mid = Math.ceil(all.length / 2);
+    this.leftCompetences = all.slice(0, mid);
+    this.rightCompetences = all.slice(mid);
+  }
 
   constructor(
     private caracteristiqueService: CaracteristiqueService,
@@ -70,6 +83,7 @@ export class ConsultCharacterComponent implements OnInit, AfterViewInit, AfterVi
         this.fichePersonnageService.getFichePersonnageById(+id).subscribe({
           next: (data) => {
             this.characterData = data;
+            this.splitCompetences();
             this.loading = false;
           },
           error: (err) => {
@@ -78,6 +92,8 @@ export class ConsultCharacterComponent implements OnInit, AfterViewInit, AfterVi
           }
         });
       }
+    } else {
+      this.splitCompetences();
     }
   }
 
