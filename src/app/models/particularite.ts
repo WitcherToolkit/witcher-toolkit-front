@@ -2,7 +2,7 @@ import { Race } from "./race";
 
 export interface Particularite {
 
-    idParticularite: number;
+    idParticularite: string;
 
     nom: string;
 

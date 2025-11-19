@@ -2,7 +2,7 @@ import { Race } from "./race";
 
 export interface ReputationWiki {
 
-    idReputationWiki: number;
+    idReputationWiki: string;
 
     territoire: string;
 

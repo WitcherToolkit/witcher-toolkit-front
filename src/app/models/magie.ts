@@ -1,6 +1,6 @@
 export interface Magie {
 
-  idMagie: number;
+  idMagie: string;
   
   nom: string;
   

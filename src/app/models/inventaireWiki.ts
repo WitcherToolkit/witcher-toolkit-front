@@ -1,6 +1,6 @@
 export interface InventaireWiki {
 
-    idInventaireWiki: number;
+    idInventaireWiki: string;
 
     quantite: number;
 

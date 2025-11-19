@@ -3,7 +3,7 @@ import { ReputationWiki } from "./reputation-wiki";
 
 export interface Race {
 
-    idRace: number;
+    idRace: string;
     
     nom: string;
     

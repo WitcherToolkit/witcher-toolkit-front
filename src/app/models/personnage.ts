@@ -7,6 +7,7 @@ import { Profession } from "./profession";
 import { Race } from "./race";
 
 export interface Personnage {
+    idPersonnage : string;
     nomPersonnage : string;
     nomJoueur : string;
     // nomImage : string;

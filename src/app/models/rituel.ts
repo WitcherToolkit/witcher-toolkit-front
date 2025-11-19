@@ -1,6 +1,6 @@
 export interface Rituel {
 
-    idRituel: number;
+    idRituel: string;
     
     nom: string;
     

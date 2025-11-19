@@ -1,6 +1,6 @@
 export interface Envoutement {
 
-  idEnvoutement: number;
+  idEnvoutement: string;
   
   nom: string;
   

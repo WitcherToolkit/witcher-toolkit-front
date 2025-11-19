@@ -2,7 +2,7 @@ import { Caracteristique } from "./caracteristique";
 
 export interface Competence {
 
-    idCompetence: number;
+    idCompetence: string;
 
     nom: string;
 

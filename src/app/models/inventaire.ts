@@ -2,7 +2,7 @@ import { Personnage } from "./personnage";
 
 export interface Inventaire {
 
-    idInventaire: number;
+    idInventaire: string;
 
     quantite: number;
 

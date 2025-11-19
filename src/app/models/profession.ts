@@ -3,7 +3,7 @@ import { InventaireWiki } from "./inventaireWiki";
 
 export interface Profession {
 
-    idProfession : number;
+    idProfession : string;
 
     nom : string;
 
