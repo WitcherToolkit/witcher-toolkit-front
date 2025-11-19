@@ -111,7 +111,7 @@ export class CompetencesUpdateComponent implements AfterViewInit, OnChanges {
       instance.close();
     };
     const selectedId = this.competenceForm.value.caracteristique;
-    const selectedCarac = this.caracteristiques.find(c => c.idCaracteristique === +selectedId) ?? null;
+    const selectedCarac = this.caracteristiques.find(c => c.idCaracteristique === selectedId) ?? null;
     if (this.competence) {
       // Edition
       const competenceToUpdate = {
@@ -160,7 +160,7 @@ export class CompetencesUpdateComponent implements AfterViewInit, OnChanges {
       return;
     }
     const selectedId = this.competenceForm.value.caracteristique;
-    const selectedCarac = this.caracteristiques.find(c => c.idCaracteristique === +selectedId) ?? null;
+    const selectedCarac = this.caracteristiques.find(c => c.idCaracteristique === selectedId) ?? null;
     const competenceToCreate = {
       ...this.competenceForm.value,
       caracteristique: selectedCarac,

@@ -43,7 +43,7 @@ export class ProfessionsDetailComponent implements AfterViewInit {
   }
 
   // --- Récupère les détails de la profession depuis le service ---
-  fetchProfessionDetails(id: number) {
+  fetchProfessionDetails(id: string) {
     this.professionsService.getProfessionCompetences(id).subscribe({
       next: (data: Profession) => {
         this.detailedProfession.set(data);
@@ -70,7 +70,7 @@ export class ProfessionsDetailComponent implements AfterViewInit {
   }
 
   // --- TrackBy pour *ngFor sur la liste des compétences ---
-  trackCompetenceProfessionById(index: number, compProfession: CompetenceProfession): number {
-    return compProfession.idCompetenceProfession || index;
+  trackCompetenceProfessionById(index: number, compProfession: CompetenceProfession): string {
+    return compProfession.idCompetenceProfession || index.toString();
   }
 }

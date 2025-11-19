@@ -63,7 +63,7 @@ export class CompetenceService {
   }
 
   // --- Supprimer une compétence par son ID ---
-  deleteCompetence(id: number): Observable<void> {
+  deleteCompetence(id: string): Observable<void> {
     console.log('Deleting competence with id:', id);
     return this.http.delete<void>(`${this.apiUrl}/delete/${id}`).pipe(
       map(result => {

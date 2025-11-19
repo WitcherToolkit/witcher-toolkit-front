@@ -104,8 +104,8 @@ export class ProfessionsListComponent {
   }
 
   // --- Utilitaires ---
-  trackById(index: number, profession: Profession): number {
-    return profession.idProfession || index;
+  trackById(index: number, profession: Profession): string {
+  return profession.idProfession || index.toString();
   }
 
   truncateText(text: string): string {

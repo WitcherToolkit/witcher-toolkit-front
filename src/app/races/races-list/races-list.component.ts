@@ -104,8 +104,8 @@ export class RacesListComponent {
   }
 
   // --- Utilitaires pour l'affichage ---
-  trackById(index: number, race: Race): number {
-    return race.idRace;
+  trackById(index: number, race: Race): string {
+    return race.idRace || index.toString();
   }
 
   getParticularitesAsLine(race: Race): string {

@@ -106,8 +106,8 @@ export class EnvoutementsListComponent implements OnInit {
   }
 
   // --- Utilitaires ---
-  trackById(index: number, envoutement: Envoutement): number {
-    return envoutement.idEnvoutement;
+  trackById(index: number, envoutement: Envoutement): string {
+    return envoutement.idEnvoutement || index.toString();
   }
 
   truncateText(text: string): string {

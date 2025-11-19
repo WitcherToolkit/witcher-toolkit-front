@@ -75,7 +75,7 @@ export class RituelsService {
   }
 
   // --- Supprimer un rituel par son ID ---
-  deleteRituel(id: number): Observable<void> {
+  deleteRituel(id: string): Observable<void> {
     console.log('Deleting rituel with id:', id);
     return this.http.delete<void>(`${this.apiUrl}/delete/${id}`).pipe(
       map(result => {

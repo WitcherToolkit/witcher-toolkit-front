@@ -61,11 +61,13 @@ export class ProfessionsUpdateComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     const idParam = this.route.snapshot.paramMap.get('id');
+    
     this.competencesService.getCompetencesList().subscribe((competences) => {
       this.competences = competences;
+      
       if (idParam) {
-        // Edition : charger la profession existante
-        this.professionsService.getProfessionCompetences(+idParam).subscribe((profession) => {
+        // ✅ Supprimer le + et utiliser directement idParam (string/UUID)
+        this.professionsService.getProfessionCompetences(idParam).subscribe((profession) => {
           this.profession = profession;
           this.initForm();
           this.cdr.detectChanges();

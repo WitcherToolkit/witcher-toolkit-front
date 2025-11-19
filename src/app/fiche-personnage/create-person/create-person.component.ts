@@ -50,14 +50,27 @@ export class CreatePersonComponent implements OnDestroy {
 
   // Configuration des subscriptions
   private setupFormSubscriptions(): void {
-    // Écoute les changements du formulaire pour mettre à jour selectedProfession
     this.subscriptions.push(
       this.form.valueChanges.subscribe(() => {
         const professionValue = this.form.get('profession')?.value;
-        if (professionValue && typeof professionValue === 'object') {
+        
+        // Si pas de valeur, réinitialiser
+        if (!professionValue) {
+          this.selectedProfession = undefined;
+          return;
+        }
+        
+        // Si c'est déjà un objet Profession, l'utiliser directement
+        if (typeof professionValue === 'object' && professionValue !== null) {
           this.selectedProfession = professionValue;
-        } else {
-          this.selectedProfession = this.professions.find(p => p.idProfession === +professionValue);
+        } 
+        // Si c'est une string (UUID), chercher dans la liste
+        else if (typeof professionValue === 'string') {
+          this.selectedProfession = this.professions.find(p => p.idProfession === professionValue);
+        }
+        // Sinon, réinitialiser (sécurité)
+        else {
+          this.selectedProfession = undefined;
         }
       })
     );
@@ -139,7 +152,7 @@ export class CreatePersonComponent implements OnDestroy {
     if (professionValue && typeof professionValue === 'object') {
       selectedProfession = professionValue;
     } else {
-      selectedProfession = this.professions.find(p => p.idProfession === +professionValue);
+      selectedProfession = this.professions.find(p => p.idProfession === professionValue);
     }
     return !!(
       this.currentStep === 3 && 

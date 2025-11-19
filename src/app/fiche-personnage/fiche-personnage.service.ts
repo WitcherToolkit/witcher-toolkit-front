@@ -13,7 +13,7 @@ export class FichePersonnageService {
   constructor(private http: HttpClient) { }
 
   // --- Méthode pour récupérer une fiche personnage par son ID ---
-  getFichePersonnageById(id: number) {
+  getFichePersonnageById(id: string) {
     return this.http.get(`${this.apiUrl}/${id}`);
   }
 

@@ -106,8 +106,8 @@ export class CaracteristiquesListComponent {
   }
 
   // --- Utilitaires ---
-  trackById(index: number, caracteristique: Caracteristique): number {
-    return caracteristique.idCaracteristique;
+  trackById(index: number, caracteristique: Caracteristique): string {
+    return caracteristique.idCaracteristique || index.toString();
   }
 
   truncateText(text: string): string {

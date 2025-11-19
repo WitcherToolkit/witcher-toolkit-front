@@ -39,8 +39,7 @@ export class RacesUpdateComponent implements OnInit {
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
       // Mode édition
-      const id = Number(idParam);
-      this.raceService.getRaceById(id).subscribe(race => {
+      this.raceService.getRaceById(idParam).subscribe(race => {
         this.race = race;
         this.initForm();
       });

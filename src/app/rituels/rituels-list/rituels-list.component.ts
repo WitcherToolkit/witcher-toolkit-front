@@ -106,8 +106,8 @@ export class RituelsListComponent {
   }
 
   // --- Utilitaires ---
-  trackById(index: number, rituel: Rituel): number {
-    return rituel.idRituel;
+  trackById(index: number, rituel: Rituel): string {
+    return rituel.idRituel || index.toString();
   }
 
   truncateText(text: string): string {

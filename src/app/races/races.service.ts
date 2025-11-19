@@ -33,7 +33,7 @@ export class RacesService {
   }
 
   // --- Récupérer une race par son ID ---
-  getRaceById(id: number): Observable<Race> {
+  getRaceById(id: string): Observable<Race> {
     return this.http.get<Race>(`${this.apiUrl}/${id}`);
   }
 
@@ -65,7 +65,7 @@ export class RacesService {
   }
 
   // --- Supprimer une race par son ID ---
-  deleteRace(id: number): Observable<void> {
+  deleteRace(id: string): Observable<void> {
     console.log('Deleting race with ID:', id);
     return this.http.delete<void>(`${this.apiUrl}/delete/${id}`).pipe(
       map(result => {

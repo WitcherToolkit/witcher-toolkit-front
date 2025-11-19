@@ -80,7 +80,7 @@ export class ConsultCharacterComponent implements OnInit, AfterViewInit, AfterVi
       const id = this.route.snapshot.paramMap.get('id');
       if (id) {
         this.loading = true;
-        this.fichePersonnageService.getFichePersonnageById(+id).subscribe({
+        this.fichePersonnageService.getFichePersonnageById(id).subscribe({
           next: (data) => {
             this.characterData = data;
             this.splitCompetences();

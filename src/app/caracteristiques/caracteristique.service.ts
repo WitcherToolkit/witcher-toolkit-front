@@ -74,7 +74,7 @@ export class CaracteristiqueService {
   }
 
   // --- Supprimer une caractéristique par son ID ---
-  deleteCaracteristique(id: number): Observable<void> {
+  deleteCaracteristique(id: string): Observable<void> {
     console.log('Deleting caracteristique with id:', id);
     return this.http.delete<void>(`${this.apiUrl}/delete/${id}`).pipe(
       map(result => {

@@ -41,7 +41,7 @@ export class ProfessionsService {
   }
 
   // --- Récupérer une profession avec ses compétences ---
-  getProfessionCompetences(id: number): Observable<Profession> {
+  getProfessionCompetences(id: string): Observable<Profession> {
     console.info('Fetching profession detail from API...');
     console.log(`API Base URL: ${this.apiUrl}/${id}/competences`);
     return this.http.get<Profession>(`${this.apiUrl}/${id}/competences`);
@@ -73,7 +73,7 @@ export class ProfessionsService {
   }
 
   // --- Supprimer une profession par son ID ---
-  deleteProfession(id: number): Observable<void> {
+  deleteProfession(id: string): Observable<void> {
     console.log('Deleting profession with ID:', id);
     return this.http.delete<void>(`${this.apiUrl}/delete/${id}`).pipe(
       map(result => {

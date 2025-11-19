@@ -75,7 +75,7 @@ export class MagieService {
   }
 
   // --- Supprimer une magie par son ID ---
-  deleteMagie(id: number): Observable<void> {
+  deleteMagie(id: string): Observable<void> {
     console.log('Deleting magie with id:', id);
     return this.http.delete<void>(`${this.apiUrl}/delete/${id}`).pipe(
       map(result => {

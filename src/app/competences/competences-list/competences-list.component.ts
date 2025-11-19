@@ -106,8 +106,8 @@ export class CompetencesListComponent {
   }
 
   // --- Utilitaires ---
-  trackById(index: number, competence: Competence): number {
-    return competence.idCompetence;
+  trackById(index: number, competence: Competence): string {
+    return competence.idCompetence || index.toString();
   }
 
   truncateText(text: string): string {

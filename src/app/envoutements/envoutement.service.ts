@@ -65,7 +65,7 @@ export class EnvoutementService {
   }
 
   // --- Supprimer un envoutement par son ID ---
-  deleteEnvoutement(id: number): Observable<void> {
+  deleteEnvoutement(id: string): Observable<void> {
     console.log('Deleting envoutement with ID:', id);
     return this.http.delete<void>(`${this.apiUrl}/delete/${id}`).pipe(
       map(result => {

@@ -109,18 +109,24 @@ export class Part3CompetenceComponent implements OnInit, OnDestroy {
   // Chargement des compétences d'une profession
   private loadProfessionCompetences(professionValue: any): void {
     // Extraire l'ID si c'est un objet, sinon utiliser la valeur directement
-    const professionId = typeof professionValue === 'object' && professionValue !== null
-      ? professionValue.idProfession
+    const professionId = typeof professionValue === 'object' && professionValue !== null 
+      ? professionValue.idProfession 
       : professionValue;
-
+    
     if (!professionId) {
       this.resetCompetences();
       return;
     }
-
+    
     this.subscriptions.push(
-      this.professionsService.getProfessionCompetences(+professionId).subscribe(selectedProfession => {
-        this.processCompetences(selectedProfession);
+      this.professionsService.getProfessionCompetences(professionId).subscribe({
+        next: (selectedProfession) => {
+          this.processCompetences(selectedProfession);
+        },
+        error: (err) => {
+          console.error('Erreur chargement compétences:', err);
+          this.resetCompetences();
+        }
       })
     );
   }

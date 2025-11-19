@@ -113,8 +113,8 @@ export class SortsListComponent implements OnInit {
   }
 
   // --- Utilitaires ---
-  trackById(index: number, magie: Magie): number {
-    return magie.idMagie;
+  trackById(index: number, magie: Magie): string {
+    return magie.idMagie || index.toString();
   }
 
   truncateText(text: string): string {
