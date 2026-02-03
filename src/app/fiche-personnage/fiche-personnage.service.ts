@@ -20,7 +20,7 @@ export class FichePersonnageService {
   // --- Méthode pour créer une fiche personnage ---
   createFichePersonnage(fichePersonnage: any) {
     console.log('Creating fiche personnage:', fichePersonnage);
-    return this.http.post(`${this.apiUrl}/create`, fichePersonnage);
+    return this.http.post(`${this.apiUrl}`, fichePersonnage);
   }
   
 }

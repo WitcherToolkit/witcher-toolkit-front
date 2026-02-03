@@ -121,16 +121,20 @@ export class CreatePersonComponent implements OnDestroy {
       this.personnageService.createFichePersonnage(this.form.value).subscribe({
         next: (response: any) => {
           console.log('Fiche personnage créée avec succès:', response);
-          const id = response.id ?? response.idFichePersonnage;
           
+          // CORRECTION ICI : On cherche le bon champ 'idPersonnage'
+          const id = response.idPersonnage; 
+
           if (id) {
+            // Attention : vérifiez bien votre route dans app-routing.module.ts
+            // Est-ce 'personnage/:id' ou 'personnages/:id' ?
             this.router.navigate([`/${PERSONNAGE_CONSULT_PATH}`, id]);
           } else {
-            console.error('ID de fiche personnage non retourné par le backend.');
+            console.error('ID de fiche personnage non retourné par le backend. Réponse reçue :', response);
           }
         },
         error: (error) => {
-          console.error('Erreur lors de la création de la fiche personnage:', error);
+          console.error('Erreur lors de la création :', error);
         }
       })
     );
